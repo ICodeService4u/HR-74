@@ -6,7 +6,7 @@ world lacks ships as a 1.4 task input rather than as a world edit. That is the r
 every other task in the world valid, and it is the lever HR 32 proved on its T24 and T25 and HR 79
 proved on its T1.
 
-**One package exists, retired on its first run set.** It is built to the HR 79 T1 shape, which twenty-two
+**Two packages exist: T1, retired on its first run set, and T1 v2, built from that measurement.** Both are built to the HR 79 T1 shape, which twenty-two
 packages, four hundred pull requests and seven task AutoQC rounds bought, and everything in
 `../HR-79/tasks/README.md` that is not about HR 79's own apps applies here. The four rules from it
 that no world-side rule covers are in the root `CLAUDE.md`.
@@ -14,6 +14,7 @@ that no world-side rule covers are in the root `CLAUDE.md`.
 | Package | Request | Status |
 |---|---|---|
 | `HR_Troutly_T1_august_operating_review` | The recruiting lead's 08/31/2026 request for two Wiki.js pages, an approved-hiring view and a staffed-role view, for the 09/10/2026 operating review | Built and **retired 09/19/2026**. 35 verifiers, 113 points, 1 gate, every row App DB on the Wiki.js pages table, battery 1365 of 1365, one 1.4 input on the Filesystem target, two golden pages. Registered modal failing path 32.7% and Gemini mean 38%; **measured Gemini mean 96.5%** on five runs, nine of nine runs reconciling the population, so the rule registered before the runs retired it. The record, the run set and the lesson are kept |
+| `HR_Troutly_T1v2_august_operating_review` | The same request with the memo stripped of every source, figure and reconciliation it had named, and a current employee and each status value defined instead | Built 09/19/2026 from T1's traces. **24 verifiers, 83 points, 1 gate**, the population 67% of the points, the free base 8%; battery **864 of 864** with the three failing paths as pages, P1 32.5% and P1b 37.3%. Registered Gemini mean 58% with the honest note that T1's runs found the roster and the crosswalk by listing the tree. Run set and task data id owed |
 
 ## The rules every package here is built to
 
