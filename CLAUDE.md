@@ -65,5 +65,7 @@ T1's first run set, nine trajectories on 09/19/2026, captured the tool catalogue
 `tasks/APP_TOOL_SURFACE.md`, read the snapshot ids off the exports, and saw the Wiki.js page tool
 create pages under exact titles. It also retired T1: nine of nine runs reconciled the population,
 Gemini 3.8 Flash meaning 96.5% against a registered 38%. `tasks/README.md` carries the measured
-record and what landed wrong. What is still unmeasured, a grading snapshot's column names and the
-import toast, is recorded there as open. Do not invent any of it.
+record and what landed wrong. T1 v2 is built from that record: the memo names no source and no
+reconciliation, and the rubric carries the population at two thirds of the points. What is still
+unmeasured, a grading snapshot's column names, the import toast and the v2 task data id, is
+recorded there as open. Do not invent any of it.
