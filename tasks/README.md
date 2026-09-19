@@ -92,10 +92,17 @@ Not yet measured in this world, and recorded as open items rather than assumed:
 | Whether a page created through the platform's Wiki.js tools lands in `pages` under the title the run gives it | Read the first grading run's `details` and the transcripts' page-create calls |
 | The world and task-data snapshot ids | Read `world_snapshot_id` and `task_data_id` off the first export; never invent one |
 | The step count | Read off the longest of the first five Gemini trajectories; the threshold is 90+, 80+ conditionally |
-| Whether 1.5 accepts an empty list, and what the Expected output picker calls a wiki-page deliverable | The interface, at entry |
+| Whether 1.5 accepts an empty list | The interface, at entry |
 
 Write each answer into this file the way HR 79's root `CLAUDE.md` rule 6 was written, naming
 what landed wrong as well as what worked.
+
+**Measured 09/19/2026, the Expected output picker.** It offers eight labels: Edit Existing and
+Make New, each over Sheet, Doc, Slide Deck and App Data. A wiki-page deliverable is App Data, and
+two pages the run creates are **Make New App Data**, which is what the synth's task record
+arrived carrying pre-selected. What landed wrong: T1's `02_task_metadata.md` had recorded Edit
+Existing App Data before the picker was seen, and was corrected the same day. Neither deliverable
+title is in the seed `Page.csv`, so Edit Existing would have named an update the run never makes.
 
 ## Running the checks
 

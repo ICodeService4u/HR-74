@@ -9,7 +9,7 @@
 | **World** | HR 74 - Troutly Analytics, Inc. (HR), `filesystem/` (69 files) and `apps_data/` (31 seed tables across `bamboohr/`, `greenhouse/` and `wiki_js/`), the bytes of `HR 74.zip` held in place by `world/checks/world_manifest.py`. **No world byte moves**; the one input is a 1.4 task file |
 | **Spec row** | This repository holds no spec workbook. The package is built from the world and from the request the owner supplied on 09/19/2026, and every graded value is asserted against the world's bytes by `check_world()` |
 | **Anchor date** | 08/31/2026, the request's date and the last day of employee and recruiting activity it sets: the day of the master roster, the ATS export and the People Metrics page's stale count |
-| **Expected output** | **Edit Existing App Data**, one stateful app update: two pages published in Wiki.js. The HR row allows one output type, and this is it. Confirm the picker's label for a wiki-page deliverable at entry; the option name is the interface's, not this record's |
+| **Expected output** | **Make New App Data**, one stateful app update: two pages published in Wiki.js, neither of which exists in the seed `Page.csv`. The HR row allows one output type, and this is it. The picker, read on 09/19/2026, offers eight labels, Edit Existing and Make New over Sheet, Doc, Slide Deck and App Data, and the synth arrived with Make New App Data pre-selected. This record first said Edit Existing App Data before the picker was seen, which was wrong on the new-versus-existing axis: the run creates two rows and edits none |
 | **1.5) Expected Output Files** | Nothing. The deliverable is two wiki pages and no file, and the field takes filename chips only. Both page titles live in the prompt and in the request |
 | **Grading target** | None. Every row is App DB Programatic on the `wiki_js` `pages` table and carries no grading target and no output dependency |
 | **Apps** | BambooHR (read the employee and department tables), Greenhouse (read jobs, applications, candidates, hiring teams, users, notes), Wiki.js (read the three lookup pages, write the two deliverables). Three apps used, against the Domain Lead's 09/19/2026 rule of at least two |
@@ -387,7 +387,7 @@ Nothing is entered in Studio. What has to be entered, and what each field takes:
 | 1.3 Step plan | The Checkpoints table in `08_section_1_3_step_plan.md`; the count validated on the first Gemini trajectory |
 | 1.4 Additional task files | `operating_review_request.pdf`, 3.9 KB, md5 `c4af3a51afbf93ad2fa65a0223940916`, target **Filesystem**. The `00_task_input_` prefix is a repo sorting convention and is not part of the uploaded name. Confirm the upload by digest, never by the file browser |
 | 1.5 Expected Output Files | Nothing. Confirm the field accepts an empty list for a task whose deliverable is app state; if it does not, that is an escalation and not a reason to invent a file |
-| Expected output type | Edit Existing App Data, or whatever label the picker gives a wiki-page deliverable |
+| Expected output type | Make New App Data, the picker's own label, read 09/19/2026. Not Edit Existing App Data, which this record carried before the picker was seen |
 | Files and data tables | 25 selected: the fourteen world files and eleven app tables above |
 | Rubric | Import `05_rubric_import.xlsx` **after** the snapshot ids are read off the first export; then set every row's form fields per `09_rubric_import.md`, paste each row's code from `qc/verifiers/`, and run the per-verifier test-run |
 | Task-data and world snapshot | Owed, read off the first export |
@@ -418,6 +418,7 @@ Nothing is entered in Studio. What has to be entered, and what each field takes:
 | Is the dash in the titles a hyphen? | Yes, and every verifier normalises an en or em dash before matching | The house register; `qc/scenarios.py` |
 | Does the golden score 100? | Yes, 35 of 35 rows, under real and placeholder column names and as HTML | `qc/verifier_harness.py`, 09/19/2026 |
 | Do the verifiers fail the registered modal path? | Yes, 14 rows | the same |
+| What does the Expected output picker call a wiki-page deliverable? | Make New App Data. The picker offers Edit Existing and Make New over Sheet, Doc, Slide Deck and App Data, and two created pages are Make New | The interface, 09/19/2026 |
 | Must a rubric row grade the request's form instructions? | Yes; two rows do, tagged `Style / formatting` | the 09/15/2026 EPM direction, held by `check_asks()` |
 | May a rubric row grade a fence? | No | `check_asks()` |
 
