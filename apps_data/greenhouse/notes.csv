@@ -1,0 +1,6 @@
+id,candidate_id,user_id,body,visibility
+1,1,5,"Offer accepted 07/06/2026. Start date moved from 07/13 to 07/22 per candidate request confirmed via email 07/09/2026. All other terms unchanged: CSM, $88,000.00 base, $5,000.00 sign-on, reporting to Edith Bustamante.",admin_only
+2,1,5,Start date confirmed 07/22/2026. IT provisioning ticket IT-2026-01847 opened 07/17.,admin_only
+3,2,5,"Offer letter sent 08/18/2026 for Data Analyst II, Product, $89,500.00 base. Reports to Sora Jackson. ATS ref ATS-4471, requisition REQ-2026-038.",admin_only
+4,2,5,Offer accepted and signed 08/20/2026. Start date 09/08/2026.,admin_only
+5,3,5,"Hired as Sales Development Representative, Sales, $56,300.00 base. Start date 08/03/2026. Employee ID TRT-0155, ATS candidate CAND-2026-025.",admin_only

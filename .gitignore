@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+
+# The generation pipeline's own scaffolding, if it ever ships beside filesystem/. Never world
+# content, never mounted for the solver, never in a revision upload or this repository.
+.meta/
+
+# Everything a remediation round writes while in flight.
+qc_workspace/
+*_qc_backup/
+
+# OS junk that AutoQC grades as a build artifact
+.DS_Store
+Thumbs.db
+desktop.ini

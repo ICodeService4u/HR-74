@@ -1,0 +1,25 @@
+employee_id,type_id,policy_id,start_date,end_date,amount,status,notes,approver_id
+TRT-0001,Standard PTO,PTO 5 Plus Years,2026-07-06,2026-07-10,40.00,approved,,
+TRT-0012,Standard PTO,PTO 2 to 5 Years,2026-07-20,2026-07-24,40.00,approved,,TRT-0002
+TRT-0021,Standard PTO,PTO 2 to 5 Years,2026-07-13,2026-07-13,8.00,approved,,TRT-0001
+TRT-0021,Standard PTO,PTO 2 to 5 Years,2026-07-14,2026-07-14,8.00,approved,,TRT-0001
+TRT-0027,Standard PTO,PTO 2 to 5 Years,2026-07-27,2026-07-28,16.00,approved,,TRT-0001
+TRT-0029,Standard PTO,PTO 2 to 5 Years,2026-07-31,2026-07-31,8.00,approved,,TRT-0018
+TRT-0031,Standard PTO,PTO 2 to 5 Years,2026-07-27,2026-07-30,32.00,approved,,TRT-0066
+TRT-0043,Standard PTO,PTO Under 2 Years,2026-07-22,2026-07-24,24.00,approved,,TRT-0018
+TRT-0045,Standard PTO,PTO 2 to 5 Years,2026-07-13,2026-07-17,40.00,approved,,TRT-0021
+TRT-0047,Standard PTO,PTO 2 to 5 Years,2026-07-07,2026-07-10,32.00,approved,,TRT-0066
+TRT-0051,Standard PTO,PTO Under 2 Years,2026-07-29,2026-07-31,24.00,approved,,TRT-0012
+TRT-0052,Standard PTO,PTO 2 to 5 Years,2026-07-15,2026-07-17,24.00,approved,,TRT-0027
+TRT-0055,Standard PTO,PTO 2 to 5 Years,2026-07-09,2026-07-10,16.00,approved,,TRT-0012
+TRT-0062,Standard PTO,PTO 2 to 5 Years,2026-07-02,2026-07-02,8.00,approved,,TRT-0066
+TRT-0076,Standard PTO,PTO 2 to 5 Years,2026-07-24,2026-07-24,8.00,approved,,TRT-0040
+TRT-0083,Standard PTO,PTO Under 2 Years,2026-07-13,2026-07-16,32.00,approved,,TRT-0021
+TRT-0088,Standard PTO,PTO 2 to 5 Years,2026-07-20,2026-07-24,40.00,approved,,TRT-0021
+TRT-0093,Standard PTO,PTO 2 to 5 Years,2026-07-06,2026-07-09,32.00,approved,,TRT-0027
+TRT-0096,Standard PTO,PTO Under 2 Years,2026-07-16,2026-07-17,16.00,approved,,TRT-0021
+TRT-0105,Standard PTO,PTO Under 2 Years,2026-07-29,2026-07-31,24.00,approved,,TRT-0012
+TRT-0108,Standard PTO,PTO Under 2 Years,2026-07-03,2026-07-03,8.00,approved,,TRT-0018
+TRT-0117,Standard PTO,PTO 2 to 5 Years,2026-07-07,2026-07-10,32.00,approved,,TRT-0012
+TRT-0119,Standard PTO,PTO Under 2 Years,2026-07-24,2026-07-24,8.00,approved,,TRT-0012
+TRT-0131,Standard PTO,PTO Under 2 Years,2026-07-06,2026-07-10,40.00,approved,,TRT-0027

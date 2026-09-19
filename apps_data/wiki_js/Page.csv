@@ -1,0 +1,466 @@
+path,title,description,content,contentType,editor,locale,isPublished,isPrivate,author_email,creator_email
+benefits-overview,Benefits Overview,"Eligibility, coverage tiers, premiums, and enrollment for Troutly medical benefits","# Benefits Overview
+
+Eligibility: full-time employees from date of hire
+
+## The basics
+
+We offer medical, dental, and vision through Lampasas Benefits Group. Claudia Bong is our broker — she's the person to loop in when you have plan-specific questions. Our plan year runs September through August.
+
+## Who's covered
+
+If you're a full-time employee, you're eligible. You pick one of four coverage tiers when you enroll:
+
+- Employee Only
+- Employee plus Spouse
+- Employee plus Children
+- Family
+
+If you don't want the coverage (e.g. you're on a spouse's plan), you can waive — just make sure the waiver is on file.
+
+## What it costs
+
+Below are the composite monthly premiums for the current plan year. These are the total premiums; Troutly pays 80% of the Employee Only premium for everyone who's enrolled, and the rest comes out of your paycheck pre-tax.
+
+| Tier | Monthly premium |
+|---|---|
+| Employee Only | $571.90 |
+| Employee plus Spouse | $1,199.50 |
+| Employee plus Children | $1,086.30 |
+| Family | $1,714.80 |
+
+Rate sheet: /HR/Benefits/Rate_Sheet_2025.pdf
+
+## Life events
+
+Getting married, having a kid, adopting, losing other coverage — that's a qualifying life event and you can change your tier outside of open enrollment. Send the paperwork to People Ops within 30 days of the event.
+
+## Open enrollment
+
+Runs once a year in August. You'll get an email from the broker with the election form. If you don't send anything back, your current elections roll forward.
+
+## Questions
+
+Ping People Ops in Slack or email the broker directly. For anything plan-document-specific (deductibles, in-network questions, claims), Claudia is faster than we are.
+
+---
+
+*Last edited: September 2025 by Grayson Oshimoto*",markdown,markdown,en,true,false,grayson@troutlyanalytics.com,grayson@troutlyanalytics.com
+compensation-authority,Compensation Authority,Who can change pay at Troutly,"# Compensation Authority
+
+*Who can change pay at Troutly.*
+
+This page is informational. The controlling documents are the Employee Handbook (sections on compensation and pay administration) and the current Compensation Bands Memo issued by Finance. If anything here drifts from those, they win.
+
+## Who signs off on base salary
+
+Base salary changes require a written approval signed by the employee's manager and the CEO or CTO. Both signatures, on the same document, before the change is entered anywhere. No exceptions for market adjustments, retention, mid-cycle raises, or anything else that touches the annual number.
+
+That means:
+
+- A manager alone can't move a salary.
+- A CEO or CTO alone can't move a salary.
+- People Ops can prepare the paperwork, but we don't approve it.
+- Once both signatures are on the document, we route it to payroll and update the HRIS record.
+
+## When the system and the paper disagree
+
+Where the HRIS and a signed compensation document disagree, the signed document governs until the record is corrected. Pay the person from the signed doc, then fix the system. If you find one of these mismatches, flag it to People Ops so we can open a correction ticket and get the HRIS back in line.
+
+This mirrors Handbook v3 section 3: the HRIS is our system of record, but a signed comp document outranks it whenever they conflict.
+
+## Support Specialist step increases
+
+Support Specialists receive an automatic $3,000.00 annual step increase on each service anniversary. This is triggered by the anniversary date, not by a manager review — no approval memo, no performance check, no separate signature required. The step is baked into the role.
+
+Practically:
+
+- On the anniversary date, the new annual salary is old annual salary + $3,000.00.
+- The increase takes effect in the pay period containing the anniversary.
+- The first paycheck at the new rate is the first regular biweekly payroll on or after the effective date.
+- People Ops watches for upcoming anniversaries and updates the record; no ticket needed from the manager.
+
+## Sign-on bonuses
+
+A sign-on bonus pays on the first regular payroll after the start date. Not the start date itself, not a special off-cycle check — the next scheduled biweekly run. The amount is whatever the signed offer letter specifies.
+
+If a new hire's start date shifts, the bonus follows the actual start date, not the original one.
+
+## What this page does not cover
+
+- **Bands and midpoints:** see the current Compensation Bands Memo from Finance.
+- **Promotions and level changes:** same signature rule as base pay — manager + CEO or CTO — plus a leveling note.
+- **Bonus plans (variable comp, commissions):** governed by the plan document, not this page.
+- **Contractor rates:** contractor agreements, not employee compensation policy.
+
+## Questions
+
+Ping People Ops in #people-ops or email anjelina@troutlyanalytics.com.
+
+---
+
+*Last edited: 08/05/2026 by Anjelina Brocollini*",markdown,markdown,en,true,false,anjelina@troutlyanalytics.com,anjelina@troutlyanalytics.com
+compensation-bands,Compensation Bands,"Quick reference for salary bands used in offers, promotions, and compa-ratio checks","# Compensation Bands
+
+Quick reference for our salary bands. We use these when we're building offers, checking a promotion, or just double-checking a compa-ratio sanity check. If a level you're looking at isn't here, ping People Ops.
+
+## How we use them
+
+We anchor to the midpoint of the level the person is actually working at. A hire coming in below midpoint is normal; above midpoint means we should have a good reason and a manager sign-off. Compa-ratio is salary divided by the midpoint of the current level.
+
+## Bands
+
+| Level | Midpoint |
+|---|---|
+| Customer Success Manager I | $90,000 |
+| Customer Success Manager II | $108,000 |
+| Senior Customer Success Manager | $112,000 |
+| Account Executive | $92,000 |
+| Software Engineer II | $121,000 |
+| Senior Software Engineer | $144,000 |
+| Support Specialist | $56,000 |
+| Marketing Manager | $82,000 |
+| Data Analyst II | $85,000 |
+
+## Notes
+
+- Support Specialists get a $3,000 annual step on their service anniversary. That's outside the band table and applies on top.
+- Bands are base salary only. Sign-on bonuses, commission plans, and equity aren't in this table.
+
+## When to escalate
+
+If an offer is landing outside the band (above max or below min for a level), get the CEO or CTO on the approval line before we send it. Same for any mid-cycle base adjustment — signed approval from the manager AND CEO or CTO.
+
+## Where the numbers live
+
+Bands spreadsheet: /HR/Comp/Compensation_Bands_2025.xlsx
+
+---
+
+Last edited: January 2025 by Sora Jackson",markdown,markdown,en,true,false,sora@troutlyanalytics.com,sora@troutlyanalytics.com
+hiring-plan,Hiring Plan,Second-half 2026 hiring plan approved by the board,"# Hiring Plan
+
+Second-half 2026 hiring plan. Board approved on 06/20/2026.
+
+Plan spreadsheet: /Recruiting/Hiring_Plan_2026_FINAL.xlsx
+
+## What we're hiring
+
+We're bringing on 8 roles between now and year-end. The team pulled this together with Finance and it's what we're recruiting against. Comp targets below are anchored to our 2025 midpoints — Sora will refresh the bands later in the year, but we're not re-pricing anything mid-cycle.
+
+## The 8 roles
+
+- **Senior Software Engineer** — Engineering, IC4. Owned by Jessica.
+- **Software Engineer II** — Engineering, IC3. Owned by Jessica.
+- **Account Executive** — Sales, quota-carrying. Owned by Michael.
+- **Customer Success Manager** — Customer Success, CSM I. Owned by Edith.
+- **Product Designer** — Product, IC3. Owned by Sora.
+- **Marketing Manager** — Marketing, IC3. Owned by Michael.
+- **Data Analyst II** — Product, IC3. Owned by Sora.
+- **Account Executive** (second) — Sales, quota-carrying. Owned by Michael.
+
+## Budget
+
+Total annualized: **$868,000.00** at 2025 midpoints.
+
+That's the full-year run rate; actual 2026 impact depends on start dates. Luka is sequencing the openings so Engineering and the first AE go out first, then CS + Product Designer, then Marketing and the Data Analyst, then the second AE last.
+
+## Where to find things
+
+- Plan spreadsheet (owned by Recruiting): /Recruiting/Hiring_Plan_2026_FINAL.xlsx
+- Requisitions get opened in Greenhouse — ping Luka before opening one so we keep the sequencing straight.
+- Offer letters go through the usual DocuSign template. CEO or CTO signs.
+- Comp bands live on the Compensation Bands wiki page.
+
+## Notes
+
+- Titles here are the ones we'll post. Levels follow the current leveling guide (see the guide if in doubt).
+- If a role's scope shifts before we open the req, flag it to Luka and we'll update the plan.
+- Contractor conversions don't count against this plan — those are handled separately with Finance.
+
+---
+
+*Last edited: 06/25/2026 by Luka Odum*",markdown,markdown,en,true,false,luka@troutlyanalytics.com,luka@troutlyanalytics.com
+offboarding-checklist,Offboarding Checklist,Step-by-step checklist for employee separations at Troutly,"# Offboarding Checklist
+
+Whenever someone leaves Troutly — resignation, end of contract, or involuntary — we work this list top to bottom. Nothing here is optional. If a step doesn't apply, note why in the separation folder and move on. Questions go to People Ops.
+
+## Who owns what
+
+People Ops drives the checklist. Finance owns anything that touches pay. IT owns access and hardware. The departing person's manager owns the handoff of work, not the paperwork.
+
+## The checklist
+
+1. **Notify People Ops and Finance.** Email the Head of People (Anjelina Brocollini) and the Finance Manager (Krystale Jumawan) with the last day as soon as it's known. Same day if we can — payroll cutoffs move fast on the biweekly calendar.
+
+2. **Enter the termination record in the HRIS.** People Ops enters the termination record in BambooHR effective the last day. A manager cannot enter a termination on their own record or on their own report without People Ops in the loop; the system-of-record entry belongs to People Ops.
+
+3. **Open the IT deprovisioning ticket.** File the IT deprovisioning ticket the moment step 1 goes out. The ticket covers SSO, email, GitHub, cloud consoles, VPN, and any dept-specific tools the manager flags. IT will schedule disable-at-EOD on the last day unless we ask otherwise in writing.
+
+4. **Track return of company equipment.** Laptop and badge return goes in the separation folder — serial numbers, condition notes, date received, who accepted it. Any additional hardware (monitors, keyboards, YubiKeys) goes on the same log. Unreturned equipment cost may be deducted from final pay ONLY where a signed Equipment Deduction Authorization form is in the folder for that employee, per Employee Handbook v3 section 11 and Texas Labor Code 61.018. No signed form on file, no deduction — full stop. If the form is missing, we pursue return through other means and note it in the file.
+
+5. **Final pay calculation.** Finance runs an off-cycle final pay when the last day doesn't line up with the next regular check date. Sign-off by the Finance Manager is required on every final pay before release, off-cycle or not. People Ops sends the inputs (last day, PTO status, any approved deductions with backing paperwork) to Finance; Finance produces the calc and signs.
+
+6. **PTO payout.** Accrued PTO is paid at separation only where the employee gave 14 calendar days written notice and worked through the notice period, per handbook 7.4. If either condition isn't met, no payout is owed. Rate and balance conventions live in the current PTO memo — don't invent a rate here.
+
+7. **Schedule the exit interview.** People Ops books the exit interview for sometime in the last week. Thirty minutes, video or in-person. Notes go into the separation folder, not the HRIS.
+
+8. **Send the COBRA notice.** People Ops notifies Lampasas Benefits Group of the qualifying event within 30 days of the last day, and the broker sends the election notice within 14 days of receiving it. Coverage runs through the end of the month containing the last day; the notice starts the election clock. People Ops confirms the broker sent it and files the confirmation.
+
+## References
+
+- Employee Handbook v3, section 7.4 — PTO payout at separation
+- Employee Handbook v3, section 11 — Separation, wage-withholding rules, Equipment Deduction Authorization
+- Employee Handbook v3, section 12 — Business expenses (recoveries at separation)
+- Texas Labor Code 61.018 — written authorization required for wage deductions
+
+## Separation folder contents
+
+At close-out the folder should hold: signed resignation or termination memo, HRIS termination confirmation, IT deprovisioning ticket number and close-out, equipment return log, Equipment Deduction Authorization (if any), final pay calc with Finance Manager sign-off, exit interview notes, COBRA notice confirmation. If any of those are missing, the offboarding isn't done.
+
+---
+
+*Last edited: 08/10/2026 by Anjelina Brocollini*",markdown,markdown,en,true,false,anjelina@troutlyanalytics.com,anjelina@troutlyanalytics.com
+onboarding-data-standards,Onboarding Data Standards,How to enter new hires into the HRIS,"# Onboarding Data Standards
+
+*Status: ACTIVE*
+
+This page covers how we enter new hires into the HRIS. It's the short version — if you need the field-by-field detail, see the [Field Mapping Workbook](/HR/Data/Migration/2026-06-24_Field_Mapping_Workbook.xlsx). Everything here applies from the 07/01/2026 cutover forward.
+
+## Who this is for
+
+Anyone adding a new record to BambooHR — People Ops, the Office Manager, or whoever is covering onboarding that week. Keep it consistent so payroll, benefits, and PTO all pick the record up cleanly on the next cycle.
+
+## Hire date
+
+Enter the hire date in **MM/DD/YYYY** format. Pull it straight from the **signed offer letter** — not the acceptance email, not the calendar invite, not what the candidate told you on a call. If the start date got pushed after signing, the amendment or the confirmation email that both parties acknowledged is what governs, but the offer letter is still the anchor document in the file.
+
+We don't backdate. If someone starts on a Tuesday because Monday was a holiday, the hire date is the Tuesday.
+
+## Legal name
+
+The legal name in the HRIS has to **match the I-9** exactly — same spelling, same hyphens, same middle name (or lack of one). Preferred name goes in the preferred name field, not the legal name field. Payroll and benefits both key off legal name, so a mismatch here creates work later.
+
+## Job title
+
+Pick a title that is on the **current leveling guide**. If a hiring manager wants to use a title that isn't listed (Staff Engineer, Senior CSM, Lead X, etc.), map it to the recognized level per the leveling guide synonyms and enter that. Free-text titles break comp-band reporting and slow down the census.
+
+## Adjusted service date
+
+Default the **adjusted service date** to the hire date. The exception is rehires: if the break in service was less than **365 days**, the adjusted service date **bridges** back to the original hire date so PTO tier and tenure recognitions carry through. If the break is 365 days or more, the adjusted service date resets to the rehire date.
+
+If you're not sure whether a rehire falls inside or outside 365 days, count from last day worked to first day back and check with People before saving the record.
+
+## Manager
+
+Pull the manager assignment from the current **org chart**. Don't guess from the offer letter — offer letters sometimes name a hiring manager who isn't the direct people manager once the person actually starts. The org chart is the tiebreaker.
+
+## Data validation
+
+For the July 2026 HRIS migration, all 56 loaded records were validated via the 07/22/2026 close-out memo; hire dates and salaries were spot-checked and confirmed clean. Follow-up validation is not required. See the [Migration Close-Out Memo](/HR/Data/Migration/2026-07-22_Migration_Closeout_Memo.docx) for the full write-up.
+
+For net-new hires added after cutover, the two things worth eyeballing before you save are the hire date (against the signed offer) and the salary (against the signed offer, in annual dollars, not per-period). Everything else the system will validate on its own.
+
+## Where things live
+
+- Signed offer letters: `/HR/Comp/Offer_Letters/`
+- I-9 and onboarding packet: `/HR/People/Onboarding/`
+- Leveling guide: Wiki → Compensation Authority
+- Org chart: `/HR/Org/` (dated PDF, use the latest)
+
+## Related pages
+
+- [Field Mapping Workbook](/HR/Data/Migration/2026-06-24_Field_Mapping_Workbook.xlsx)
+- [Migration Close-Out Memo](/HR/Data/Migration/2026-07-22_Migration_Closeout_Memo.docx)
+- Compensation Authority
+- Offboarding Checklist
+
+---
+
+*Last edited: 07/25/2026 by Grayson Oshimoto*",markdown,markdown,en,true,false,grayson@troutlyanalytics.com,grayson@troutlyanalytics.com
+paid-time-off,Paid Time Off,"How PTO works at Troutly — accrual, tiers, carryover, and payout.","# Paid Time Off
+
+This is the quick-reference page for how we do PTO at Troutly. If you want the full legal-y version, grab the policy document linked at the bottom.
+
+## The basics
+
+We accrue PTO **monthly**, posted on the 1st of each month. Your monthly grant equals your **annual tier divided by 12**, dropped into your balance on the first day of the month. Nothing fancy — the whole month's chunk lands on day one and it's yours to use.
+
+There's no waiting period. If you're here on the 1st, you accrue on the 1st.
+
+## Tiers
+
+Your annual tier is based on how long you've been with us (adjusted service date, if you've been rehired):
+
+- **Under 2 years of service:** 80 hours per year
+- **2 years up to (but not including) 5 years:** 120 hours per year
+- **5 years and over:** 160 hours per year
+
+You tier up in the pay period that contains your service anniversary — the next monthly accrual after that anniversary comes in at the new rate.
+
+## Carryover
+
+Whatever you don't use rolls forward. Balances **carry over without limit** from year to year. We don't zero anyone out at year-end and we don't cap what you can bank. Take the time you need; if you don't need it, keep it.
+
+## What a balance is worth
+
+Your balance is measured in hours, and hours are valued at your **current hourly rate** — meaning your annual pay rate on the measurement date divided by 2,080. If your salary goes up, the dollar value of your balance goes up with it. If you take a vacation day, the day is paid at whatever your rate is when you take it.
+
+## Requesting time off
+
+Talk to your manager first. Once you've agreed on the dates, log the time off in the HR system so payroll and your team know you're out. We don't require a specific amount of advance notice — just be reasonable and give your team enough runway to cover for you.
+
+## Payout at separation
+
+If you leave Troutly, unused PTO is paid out only if you give at least 14 calendar days of written notice and work through that notice period. Give proper notice and work it out, and your remaining balance gets cashed out on your final check at your current hourly rate. Skip the notice, walk early, or get terminated for cause and no payout is owed.
+
+This one's important — Texas doesn't require employers to pay unused leave at separation unless the written policy promises it, and ours promises it only under those two conditions.
+
+## Rehires
+
+If you leave and come back, your prior service bridges as long as your break was less than 365 days. That means your tier picks up where it left off and your adjusted service date is your original start date. If the break was a year or longer, the clock resets to your rehire date.
+
+## FAQ
+
+**Do PTO hours expire?** No. Balances carry over without limit.
+
+**Can I take PTO before I've accrued it?** Talk to your manager. We can front-load in reasonable cases, but if you leave with a negative balance we'll square up on the final check.
+
+**Does the company observe holidays separately?** Yes — the office holiday calendar is separate from PTO and doesn't draw down your balance.
+
+**What about sick time?** Use PTO. We don't run a separate sick bucket.
+
+**Who do I ask if I have questions?** Ping the People Ops channel or email the Office Manager.
+
+---
+
+*For the full policy document see /HR/Policies/PTO_Policy_2025.docx*
+
+*Last edited: January 2025 by Grayson Oshimoto*",markdown,markdown,en,true,false,grayson@troutlyanalytics.com,grayson@troutlyanalytics.com
+payroll-schedule,Payroll Schedule,Quick reference for how Troutly pays employees,"# Payroll Schedule
+
+Quick reference for how we pay everyone at Troutly. If you're new, read this first — it answers most of the questions we get.
+
+## When we pay
+
+We run payroll semi-monthly. That means checks land on the **15th** and the **last day** of each month. If either date falls on a weekend or a bank holiday, the check moves to the business day just before.
+
+That works out to **24 checks** across the year — twelve mid-month runs and twelve end-of-month runs.
+
+## How salaried pay is calculated
+
+For anyone on salary, each check is **annual salary / 24**. Same amount every time, no matter how many workdays fell inside the pay period. Simple, predictable, and it's what the offer letters point to.
+
+## Timesheets
+
+Hourly folks and contractors: get your timesheet in **two days before the pay date**. That gives us time to review, reconcile with the manager, and cut the check on time. Late timesheets roll to the next run — we don't do off-cycle for missed submissions.
+
+Managers, please approve on the same two-day window. If you're going to be out, delegate.
+
+## New hires
+
+If your start date lands mid-period, we pay you from your start date forward on a **calendar-day** basis. We count actual days in the period (including weekends), divide, and apply that fraction to the per-check amount. First check may look small — that's why.
+
+Same math runs in reverse if someone separates mid-period.
+
+## PTO, expenses, one-offs
+
+- PTO used shows up on the check for the period it was taken.
+- Approved reimbursed expenses submitted by the timesheet deadline ride along with the same check.
+- Bonuses and commissions run through the normal payroll on the pay date closest to when they're approved.
+
+## Common questions
+
+**""Why don't the two halves of the month have the same number of workdays?""** They don't need to — we're paying by the calendar half-month, not by hours worked. Your check is the same either way.
+
+**""What if the 15th is a Saturday?""** Check drops on Friday the 14th.
+
+**""Can I get paid early?""** No. Off-cycle checks are reserved for corrections and true emergencies, and Finance has to approve.
+
+**""Where's the calendar with all the actual dates?""** See the link below.
+
+---
+
+For the full schedule document see /HR/Payroll/Payroll_Schedule_2025.docx
+
+*Last edited: February 2025 by Grayson Oshimoto*",markdown,markdown,en,true,false,grayson@troutlyanalytics.com,grayson@troutlyanalytics.com
+people-metrics,People Metrics,"Company headcount, department breakdown, attrition, and recruiting status","# People Metrics
+
+A quick pulse on where we are as a company. We refresh this page when something moves. Numbers pulled straight from the HRIS unless noted.
+
+## Headcount
+
+**Headcount 57** (as of 08/21/2026)
+
+That's us — the whole team, wall to wall.
+
+## By Department
+
+| Department | People |
+|---|---|
+| Engineering | 22 |
+| Customer Success | 11 |
+| Sales | 9 |
+| Marketing | 5 |
+| Product | 5 |
+| Finance and Corporate | 5 |
+
+## Attrition
+
+Voluntary attrition YTD: **2**
+
+We're at a really healthy place on this one. Two departures in eight months on a team our size is well under what we'd expect for a company at this stage.
+
+## Recruiting
+
+**Open reqs: 8**
+
+Pipeline is busy — Luka has offers moving on several of these and a few second-rounds landing this week. We'll flip status as things close.
+
+## How we count
+
+Headcount source: HRIS active records as of the page date. Future-dated hires (signed offers with start dates after today) are tracked separately in Recruiting and are not included above.
+
+Anyone we've historically counted (terminations, contractors handled separately) is not in the number above.
+
+---
+
+*Last edited: 08/21/2026 by Luka Odum*",markdown,markdown,en,true,false,luka@troutlyanalytics.com,luka@troutlyanalytics.com
+team-directory,Team Directory,Quick-reference lookup for department leads and who to ask about what,"# Team Directory
+
+Welcome! This page is our quick-reference lookup for who runs what at Troutly. If you're brand new and trying to figure out who to ping about anything from a broken laptop to a comp band question, start here and follow the profile links.
+
+We try to keep this page fresh, but the source of truth for reporting lines is always the current org chart PDF — see the link at the bottom.
+
+## Department leads
+
+- **Michael Labeson** — CEO. Co-founder, sets overall direction, owns the board relationship.
+- **Sora Jackson** — CTO. Co-founder, owns product engineering and platform.
+- **Jessica Ko** — Engineering Manager. Runs the engineering org day to day, owns headcount and hiring for the team.
+- **Edith Bustamante** — Customer Success Lead. Owns the CSM pod, renewals motion, and support escalations.
+- **Krystale Jumawan** — Finance Manager. Owns FP&A, payroll cadence, board reporting, and vendor spend.
+- **Grayson Oshimoto** — Office Manager. Handles the Austin office, laptop/equipment logistics, and the general ""how do I get X"" firehose.
+
+## Who to ask about what
+
+- Anything HR/benefits — talk to your manager first, then loop in the People function.
+- Laptops, badges, desk moves, snacks, mail — Office Manager.
+- Payroll timing, expense reimbursements, corporate card — Finance Manager.
+- Recruiting pipeline, interview scheduling, offer questions — Talent.
+- Wiki edits, page ownership, doc cleanup — anyone can edit; ping the page owner listed at the top of a page before rewriting large sections.
+
+## Full org chart
+
+We keep the visual org chart in the HR share. It shows every reporting line, not just the six leads above.
+
+See current chart: /HR/Org/2026-01-12_Org_Chart.pdf
+
+If you spot a name on the chart that doesn't match what you see in the HRIS, the chart is almost always the one that's behind — check with the manager listed before assuming a change happened.
+
+## Keeping this page honest
+
+If you notice a stale entry (someone changed roles, someone new joined a leadership role, a title shifted), edit it in place — no need to ask permission. Include a short note in the change summary so we can see why it moved.
+
+---
+
+*Last edited: January 2026 by Grayson Oshimoto*",markdown,markdown,en,true,false,grayson@troutlyanalytics.com,grayson@troutlyanalytics.com

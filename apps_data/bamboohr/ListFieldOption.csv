@@ -1,0 +1,44 @@
+field_name,option_value,sort_order
+department,Finance and Corporate,1
+department,Engineering,2
+department,Sales,3
+department,Customer Success,4
+department,Marketing,5
+department,Product,6
+jobTitle,Account Executive,1
+jobTitle,Chief Executive Officer and Co-founder,2
+jobTitle,Chief Technology Officer and Co-founder,3
+jobTitle,Content Marketing Manager,4
+jobTitle,Contract Backend Engineer,5
+jobTitle,Contract Data Engineer,6
+jobTitle,Contract Product Designer,7
+jobTitle,Contract QA Analyst,8
+jobTitle,Customer Success Lead,9
+jobTitle,Customer Success Manager,10
+jobTitle,Data Analyst,11
+jobTitle,Data Engineer,12
+jobTitle,Demand Generation Manager,13
+jobTitle,Engineering Manager,14
+jobTitle,"Engineering Manager, Platform",15
+jobTitle,Finance Manager,16
+jobTitle,Head of Marketing,17
+jobTitle,Head of People,18
+jobTitle,Head of Product,19
+jobTitle,Marketing Coordinator,20
+jobTitle,Marketing Operations Specialist,21
+jobTitle,Office Manager,22
+jobTitle,Onboarding Specialist,23
+jobTitle,People Operations Analyst,24
+jobTitle,Product Designer,25
+jobTitle,Sales Development Representative,26
+jobTitle,Senior Account Manager,27
+jobTitle,Senior Product Manager,28
+jobTitle,Senior Site Reliability Engineer,29
+jobTitle,Senior Software Engineer,30
+jobTitle,Software Engineer I,31
+jobTitle,Software Engineer II,32
+jobTitle,Staff Software Engineer,33
+jobTitle,Support Specialist,34
+jobTitle,Talent Acquisition Specialist,35
+jobTitle,Vice President of Sales,36
+location,TX,1

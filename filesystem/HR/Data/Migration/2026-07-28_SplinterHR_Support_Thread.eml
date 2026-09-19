@@ -1,0 +1,85 @@
+From: Krystale Jumawan <krystale@troutlyanalytics.com>
+To: Imex Campbell <icampbell@splinterhr.com>
+Subject: RE: Historical export required before 08/01/2026 contract close -
+ Final Archive Delivery
+Date: Tue, 28 Jul 2026 17:08:00 -0500
+Message-ID: <SR-2026-08841.msg4@troutlyanalytics.com>
+In-Reply-To: <SR-2026-08841.msg3@splinterhr.com>
+References: <SR-2026-08841.msg1@troutlyanalytics.com>
+ <SR-2026-08841.msg2@splinterhr.com> <SR-2026-08841.msg3@splinterhr.com>
+X-Support-Case: SR-2026-08841
+X-Mailer: Microsoft Outlook 16.0
+Thread-Topic: Historical export required before 08/01/2026 contract close
+Thread-Index: AQHc1F8k2b7d3aE9m0X2vN8pQrKqzg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+
+Received, thank you.
+
+Krystale Jumawan
+Finance Manager, Troutly Analytics, Inc.
+(512) 555-0169
+
+On Tue, Jul 28, 2026 at 2:32 PM PT, Imex Campbell <icampbell@splinterhr.com> wrote:
+> Dear Ms. Jumawan,
+>
+> Attached please find SplinterHR_Final_Archive_2026-07-28.xlsx, the final archive prepared under Case SR-2026-08841 in accordance with the scope confirmed on 07/25/2026. The workbook contains three worksheets: Employees (with salary history, change reasons, and termination dates carried on each record), Pay History, and Balances. Extraction was completed at 07:14 PT today from the production SplinterHR tenant for Troutly Analytics, Inc.
+>
+> NOTE: The 06/01/2026 migration snapshot you received earlier was a point-in-time export and therefore did not include any records created or modified in the source system after that date. The final archive attached to this message reflects the state of the SplinterHR tenant as of the extraction timestamp on 07/28/2026 and reflects activity in SplinterHR through the contract term as of the extract date.
+>
+> Please retain this file for your records. Per the terms of your service agreement, SplinterHR will retain a copy of the archive for ninety (90) days following contract close, after which the tenant data will be purged. Any subsequent requests for extract must be submitted before 10/30/2026.
+>
+> If the attachment does not open or you identify a scope gap, please reply on this thread and reference Case SR-2026-08841. It has been a pleasure supporting Troutly Analytics.
+>
+> Kind regards,
+>
+> Imex Campbell
+> Customer Support Representative
+> SplinterHR
+> icampbell@splinterhr.com
+> (415) 555-0149
+> Reference: SR-2026-08841
+
+On Sat, Jul 25, 2026 at 10:47 AM PT, Imex Campbell <icampbell@splinterhr.com> wrote:
+> Dear Ms. Jumawan,
+>
+> Thank you for contacting SplinterHR Customer Support. This message confirms receipt of your request for a full historical archive in advance of contract close on 08/01/2026. Your inquiry has been logged under Case Number SR-2026-08841 and assigned to me for handling.
+>
+> We have reviewed the scope you specified and confirm that the final archive will include the following data sets, delivered as a single Microsoft Excel workbook (.xlsx):
+>
+> 1. All employee records ever active in the SplinterHR tenant for Troutly Analytics, Inc., including employee identifier, legal name, department, and status (Active / Terminated / Leave).
+> 2. Full salary history for every record, with effective dates, prior rate, new rate, change reason, and system-recorded approver where present.
+> 3. Termination date and termination reason for every separated record.
+> 4. Complete pay history register at the check-line level, covering all pay periods processed in SplinterHR through the final semi-monthly run of 06/30/2026.
+> 5. PTO balances measured as of separation date for terminated records, and as of 06/30/2026 for records active on that date.
+>
+> Extraction is scheduled to complete no later than end of business Tuesday, 07/28/2026 Pacific Time. Delivery will be made via secure email attachment to this thread. Please reply to this message if additional data elements are required so we may adjust scope before the extract is finalized.
+>
+> Kind regards,
+>
+> Imex Campbell
+> Customer Support Representative
+> SplinterHR
+> icampbell@splinterhr.com
+> (415) 555-0149
+> Reference: SR-2026-08841
+
+On Fri, Jul 24, 2026 at 8:14 AM CT, Krystale Jumawan <krystale@troutlyanalytics.com> wrote:
+> Imex,
+>
+> Our SplinterHR contract closes 08/01/2026. Before that date I need a complete historical export from your system for the full period Troutly Analytics was on the platform.
+>
+> Scope, non-negotiable:
+>
+> 1. Every employee record ever active, with employee ID, name, department, status.
+> 2. Full salary history with effective dates and change reasons.
+> 3. Termination dates and termination reasons for every separated record.
+> 4. Complete pay history register at the check-line level.
+> 5. PTO balances at termination for separated records, and PTO balances as of 06/30/2026 for actives.
+>
+> Deliver as a single .xlsx with one tab per item above. Please confirm scope and ETA today.
+>
+> Krystale Jumawan
+> Finance Manager, Troutly Analytics, Inc.
+> (512) 555-0169

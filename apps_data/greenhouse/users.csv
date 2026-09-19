@@ -1,0 +1,11 @@
+id,first_name,last_name,primary_email_address,employee_id,disabled,site_admin
+1,Michael,Labeson,michael@troutlyanalytics.com,TRT-0001,false,true
+2,Sora,Jackson,sora@troutlyanalytics.com,TRT-0002,false,true
+3,Jessica,Ko,jessica@troutlyanalytics.com,TRT-0012,false,false
+4,Edith,Bustamante,edith@troutlyanalytics.com,TRT-0021,false,false
+5,Luka,Odum,luka@troutlyanalytics.com,TRT-0034,false,false
+6,Kenji,Abubakar,kenji@troutlyanalytics.com,TRT-0027,false,false
+7,Marisela,Thornbury,marisela@troutlyanalytics.com,TRT-0018,false,false
+8,Ilse,Van der Kolk,ilse@troutlyanalytics.com,TRT-0040,false,false
+9,Anjelina,Brocollini,anjelina@troutlyanalytics.com,TRT-0154,false,false
+10,Casey,Ouk,casey@troutlyanalytics.com,TRT-0156,false,false

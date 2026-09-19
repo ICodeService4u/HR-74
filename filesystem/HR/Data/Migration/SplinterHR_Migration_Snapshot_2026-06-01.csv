@@ -1,0 +1,55 @@
+EmployeeID,Name,Department,Title,Status,HireDate,AnnualSalary,PTOBalanceHours,PayFrequency
+TRT-0001,Michael Labeson,Finance and Corporate,Chief Executive Officer and Co-founder,Active,04MAR2019,215000.00,38.25,Semi-Monthly
+TRT-0002,Sora Jackson,Engineering,Chief Technology Officer and Co-founder,Active,04MAR2019,205000.00,38.0,Semi-Monthly
+TRT-0005,Mikelle Hosana,Engineering,Staff Software Engineer,Active,20MAY2019,187510.00,92.5,Semi-Monthly
+TRT-0006,Grayson Oshimoto,Finance and Corporate,Office Manager,Active,02MAR2020,80600.00,75.7,Semi-Monthly
+TRT-0009,Krystale Jumawan,Finance and Corporate,Finance Manager,Active,14JUN2021,138700.00,84.0,Semi-Monthly
+TRT-0012,Jessica Ko,Engineering,Engineering Manager,Active,13SEP2021,176400.00,71.5,Semi-Monthly
+TRT-0014,Rohan Iyer,Engineering,Senior Software Engineer,Active,04OCT2021,156700.00,66.0,Semi-Monthly
+TRT-0018,Marisela Thornbury,Sales,Vice President of Sales,Active,09AUG2021,173300.00,63.25,Semi-Monthly
+TRT-0021,Edith Bustamante,Customer Success,Customer Success Lead,Active,10JAN2022,121300.00,74.0,Semi-Monthly
+TRT-0023,Maeve Oyinlola,Engineering,Senior Software Engineer,Active,14FEB2022,154900.00,60.5,Semi-Monthly
+TRT-0027,Kenji Abubakar,Marketing,Head of Marketing,Active,24JAN2022,157600.00,24.25,Semi-Monthly
+TRT-0029,Emeka Thorsen,Sales,Account Executive,Active,21FEB2022,101400.00,57.0,Semi-Monthly
+TRT-0031,Zephyr Adebayo,Engineering,Senior Site Reliability Engineer,Active,07MAR2022,161200.00,52.0,Semi-Monthly
+TRT-0034,Luka Odum,Finance and Corporate,Talent Acquisition Specialist,Active,28MAR2022,84600.00,12.5,Semi-Monthly
+TRT-0037,Piper Athanasoulis,Sales,Account Executive,Active,18APR2022,68900.00,30.0,Semi-Monthly
+TRT-0040,Ilse Van der Kolk,Product,Head of Product,Active,11JUL2022,176400.00,49.5,Semi-Monthly
+TRT-0043,Oren Kastellanos,Sales,Senior Account Manager,Active,15OCT21,97350.00,43.5,Semi-Monthly
+TRT-0045,Thaddeus Ilunga,Customer Success,Customer Success Manager,Active,25JUL2022,100800.00,29.5,Semi-Monthly
+TRT-0047,Sunniva Mbeki,Engineering,Software Engineer II,Active,05DEC2022,132300.00,19.0,Semi-Monthly
+TRT-0049,Halston Perevalov,Sales,Sales Development Representative,Active,14NOV2024,74250.00,22.5,Semi-Monthly
+TRT-0051,Priyamvada Raghunath,Engineering,Software Engineer II,Active,03MAY22,129800.00,12.25,Semi-Monthly
+TRT-0052,Persephone Adeyinka,Marketing,Content Marketing Manager,Active,06JUN2022,103700.00,10.0,Semi-Monthly
+TRT-0055,Ignatius Werahiko,Engineering,Software Engineer II,Active,01AUG2022,130450.00,13.5,Semi-Monthly
+TRT-0058,Callum Oyelaran,Sales,Account Executive,Active,12SEP22,94750.00,22.5,Semi-Monthly
+TRT-0062,Tina Jung,Engineering,Senior Software Engineer,Active,14NOV2022,152600.00,10.75,Semi-Monthly
+TRT-0064,Marguerite Delacroix-Hahn,Customer Success,Customer Success Manager,Active,07NOV2022,71377.00,52.0,Semi-Monthly
+TRT-0066,Tomasz Ekwueme,Engineering,"Engineering Manager, Platform",Active,09JAN2023,179800.00,9.5,Semi-Monthly
+TRT-0069,Xiomara Bekele,Customer Success,Customer Success Manager,Active,15MAY2023,99300.00,27.75,Semi-Monthly
+TRT-0071,Samuel Burkenham,Product,Data Analyst,Active,22APR24,81000.00,27.25,Semi-Monthly
+TRT-0074,Cassius Oyelowo,Engineering,Software Engineer I,Active,18SEP2023,111800.00,25.75,Semi-Monthly
+TRT-0076,Nikolai Oyeleke,Product,Senior Product Manager,Active,02OCT2023,151900.00,24.75,Semi-Monthly
+TRT-0079,Wren Takahashi-Bell,Product,Product Designer,Active,06FEB23,119600.00,6.5,Semi-Monthly
+TRT-0083,Desmond Achterberg,Customer Success,Customer Success Manager,Active,19JUN23,93100.00,32.25,Semi-Monthly
+TRT-0086,Rosalind Munro,Sales,Sales Development Representative,Active,28AUG2023,63750.00,33.5,Semi-Monthly
+TRT-0088,Yolanda Featherstone,Customer Success,Customer Success Manager,Active,17JUL2023,104000.00,34.75,Semi-Monthly
+TRT-0091,Beatrix Nakagawa,Engineering,Data Engineer,Active,06NOV2023,144500.00,7.25,Semi-Monthly
+TRT-0093,Caspian Nwachukwu,Marketing,Demand Generation Manager,Active,11DEC2023,109300.00,33.75,Semi-Monthly
+TRT-0096,Delphine Marchetti,Customer Success,Support Specialist,Active,17AUG25,58000.00,24.25,Semi-Monthly
+TRT-0099,Leopold Anyanwu,Customer Success,Onboarding Specialist,Active,09DEC2024,77650.00,24.75,Semi-Monthly
+TRT-0102,Lucía Ferrante,Engineering,Software Engineer I,Active,20JAN25,108900.00,12.0,Semi-Monthly
+TRT-0105,Olamide Fitzwilliam,Engineering,Software Engineer I,Active,24FEB2025,109200.00,27.5,Semi-Monthly
+TRT-0108,Gideon Marlowe,Sales,Account Executive,Active,03MAR2025,95850.00,37.0,Semi-Monthly
+TRT-0110,Bartholomew Oduya,Sales,Account Executive,Active,17MAR25,91200.00,11.5,Semi-Monthly
+TRT-0113,Winnie Barslanian,Customer Success,Support Specialist,Active,07APR2025,61900.00,14.25,Semi-Monthly
+TRT-0117,Belaviv Luk,Engineering,Senior Software Engineer,Active,11MAR2024,138000.00,22.0,Semi-Monthly
+TRT-0119,Hectori Bung,Engineering,Software Engineer II,Active,03FEB2025,134000.00,17.75,Semi-Monthly
+TRT-0122,Amara Osei-Tutu,Engineering,Software Engineer II,Active,29SEP2025,125600.00,19.0,Semi-Monthly
+TRT-0128,Beenan Lanik,Engineering,Software Engineer II,Active,20OCT2025,129750.00,7.75,Semi-Monthly
+TRT-0131,Aurelio Banda,Marketing,Marketing Operations Specialist,Active,10NOV2025,76850.00,32.0,Semi-Monthly
+TRT-0135,Solveig Okonjo,Customer Success,Customer Success Manager,Active,01DEC2025,94600.00,37.0,Semi-Monthly
+TRT-0141,Beatriz Quintanilla,Customer Success,Support Specialist,Active,03NOV2025,47840.00,20.75,Semi-Monthly
+CTR-2001,Henrike Sato,Engineering,Contract Data Engineer,Active,03NOV2025,179400.00,0.0,Semi-Monthly
+CTR-2002,Piet Vanterpool,Engineering,Contract Backend Engineer,Active,01DEC2025,174720.00,0.0,Semi-Monthly
+CTR-2003,Ines Farahani-Boyd,Product,Contract Product Designer,Active,05JAN2026,117600.00,0.0,Semi-Monthly
