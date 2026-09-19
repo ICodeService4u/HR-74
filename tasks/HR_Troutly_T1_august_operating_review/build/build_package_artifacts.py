@@ -443,7 +443,7 @@ def _rubric():
               "export carries the same date, which is the latest record behind the status.",
               [offer, ats],
               dict(kind="cell", pages=[PAGE_A], keys=["REQ-2026-038"],
-                   column="status source date", date="08/20/2026")))
+                   column="source date", date="08/20/2026")))
     R.append((APPDB, OC, 1, "-", "No",
               A_ + "a status source date of %s on each of %s." % (
                   ASOF, ", ".join(r["req"] for r in OPEN_NO_OFFER[:-1]) + " and "
@@ -453,7 +453,7 @@ def _rubric():
               "recruiting activity." % ASOF,
               [ats, jobs],
               dict(kind="cells", pages=[PAGE_A], keys=[r["req"] for r in OPEN_NO_OFFER],
-                   column="status source date", date=ASOF)))
+                   column="source date", date=ASOF)))
     R.append((APPDB, OC, 1, "-", "No",
               A_ + "Jessica Ko as owner of REQ-2026-031 and REQ-2026-032, Michael Labeson of "
               "REQ-2026-033, Edith Bustamante of REQ-2026-034 and Sora Jackson of REQ-2026-035.",
@@ -647,11 +647,11 @@ def _rubric():
 RUBRIC = _rubric()
 
 # ---------------------------------------------------------------- the import (what registers)
-# Both snapshot ids are read off an export, never invented. This world has no export yet, so the
-# builder writes the sentinel and check_import() refuses to call the file loadable until both
-# carry a real id. Replace them from the first trajectory's export, not by hand in a cell.
-SNAP = "SNAPSHOT_ID_NOT_YET_READ"
-TASK_SNAP = "SNAPSHOT_ID_NOT_YET_READ"
+# Both snapshot ids are read off an export, never invented. They were read off the nine trajectory
+# exports of 09/19/2026, every one carrying the same pair; check_import() refuses to call the file
+# loadable while either is the sentinel.
+SNAP = "snap_c6f6a0879f3d47a19048ee80d7529157"  # world_snapshot_id, nine exports of 09/19/2026
+TASK_SNAP = "snap_dc228e8bba9d423fbe9f3dd35862f658"  # task_data_id, the same exports
 UPLOAD_PREFIX = "00_task_input_"
 TASK_UPLOADS = tuple(n[len(UPLOAD_PREFIX):] for n in TASK_INPUTS)
 IMPORT_DB_DROPDOWN = {"Objective Compliance", "Expert Assessment", "Process"}
@@ -1153,8 +1153,10 @@ def check_tools():
         return
     text = open(cat, encoding="utf8").read()
     tools = re.findall(r"^- `([a-z0-9_]+)`(.*)$", text, flags=re.M)
+    assert len(tools) >= 100, "the tool catalogue is a stub, %d tools" % len(tools)
     writes = {n for n, tail in tools if "(write)" in tail}
-    wiki_writes = [t for t in writes if "wiki" in t and any(k in t for k in ("create", "update", "write", "publish"))]
+    wiki_writes = [t for t in writes if "wiki" in t and "page" in t
+                   and any(k in t for k in ("create", "update", "write", "publish"))]
     assert wiki_writes, "the tool catalogue lists no Wiki.js page-writing tool, so no App DB row here is reachable"
     print("tools: %d catalogued, wiki writers %r" % (len(tools), sorted(wiki_writes)))
 
