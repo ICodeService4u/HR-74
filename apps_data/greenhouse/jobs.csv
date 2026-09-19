@@ -1,0 +1,11 @@
+id,name,requisition_id,notes,confidential,status,opened_at,closed_at,is_template,copied_from_id
+1,Senior Software Engineer,REQ-2026-031,Board plan 06/20/2026,false,open,2026-06-29,,false,
+2,Software Engineer II,REQ-2026-032,Board plan 06/20/2026,false,open,2026-06-29,,false,
+3,Account Executive,REQ-2026-033,Board plan 06/20/2026,false,open,2026-07-06,,false,
+4,Customer Success Manager,REQ-2026-034,Board plan 06/20/2026,false,open,2026-07-06,,false,
+5,Product Designer,REQ-2026-035,Board plan 06/20/2026,false,open,2026-07-13,,false,
+6,Customer Success Manager II,REQ-2026-036,Backfill — incumbent TRT-0064 departed 06/15/2026,false,open,2026-07-20,,false,
+7,Marketing Manager,REQ-2026-037,Hiring_Plan_2026_FINAL,false,open,2026-07-27,,false,
+8,Data Analyst II,REQ-2026-038,Hiring_Plan_2026_FINAL,false,open,2026-07-27,,false,
+9,Customer Success Manager,REQ-2026-029,"Q2 2026 plan, filled",false,closed,2026-05-18,2026-07-06,false,
+10,Sales Development Representative,REQ-2026-030,"Q2 2026 plan, filled",false,closed,2026-06-01,2026-07-13,false,

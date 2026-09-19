@@ -1,0 +1,59 @@
+employee_number,first_name,last_name,work_email,department,job_title,location,status,hire_date,termination_date,supervisor_id,salary,pay_type,pay_schedule
+TRT-0001,Michael,Labeson,michael@troutlyanalytics.com,Finance and Corporate,Chief Executive Officer and Co-founder,TX,Active,2019-03-04,,,215000.00,salary,Biweekly
+TRT-0018,Marisela,Thornbury,marisela@troutlyanalytics.com,Sales,Vice President of Sales,TX,Active,2021-08-09,,TRT-0001,173300.00,salary,Biweekly
+TRT-0037,Piper,Athanasoulis,piper@troutlyanalytics.com,Sales,Account Executive,TX,Active,2022-04-18,,TRT-0018,68900.00,salary,Biweekly
+TRT-0049,Halston,Perevalov,halston@troutlyanalytics.com,Sales,Sales Development Representative,TX,Active,2024-11-14,,TRT-0018,74250.00,salary,Biweekly
+TRT-0002,Sora,Jackson,sora@troutlyanalytics.com,Engineering,Chief Technology Officer and Co-founder,TX,Active,2019-03-04,,TRT-0001,205000.00,salary,Biweekly
+TRT-0012,Jessica,Ko,jessica@troutlyanalytics.com,Engineering,Engineering Manager,TX,Active,2021-09-13,,TRT-0002,176400.00,salary,Biweekly
+CTR-2001,Henrike,Sato,henrike.sato@contractors.troutlyanalytics.com,Engineering,Contract Data Engineer,TX,Active,2025-11-03,,TRT-0012,179400.00,salary,Biweekly
+CTR-2002,Piet,Vanterpool,piet.vanterpool@contractors.troutlyanalytics.com,Engineering,Contract Backend Engineer,TX,Active,2025-12-01,,TRT-0012,174720.00,salary,Biweekly
+CTR-2003,Ines,Farahani-Boyd,ines.farahani@contractors.troutlyanalytics.com,Product,Contract Product Designer,TX,Active,2026-01-05,,TRT-0002,117600.00,salary,Biweekly
+CTR-2004,Obadiah,Winterbourne,obadiah.winterbourne@contractors.troutlyanalytics.com,Engineering,Contract QA Analyst,TX,Active,2026-06-08,,TRT-0012,101400.00,salary,Biweekly
+TRT-0005,Mikelle,Hosana,mikelle@troutlyanalytics.com,Engineering,Staff Software Engineer,TX,Active,2019-05-20,,TRT-0002,187510.00,salary,Biweekly
+TRT-0006,Grayson,Oshimoto,grayson@troutlyanalytics.com,Finance and Corporate,Office Manager,TX,Terminated,2020-03-02,2026-07-25,TRT-0001,80600.00,salary,Biweekly
+TRT-0009,Krystale,Jumawan,krystale@troutlyanalytics.com,Finance and Corporate,Finance Manager,TX,Active,2021-06-14,,TRT-0001,138700.00,salary,Biweekly
+TRT-0014,Rohan,Iyer,rohan@troutlyanalytics.com,Engineering,Senior Software Engineer,TX,Active,2021-10-04,,TRT-0012,156700.00,salary,Biweekly
+TRT-0021,Edith,Bustamante,edith@troutlyanalytics.com,Customer Success,Customer Success Lead,TX,Active,2022-01-10,,TRT-0001,121300.00,salary,Biweekly
+TRT-0066,Tomasz,Ekwueme,tomasz@troutlyanalytics.com,Engineering,"Engineering Manager, Platform",TX,Active,2023-01-09,,TRT-0002,179800.00,salary,Biweekly
+TRT-0023,Maeve,Oyinlola,maeve@troutlyanalytics.com,Engineering,Senior Software Engineer,TX,Active,2022-02-14,,TRT-0066,154900.00,salary,Biweekly
+TRT-0027,Kenji,Abubakar,kenji@troutlyanalytics.com,Marketing,Head of Marketing,TX,Active,2022-01-24,,TRT-0001,157600.00,salary,Biweekly
+TRT-0029,Emeka,Thorsen,emeka@troutlyanalytics.com,Sales,Account Executive,TX,Active,2022-02-21,,TRT-0018,101400.00,salary,Biweekly
+TRT-0031,Zephyr,Adebayo,zephyr@troutlyanalytics.com,Engineering,Senior Site Reliability Engineer,TX,Active,2022-03-07,,TRT-0066,161200.00,salary,Biweekly
+TRT-0154,Anjelina,Brocollini,anjelina@troutlyanalytics.com,Finance and Corporate,Head of People,TX,Active,2026-08-03,,TRT-0001,172500.00,salary,Biweekly
+TRT-0034,Luka,Odum,luka@troutlyanalytics.com,Finance and Corporate,Talent Acquisition Specialist,TX,Active,2022-03-28,,TRT-0154,84600.00,salary,Biweekly
+TRT-0040,Ilse,Van der Kolk,ilse@troutlyanalytics.com,Product,Head of Product,TX,Active,2022-07-11,,TRT-0002,176400.00,salary,Biweekly
+TRT-0043,Oren,Kastellanos,oren@troutlyanalytics.com,Sales,Senior Account Manager,TX,Active,2026-07-01,,TRT-0018,97350.00,salary,Biweekly
+TRT-0045,Thaddeus,Ilunga,thaddeus@troutlyanalytics.com,Customer Success,Customer Success Manager,TX,Active,2022-07-25,,TRT-0021,100800.00,salary,Biweekly
+TRT-0047,Sunniva,Mbeki,sunniva@troutlyanalytics.com,Engineering,Software Engineer II,TX,Active,2022-12-05,,TRT-0066,132300.00,salary,Biweekly
+TRT-0051,Priyamvada,Raghunath,priyamvada@troutlyanalytics.com,Engineering,Software Engineer II,TX,Active,2026-07-01,,TRT-0012,129800.00,salary,Biweekly
+TRT-0052,Persephone,Adeyinka,persephone@troutlyanalytics.com,Marketing,Content Marketing Manager,TX,Active,2022-06-06,,TRT-0027,103700.00,salary,Biweekly
+TRT-0055,Ignatius,Werahiko,ignatius@troutlyanalytics.com,Engineering,Software Engineer II,TX,Active,2022-08-01,,TRT-0012,130450.00,salary,Biweekly
+TRT-0058,Callum,Oyelaran,callum@troutlyanalytics.com,Sales,Account Executive,TX,Active,2026-07-01,,TRT-0018,94750.00,salary,Biweekly
+TRT-0062,Tina,Jung,tina@troutlyanalytics.com,Engineering,Senior Software Engineer,TX,Active,2022-11-14,,TRT-0066,152600.00,salary,Biweekly
+TRT-0064,Marguerite,Delacroix-Hahn,marguerite@troutlyanalytics.com,Customer Success,Customer Success Manager,TX,Active,2022-11-07,,TRT-0021,71377.00,salary,Biweekly
+TRT-0069,Xiomara,Bekele,xiomara@troutlyanalytics.com,Customer Success,Customer Success Manager,TX,Active,2023-05-15,,TRT-0021,99300.00,salary,Biweekly
+TRT-0071,Samuel,Burkenham,samuel@troutlyanalytics.com,Product,Data Analyst,TX,Active,2026-07-01,,TRT-0040,81000.00,salary,Biweekly
+TRT-0074,Cassius,Oyelowo,cassius@troutlyanalytics.com,Engineering,Software Engineer I,TX,Active,2023-09-18,,TRT-0066,111800.00,salary,Biweekly
+TRT-0076,Nikolai,Oyeleke,nikolai@troutlyanalytics.com,Product,Senior Product Manager,TX,Active,2023-10-02,,TRT-0040,151900.00,salary,Biweekly
+TRT-0079,Wren,Takahashi-Bell,wren@troutlyanalytics.com,Product,Product Designer,TX,Active,2026-07-01,,TRT-0040,119600.00,salary,Biweekly
+TRT-0083,Desmond,Achterberg,desmond@troutlyanalytics.com,Customer Success,Customer Success Manager,TX,Active,2026-07-01,,TRT-0021,93100.00,salary,Biweekly
+TRT-0086,Rosalind,Munro,rosalind@troutlyanalytics.com,Sales,Sales Development Representative,TX,Active,2023-08-28,,TRT-0018,63750.00,salary,Biweekly
+TRT-0088,Yolanda,Featherstone,yolanda@troutlyanalytics.com,Customer Success,Customer Success Manager,TX,Active,2023-07-17,,TRT-0021,104000.00,salary,Biweekly
+TRT-0091,Beatrix,Nakagawa,beatrix@troutlyanalytics.com,Engineering,Data Engineer,TX,Active,2023-11-06,,TRT-0012,144500.00,salary,Biweekly
+TRT-0093,Caspian,Nwachukwu,caspian@troutlyanalytics.com,Marketing,Demand Generation Manager,TX,Active,2023-12-11,,TRT-0027,109300.00,salary,Biweekly
+TRT-0096,Delphine,Marchetti,delphine@troutlyanalytics.com,Customer Success,Support Specialist,TX,Active,2026-07-01,,TRT-0021,58000.00,salary,Biweekly
+TRT-0099,Leopold,Anyanwu,leopold@troutlyanalytics.com,Customer Success,Onboarding Specialist,TX,Active,2024-12-09,,TRT-0021,77650.00,salary,Biweekly
+TRT-0102,Lucía,Ferrante,lucia@troutlyanalytics.com,Engineering,Software Engineer I,TX,Active,2026-07-01,,TRT-0066,108900.00,salary,Biweekly
+TRT-0105,Olamide,Fitzwilliam,olamide@troutlyanalytics.com,Engineering,Software Engineer I,TX,Active,2025-02-24,,TRT-0012,109200.00,salary,Biweekly
+TRT-0108,Gideon,Marlowe,gideon@troutlyanalytics.com,Sales,Account Executive,TX,Active,2025-03-03,,TRT-0018,95850.00,salary,Biweekly
+TRT-0110,Bartholomew,Oduya,bartholomew@troutlyanalytics.com,Sales,Account Executive,TX,Active,2026-07-01,,TRT-0018,91200.00,salary,Biweekly
+TRT-0113,Winnie,Barslanian,winnie@troutlyanalytics.com,Customer Success,Support Specialist,TX,Active,2025-04-07,,TRT-0021,61900.00,salary,Biweekly
+TRT-0117,Belaviv,Luk,belaviv@troutlyanalytics.com,Engineering,Senior Software Engineer,TX,Active,2024-03-11,,TRT-0012,138000.00,salary,Biweekly
+TRT-0119,Hectori,Bung,hectori@troutlyanalytics.com,Engineering,Software Engineer II,TX,Active,2025-02-03,,TRT-0012,134000.00,salary,Biweekly
+TRT-0122,Amara,Osei-Tutu,amara@troutlyanalytics.com,Engineering,Software Engineer II,TX,Active,2025-09-29,,TRT-0012,125600.00,salary,Biweekly
+TRT-0128,Beenan,Lanik,beenan@troutlyanalytics.com,Engineering,Software Engineer II,TX,Active,2025-10-20,,TRT-0066,129750.00,salary,Biweekly
+TRT-0131,Aurelio,Banda,aurelio@troutlyanalytics.com,Marketing,Marketing Operations Specialist,TX,Active,2025-11-10,,TRT-0027,76850.00,salary,Biweekly
+TRT-0135,Solveig,Okonjo,solveig@troutlyanalytics.com,Customer Success,Customer Success Manager,TX,Active,2025-12-01,,TRT-0021,94600.00,salary,Biweekly
+TRT-0141,Beatriz,Quintanilla,beatriz@troutlyanalytics.com,Customer Success,Support Specialist,TX,Active,2025-11-03,,TRT-0021,47840.00,salary,Biweekly
+TRT-0150,Ingra,Zolberg,ingra@troutlyanalytics.com,Marketing,Marketing Coordinator,TX,Active,2026-07-01,,TRT-0027,62450.00,salary,Biweekly
+TRT-0156,Casey,Ouk,casey@troutlyanalytics.com,Finance and Corporate,People Operations Analyst,TX,Active,2026-08-17,,TRT-0154,71900.00,salary,Biweekly

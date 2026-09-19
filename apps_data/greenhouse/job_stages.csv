@@ -1,0 +1,61 @@
+id,job_id,name,priority,active
+1,1,Application Review,1,true
+2,1,Phone Screen,2,true
+3,1,Take-Home Exercise,3,true
+4,1,Onsite,4,true
+5,1,Offer,5,true
+6,1,Hired,6,true
+7,2,Application Review,1,true
+8,2,Phone Screen,2,true
+9,2,Take-Home Exercise,3,true
+10,2,Onsite,4,true
+11,2,Offer,5,true
+12,2,Hired,6,true
+13,3,Application Review,1,true
+14,3,Phone Screen,2,true
+15,3,Role Play,3,true
+16,3,Onsite,4,true
+17,3,Offer,5,true
+18,3,Hired,6,true
+19,4,Application Review,1,true
+20,4,Phone Screen,2,true
+21,4,Case Study,3,true
+22,4,Onsite,4,true
+23,4,Offer,5,true
+24,4,Hired,6,true
+25,5,Application Review,1,true
+26,5,Phone Screen,2,true
+27,5,Design Exercise,3,true
+28,5,Onsite,4,true
+29,5,Offer,5,true
+30,5,Hired,6,true
+31,6,Application Review,1,true
+32,6,Phone Screen,2,true
+33,6,Case Study,3,true
+34,6,Onsite,4,true
+35,6,Offer,5,true
+36,6,Hired,6,true
+37,7,Application Review,1,true
+38,7,Phone Screen,2,true
+39,7,Case Study,3,true
+40,7,Onsite,4,true
+41,7,Offer,5,true
+42,7,Hired,6,true
+43,8,Application Review,1,true
+44,8,Phone Screen,2,true
+45,8,Take-Home Analysis,3,true
+46,8,Onsite,4,true
+47,8,Offer,5,true
+48,8,Hired,6,true
+49,9,Application Review,1,true
+50,9,Phone Screen,2,true
+51,9,Case Study,3,true
+52,9,Onsite,4,true
+53,9,Offer,5,true
+54,9,Hired,6,true
+55,10,Application Review,1,true
+56,10,Phone Screen,2,true
+57,10,Role Play,3,true
+58,10,Onsite,4,true
+59,10,Offer,5,true
+60,10,Hired,6,true

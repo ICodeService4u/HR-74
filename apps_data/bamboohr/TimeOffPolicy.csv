@@ -1,0 +1,4 @@
+name,type_id,accrual_type,accrual_rate,max_balance,carry_over,carry_over_max
+PTO Under 2 Years,Standard PTO,per_pay_period,3.0769,,true,
+PTO 2 to 5 Years,Standard PTO,per_pay_period,4.6154,,true,
+PTO 5 Plus Years,Standard PTO,per_pay_period,6.1538,,true,

@@ -1,0 +1,57 @@
+EmployeeNumber,FirstName,LastName,JobTitle,Department,EmploymentStatus,HireDate,PayRate,PayType,PaySchedule,PTOBalance
+TRT-0001,Michael,Labeson,Chief Executive Officer and Co-founder,Finance and Corporate,Active,03/04/2019,215000.00,Salary,Biweekly,38.25
+TRT-0002,Sora,Jackson,Chief Technology Officer and Co-founder,Engineering,Active,03/04/2019,205000.00,Salary,Biweekly,38.0
+TRT-0005,Mikelle,Hosana,Staff Software Engineer,Engineering,Active,05/20/2019,187510.00,Salary,Biweekly,92.5
+TRT-0006,Grayson,Oshimoto,Office Manager,Finance and Corporate,Active,03/02/2020,80600.00,Salary,Biweekly,75.7
+TRT-0009,Krystale,Jumawan,Finance Manager,Finance and Corporate,Active,06/14/2021,138700.00,Salary,Biweekly,84.0
+TRT-0012,Jessica,Ko,Engineering Manager,Engineering,Active,09/13/2021,176400.00,Salary,Biweekly,71.5
+TRT-0014,Rohan,Iyer,Senior Software Engineer,Engineering,Active,10/04/2021,156700.00,Salary,Biweekly,66.0
+TRT-0018,Marisela,Thornbury,Vice President of Sales,Sales,Active,08/09/2021,173300.00,Salary,Biweekly,63.25
+TRT-0021,Edith,Bustamante,Customer Success Lead,Customer Success,Active,01/10/2022,121300.00,Salary,Biweekly,74.0
+TRT-0023,Maeve,Oyinlola,Senior Software Engineer,Engineering,Active,02/14/2022,154900.00,Salary,Biweekly,60.5
+TRT-0027,Kenji,Abubakar,Head of Marketing,Marketing,Active,01/24/2022,157600.00,Salary,Biweekly,24.25
+TRT-0029,Emeka,Thorsen,Account Executive,Sales,Active,02/21/2022,101400.00,Salary,Biweekly,57.0
+TRT-0031,Zephyr,Adebayo,Senior Site Reliability Engineer,Engineering,Active,03/07/2022,161200.00,Salary,Biweekly,52.0
+TRT-0034,Luka,Odum,Talent Acquisition Specialist,Finance and Corporate,Active,03/28/2022,84600.00,Salary,Biweekly,12.5
+TRT-0037,Piper,Athanasoulis,Account Executive,Sales,Active,04/18/2022,68900.00,Salary,Biweekly,30.0
+TRT-0040,Ilse Van der,Kolk,Head of Product,Product,Active,07/11/2022,176400.00,Salary,Biweekly,49.5
+TRT-0043,Oren,Kastellanos,Senior Account Manager,Sales,Active,07/01/2026,97350.00,Salary,Biweekly,43.5
+TRT-0045,Thaddeus,Ilunga,Customer Success Manager,Customer Success,Active,07/25/2022,100800.00,Salary,Biweekly,29.5
+TRT-0047,Sunniva,Mbeki,Software Engineer II,Engineering,Active,12/05/2022,132300.00,Salary,Biweekly,19.0
+TRT-0049,Halston,Perevalov,Sales Development Representative,Sales,Active,11/14/2024,74250.00,Salary,Biweekly,22.5
+TRT-0051,Priyamvada,Raghunath,Software Engineer II,Engineering,Active,07/01/2026,129800.00,Salary,Biweekly,12.25
+TRT-0052,Persephone,Adeyinka,Content Marketing Manager,Marketing,Active,06/06/2022,103700.00,Salary,Biweekly,10.0
+TRT-0055,Ignatius,Werahiko,Software Engineer II,Engineering,Active,08/01/2022,130450.00,Salary,Biweekly,13.5
+TRT-0058,Callum,Oyelaran,Account Executive,Sales,Active,07/01/2026,94750.00,Salary,Biweekly,22.5
+TRT-0062,Tina,Jung,Senior Software Engineer,Engineering,Active,11/14/2022,152600.00,Salary,Biweekly,10.75
+TRT-0064,Marguerite,Delacroix-Hahn,Customer Success Manager,Customer Success,Active,11/07/2022,71377.00,Salary,Biweekly,52.0
+TRT-0066,Tomasz,Ekwueme,"Engineering Manager, Platform",Engineering,Active,01/09/2023,179800.00,Salary,Biweekly,9.5
+TRT-0069,Xiomara,Bekele,Customer Success Manager,Customer Success,Active,05/15/2023,99300.00,Salary,Biweekly,27.75
+TRT-0071,Samuel,Burkenham,Data Analyst,Product,Active,07/01/2026,81000.00,Salary,Biweekly,27.25
+TRT-0074,Cassius,Oyelowo,Software Engineer I,Engineering,Active,09/18/2023,111800.00,Salary,Biweekly,25.75
+TRT-0076,Nikolai,Oyeleke,Senior Product Manager,Product,Active,10/02/2023,151900.00,Salary,Biweekly,24.75
+TRT-0079,Wren,Takahashi-Bell,Product Designer,Product,Active,07/01/2026,119600.00,Salary,Biweekly,6.5
+TRT-0083,Desmond,Achterberg,Customer Success Manager,Customer Success,Active,07/01/2026,93100.00,Salary,Biweekly,32.25
+TRT-0086,Rosalind,Munro,Sales Development Representative,Sales,Active,08/28/2023,63750.00,Salary,Biweekly,33.5
+TRT-0088,Yolanda,Featherstone,Customer Success Manager,Customer Success,Active,07/17/2023,104000.00,Salary,Biweekly,34.75
+TRT-0091,Beatrix,Nakagawa,Data Engineer,Engineering,Active,11/06/2023,144500.00,Salary,Biweekly,7.25
+TRT-0093,Caspian,Nwachukwu,Demand Generation Manager,Marketing,Active,12/11/2023,109300.00,Salary,Biweekly,33.75
+TRT-0096,Delphine,Marchetti,Support Specialist,Customer Success,Active,07/01/2026,58000.00,Salary,Biweekly,24.25
+TRT-0099,Leopold,Anyanwu,Onboarding Specialist,Customer Success,Active,12/09/2024,77650.00,Salary,Biweekly,24.75
+TRT-0102,Lucía,Ferrante,Software Engineer I,Engineering,Active,07/01/2026,108900.00,Salary,Biweekly,12.0
+TRT-0105,Olamide,Fitzwilliam,Software Engineer I,Engineering,Active,02/24/2025,109200.00,Salary,Biweekly,27.5
+TRT-0108,Gideon,Marlowe,Account Executive,Sales,Active,03/03/2025,95850.00,Salary,Biweekly,37.0
+TRT-0110,Bartholomew,Oduya,Account Executive,Sales,Active,07/01/2026,91200.00,Salary,Biweekly,11.5
+TRT-0113,Winnie,Barslanian,Support Specialist,Customer Success,Active,04/07/2025,61900.00,Salary,Biweekly,14.25
+TRT-0117,Belaviv,Luk,Senior Software Engineer,Engineering,Active,03/11/2024,138000.00,Salary,Biweekly,22.0
+TRT-0119,Hectori,Bung,Software Engineer II,Engineering,Active,02/03/2025,134000.00,Salary,Biweekly,17.75
+TRT-0122,Amara,Osei-Tutu,Software Engineer II,Engineering,Active,09/29/2025,125600.00,Salary,Biweekly,19.0
+TRT-0128,Beenan,Lanik,Software Engineer II,Engineering,Active,10/20/2025,129750.00,Salary,Biweekly,7.75
+TRT-0131,Aurelio,Banda,Marketing Operations Specialist,Marketing,Active,11/10/2025,76850.00,Salary,Biweekly,32.0
+TRT-0135,Solveig,Okonjo,Customer Success Manager,Customer Success,Active,12/01/2025,94600.00,Salary,Biweekly,37.0
+TRT-0141,Beatriz,Quintanilla,Support Specialist,Customer Success,Active,11/03/2025,47840.00,Salary,Biweekly,20.75
+TRT-0150,Ingra,Zolberg,Marketing Coordinator,Marketing,Active,07/01/2026,62450.00,Salary,Biweekly,0.0
+CTR-2001,Henrike,Sato,Contract Data Engineer,Engineering,Active,11/03/2025,179400.00,Salary,Biweekly,0.0
+CTR-2002,Piet,Vanterpool,Contract Backend Engineer,Engineering,Active,12/01/2025,174720.00,Salary,Biweekly,0.0
+CTR-2003,Ines,Farahani-Boyd,Contract Product Designer,Product,Active,01/05/2026,117600.00,Salary,Biweekly,0.0
+CTR-2004,Obadiah,Winterbourne,Contract QA Analyst,Engineering,Active,06/08/2026,101400.00,Salary,Biweekly,0.0

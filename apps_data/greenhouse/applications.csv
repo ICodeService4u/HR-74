@@ -1,0 +1,4 @@
+id,candidate_id,job_id,prospect,status,current_stage_id,recruiter_id,applied_at
+1,1,9,false,hired,54,5,2026-06-08
+2,2,8,false,hired,48,5,2026-07-28
+3,3,10,false,hired,60,5,2026-06-15

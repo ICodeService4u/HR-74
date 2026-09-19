@@ -1,0 +1,4 @@
+id,first_name,last_name,company,title,is_private,can_email,recruiter_id,coordinator_id
+1,Simone,Okonkwo,,,false,true,5,
+2,Kwame,Adjei,,,false,true,5,
+3,Rafael,Ibarra,,,false,true,5,
