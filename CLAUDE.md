@@ -59,9 +59,11 @@ default user and a Wiki.js editor.
 - **An App DB row is read from a route the run cannot rewrite, and its code is tested against a
   fixture with the answer known before it is imported.** `qc/verifier_harness.py` in each package.
 
-## What is not yet measured in this world
+## What is measured in this world
 
-No trajectory has run here. The platform's tool catalogue for this world (BambooHR, Greenhouse,
-Wiki.js) has not been captured, no snapshot id has been read off an export, and the Wiki.js page
-tools have not been seen creating a page. Each package records these as open items with the
-step that closes them. Do not invent any of them.
+T1's first run set, nine trajectories on 09/19/2026, captured the tool catalogue into
+`tasks/APP_TOOL_SURFACE.md`, read the snapshot ids off the exports, and saw the Wiki.js page tool
+create pages under exact titles. It also retired T1: nine of nine runs reconciled the population,
+Gemini 3.8 Flash meaning 96.5% against a registered 38%. `tasks/README.md` carries the measured
+record and what landed wrong. What is still unmeasured, a grading snapshot's column names and the
+import toast, is recorded there as open. Do not invent any of it.

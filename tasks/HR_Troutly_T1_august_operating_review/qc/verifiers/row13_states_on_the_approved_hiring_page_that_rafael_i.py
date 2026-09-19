@@ -108,8 +108,12 @@ def _leading(cell, wanted):
 
 
 def _key_match(cell, keys):
+    """The cell is the key, or the key with an identifier in parentheses beside it, as in
+    Kwame Adjei (ATS-4471): a run that prints the person's ID beside the name has still keyed
+    the row on the name. Anything else beside the key is another key."""
     c = _norm(cell)
-    return any(c == _norm(k) for k in keys)
+    return any(c == _norm(k) or (c.startswith(_norm(k) + " (") and c.endswith(")"))
+               for k in keys)
 
 
 def _bool(v):

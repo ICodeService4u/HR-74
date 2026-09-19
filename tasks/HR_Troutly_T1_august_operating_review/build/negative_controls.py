@@ -205,10 +205,17 @@ ok.append(control("asks: the request reworded out from under a row", SRC,
 ok.append(control("asks: a row with no clause to hang on", BLD,
     '    ("the Board-authorized annualized budget", 1, DELIVERABLE),',
     '    ("the Board-authorized annualized budget", 2, DELIVERABLE),', BP, expect="carries 1 rows"))
-# ---- the tool catalogue guard, once a catalogue exists
-ok.append(control_file("tools: a catalogue with no wiki page writer", CATALOGUE,
-    "# stub\n\n- `wiki_js_pages_get`\n- `wiki_js_pages_list`\n- `bamboohr_get_employee`\n",
+# ---- the tool catalogue guard. The catalogue exists since 09/19/2026, so the control plants a
+# defect into it: every Wiki.js page writer retagged as a read, the comment writer left as a write,
+# which the guard before that day would have accepted as a wiki writer.
+_cat = open(CATALOGUE, encoding="utf8").read()
+ok.append(control("tools: a catalogue with no wiki page writer", CATALOGUE, _cat,
+    _cat.replace("- `wiki_js_mcp_wikijs_mcp_create_page` (write)", "- `wiki_js_mcp_wikijs_mcp_create_page` (read)")
+        .replace("- `wiki_js_mcp_wikijs_mcp_update_page` (write)", "- `wiki_js_mcp_wikijs_mcp_update_page` (read)"),
     BP, expect="no Wiki.js page-writing tool"))
+ok.append(control("tools: a catalogue that is a stub", CATALOGUE, _cat,
+    "# stub\n\n- `wiki_js_mcp_wikijs_mcp_create_page` (write)\n- `wiki_js_mcp_wikijs_mcp_get_page` (read)\n",
+    BP, expect="is a stub"))
 # ---- the import
 ok.append(control("import: the guide's spelling of the App DB type", BLD,
     'APPDB = "App DB Programatic"', 'APPDB = "App DB Programmatic"', BP,
@@ -232,8 +239,14 @@ ok.append(control("verifier: a substring match on the status cell", ENG,
     '    return c == w or (c.startswith(w) and c[len(w):len(w) + 1] in SEPS)',
     '    return w in c', VH, expect="FALSE PASS", pre=BP))
 ok.append(control("verifier: the key matched as a substring", ENG,
-    '    return any(c == _norm(k) for k in keys)',
-    '    return any(_norm(k) in c for k in keys)', VH, pre=BP))
+    '    return any(c == _norm(k) or (c.startswith(_norm(k) + " (") and c.endswith(")"))',
+    '    return any(_norm(k) in c or (c.startswith(_norm(k) + " (") and c.endswith(")"))', VH, pre=BP))
+ok.append(control("verifier: a key with an identifier beside it rejected", ENG,
+    '    return any(c == _norm(k) or (c.startswith(_norm(k) + " (") and c.endswith(")"))',
+    '    return any(c == _norm(k) or False', VH, expect="WRONG", pre=BP))
+ok.append(control("verifier: the source-date hint demanding a word the memo does not use", BLD,
+    'column="source date", date="08/20/2026"',
+    'column="status source date", date="08/20/2026"', VH, expect="WRONG", pre=BP))
 ok.append(control("verifier: page history read as pages", ENG,
     '    if ctx.has_table("pages"):\n        return "pages"',
     '    if ctx.has_table("pageHistory"):\n        return "pageHistory"', VH, pre=BP))

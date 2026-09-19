@@ -201,6 +201,15 @@ BATTERY = [
     ("a candidate keyed surname first",
      lambda: snap([(A, GOLD_A.replace("| Simone Okonkwo |", "| Okonkwo, Simone |")), (Bt, GOLD_B)]),
      set(), "a name in the other order is the same person"),
+    ("the memo's own header on the source-date column",
+     lambda: snap([(A, GOLD_A.replace("| Status source date |", "| Source date |")), (Bt, GOLD_B)]),
+     set(), "the memo asks for the source date for the status; seven of nine runs on 09/19/2026 headed "
+            "the column Source date and the hint had demanded the word status"),
+    ("a candidate keyed with an identifier beside the name",
+     lambda: snap([(A, GOLD_A.replace("| Kwame Adjei |", "| Kwame Adjei (ATS-4471) |")
+                   .replace("| Simone Okonkwo |", "| Simone Okonkwo (TRT-0153) |")), (Bt, GOLD_B)]),
+     set(), "a run that prints the ID beside the name has still keyed the row on the name; G5 did on "
+            "09/19/2026 and lost four rows to it"),
     ("nothing written, the golden only in page history",
      lambda: snap(history=[(A, GOLD_A), (Bt, GOLD_B)]), "all",
      "the seed state - a check that reads history instead of pages passes a run that did nothing"),

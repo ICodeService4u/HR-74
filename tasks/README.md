@@ -6,14 +6,14 @@ world lacks ships as a 1.4 task input rather than as a world edit. That is the r
 every other task in the world valid, and it is the lever HR 32 proved on its T24 and T25 and HR 79
 proved on its T1.
 
-**One package exists, at the prompt half.** It is built to the HR 79 T1 shape, which twenty-two
+**One package exists, retired on its first run set.** It is built to the HR 79 T1 shape, which twenty-two
 packages, four hundred pull requests and seven task AutoQC rounds bought, and everything in
 `../HR-79/tasks/README.md` that is not about HR 79's own apps applies here. The four rules from it
 that no world-side rule covers are in the root `CLAUDE.md`.
 
 | Package | Request | Status |
 |---|---|---|
-| `HR_Troutly_T1_august_operating_review` | The recruiting lead's 08/31/2026 request for two Wiki.js pages, an approved-hiring view and a staffed-role view, for the 09/10/2026 operating review | Built 09/19/2026. **35 verifiers, 113 points, 1 gate**, every row App DB on the Wiki.js pages table, verifier battery **1295 of 1295**, one 1.4 input on the Filesystem target, two golden pages. Registered modal failing path 37 of 113, 32.7%; registered Gemini mean 38%. Run set, snapshot ids and tool catalogue owed |
+| `HR_Troutly_T1_august_operating_review` | The recruiting lead's 08/31/2026 request for two Wiki.js pages, an approved-hiring view and a staffed-role view, for the 09/10/2026 operating review | Built and **retired 09/19/2026**. 35 verifiers, 113 points, 1 gate, every row App DB on the Wiki.js pages table, battery 1365 of 1365, one 1.4 input on the Filesystem target, two golden pages. Registered modal failing path 32.7% and Gemini mean 38%; **measured Gemini mean 96.5%** on five runs, nine of nine runs reconciling the population, so the rule registered before the runs retired it. The record, the run set and the lesson are kept |
 
 ## The rules every package here is built to
 
@@ -84,18 +84,30 @@ Carried, because it was measured on trajectories and nothing about it is app-spe
 - **An App DB row is read from a route the run cannot rewrite.** The pages table, never the
   app's own API, never the trajectory.
 
-Not yet measured in this world, and recorded as open items rather than assumed:
+Measured here on 09/19/2026, off the nine trajectory exports of T1's first run set:
 
-| Unmeasured | How to settle it |
+| Was unmeasured | Measured |
 |---|---|
-| The platform's tool catalogue for BambooHR, Greenhouse and Wiki.js | Capture the toolbelt offered to the first trajectory into `tasks/APP_TOOL_SURFACE.md` in HR 79's form. T1's `check_tools()` fails the build once it exists and lists no Wiki.js page-writing tool |
-| Whether a page created through the platform's Wiki.js tools lands in `pages` under the title the run gives it | Read the first grading run's `details` and the transcripts' page-create calls |
-| The world and task-data snapshot ids | Read `world_snapshot_id` and `task_data_id` off the first export; never invent one |
-| The step count | Read off the longest of the first five Gemini trajectories; the threshold is 90+, 80+ conditionally |
-| Whether 1.5 accepts an empty list | The interface, at entry |
+| The platform's tool catalogue for BambooHR, Greenhouse and Wiki.js | `tasks/APP_TOOL_SURFACE.md`: 254 tools on a toolbelt agent that pulls each one in with `toolbelt_add_tool`, 39 of them Wiki.js, `wiki_js_mcp_wikijs_mcp_create_page` the page writer. T1's `check_tools()` reads it green |
+| Whether a page created through the platform's Wiki.js tools lands in `pages` under the title the run gives it | Yes. Nine of nine runs created both pages with `create_page`, ids 11 and 12 after the ten seed pages, title exact, published by default, path the run's own. No grading run on the package's rubric happened, so the grading snapshot's column names are still unmeasured |
+| The world and task-data snapshot ids | `snap_c6f6a0879f3d47a19048ee80d7529157` and `snap_dc228e8bba9d423fbe9f3dd35862f658`, the same pair on all nine exports |
+| The step count | Gemini 3.8 Flash 74, 78, 95, 84 and 90 tool calls; GPT Sol 5.6 176, 137 and 98; Opus 4.8 49. Two of five Gemini runs reach 90 |
+| Whether 1.5 accepts an empty list | Read only from the task reaching Trajectories with no file named; the export's task schema carries no field labelled for it |
 
 Write each answer into this file the way HR 79's root `CLAUDE.md` rule 6 was written, naming
 what landed wrong as well as what worked.
+
+**Measured 09/19/2026, the first run set.** What landed wrong: the population lever. The memo
+names "the reconciling items between that count and the BambooHR active record count" as an asked
+field, and a run told to list reconciling items finds them; nine of nine did, and the Gemini mean
+was 96.5% against a registered 38%. T1 retired on the rule it had registered. Also wrong, in the
+verifiers: a column hint that demanded a word the memo does not use, and a key that rejected a
+name with the ID beside it, both the false-zero class, both found by the set and fixed with a
+scenario and a control each. What worked: the Filesystem-targeted PDF reached nine of nine runs,
+the page-create tool landed every page under its exact title, and the harness's fixture matched
+the platform's route. The tier also reads files by code now: every Gemini run parsed the roster,
+the crosswalk and the org chart in a shell, 47 to 64 calls a run, so a lever that rests on a
+record the run is not pointed at does not hold in this world.
 
 **Measured 09/19/2026, the Expected output picker.** It offers eight labels: Edit Existing and
 Make New, each over Sheet, Doc, Slide Deck and App Data. A wiki-page deliverable is App Data, and
