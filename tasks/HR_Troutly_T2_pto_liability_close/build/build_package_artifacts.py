@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
 """The single source of truth for T2's graded content, at the prompt half: the PTO liability
 schedule at 08/31/2026 recomputed from the world's bytes under the rules the world states, the
-registered failing paths recomputed under the rules each path drops, and the rubric plan that
-scores them. No rubric import, golden page, verifier code or battery exists yet: by the decision
-of 09/20/2026 those are built only if the first run set fails, and this file is what they will
-be generated from.
+registered failing paths recomputed under the rules each path drops, the rubric plan that
+scores them, and, from 09/20/2026, the rubric import that registers the plan. The five Gemini
+runs of 09/20/2026 read 23.9% and the registered rule fired, so the plan's 21 rows now carry a
+criterion type, a primary flag, an explanation in the house register and the picker's reference
+artifacts, and 05_rubric_import.xlsx is generated from them in the HR 79 T1 shape. The golden
+page, the verifier code and the battery are still owed and will be generated from these rows.
 
 Run from anywhere: python3 build/build_package_artifacts.py [--docs] [--table]
 """
 import csv
 import datetime as dt
 import hashlib
+import io
+import json
 import os
 import re
 import sys
+import zipfile
 
-from openpyxl import load_workbook
+from openpyxl import Workbook, load_workbook
+from openpyxl.styles import Alignment, Font
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PKG = os.path.dirname(HERE)
@@ -430,8 +436,34 @@ PATHS = [
 
 
 # ---------------------------------------------------------------- the rubric plan
+# Each planned row is (family, weight, gate, criterion, predicate, criterion type, primary,
+# explanation, references). The first five are the prompt half's plan, scored against the
+# registered paths; the last four are the rubric half's, written 09/20/2026 after the five
+# Gemini runs read 23.9%, and every value in them recomputes from the world on every build.
+EA, OC = "Expert Assessment", "Objective Compliance"
+# THE APP DB TYPE'S SPELLING IS THE PICKER'S, NOT THE GUIDE'S. RL Studio's Add-a-verifier control
+# spells it "App DB Programatic", one "m"; the guide spells it "Programmatic". HR 32 lost the row
+# to that letter twice and the importer skips an unknown type on a warning. check_import()
+# refuses any type containing "Programmatic".
+APPDB = "App DB Programatic"
+# The guide's importance table by criterion type. A compliance row reads a stated value or a
+# stated set and is at most Core, 1 to 5. A reasoning row applies a rule the record contradicts
+# and is Supporting to Critical, 3 to 10; 9 and 10 are the gate's alone.
+BANDS = {OC: set(range(1, 6)), EA: set(range(3, 11))}
+IMPORT_DB_DROPDOWN = {"Objective Compliance", "Expert Assessment", "Process"}
+FORM_TAG = "Style / formatting"
+IMPORT_TAGS = {"Final Response", FORM_TAG}
+FORM_CRIT = ("States, on the PTO liability page, hours to two decimals, hourly rates to four "
+             "decimals, dollars to the cent and a total equal to the sum of the rows.")
+REQUEST = TASK_UPLOADS[0]
+
+
 def _same(a, b, tol=0.0):
     return abs(a - b) <= tol
+
+
+def _money(x):
+    return "$" + f"{x:,.2f}"
 
 
 def _row_checks():
@@ -505,30 +537,127 @@ def _row_checks():
         return all(i in by(s) for i in UNLOADED_IDS)
 
     always = lambda s: True
+    a71 = ARCHIVE_EMP["TRT-0071"]
+    t18 = g["TRT-0018"]
+    q41 = g["TRT-0141"]
+    j02 = g["TRT-0002"]
+    l01 = g["TRT-0001"]
+    l01_req = next(r for r in _csv("bamboohr", "TimeOffRequest.csv")
+                   if r["employee_id"] == "TRT-0001" and r["status"] == "approved")
+    ended = [i for i in ENDED_IN_BAMBOO]
+    # the reference strings: a world file as "/" + path, the 1.4 upload by its upload name, an
+    # app seed table as <app>/<table>.csv. artifact() maps the first two into the picker's
+    # namespace and drops the third, which the picker's browser does not list.
+    cut, hb, arch, roster, xwalk = "/" + CUTOVER, "/" + HANDBOOK, "/" + ARCHIVE, "/" + ROSTER, "/" + CROSSWALK
+    report, load, mapping, proc = "/" + REPORT, "/" + LOAD, "/" + MAPPING, "/" + PROCEDURES
+    promo, amend, rehire, letters = "/" + PROMOTION_0088, "/" + AMENDMENT_0117, "/" + REHIRE_0071, "/" + OFFERS_HIST
+    sched, offer153, wiki_comp, wiki_onb = "/" + SCHEDULE_0141, "/" + OFFER_0153, "/" + WIKI_COMP, "/" + WIKI_ONBOARD
+    emp, pol, bal_t, req_t, poltype = ("bamboohr/Employee.csv", "bamboohr/EmployeePolicy.csv",
+                                        "bamboohr/TimeOffBalance.csv", "bamboohr/TimeOffRequest.csv",
+                                        "bamboohr/TimeOffPolicy.csv")
+    cands, wiki = "greenhouse/candidates.csv", "wiki_js/Page.csv"
     return [
-        ("free", 1, "-", "States that a Wiki.js page titled %s is published." % PAGE, always),
-        ("free", 2, "-", "States, on the PTO liability page, the %d current employees at %s as the only employee rows." % (len(GOLDEN), ASOF), rows_ok),
-        ("free", 1, "-", "States, on the PTO liability page, hours to two decimals, hourly rates to four decimals, dollars to the cent and a total equal to the sum of the rows.", always),
-        ("free", 1, "-", "States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability.", always),
-        ("determination", 10, "Critical value", "States, on the PTO liability page, a total dollar liability of $%s." % f"{TOTAL:,.2f}", total_ok),
+        ("free", 1, "-", "States that a Wiki.js page titled %s is published." % PAGE, always,
+         OC, "No",
+         "One page under that title is what the request asks for in Wiki.js, so it exists with its published flag set.",
+         [REQUEST, wiki]),
+        ("free", 2, "-", "States, on the PTO liability page, the %d current employees at %s as the only employee rows." % (len(GOLDEN), ASOF), rows_ok,
+         OC, "No",
+         "The request defines a current employee as anyone employed by Troutly on %s. The roster carries %d. BambooHR's 57 active rows hold four contractors and three ended employees and lack two hires." % (ASOF, len(GOLDEN)),
+         [REQUEST, roster, xwalk, emp]),
+        ("free", 1, "-", FORM_CRIT, always,
+         OC, "No",
+         "The request sets hours to two decimals, rates to four, dollars to the cent and the total as the sum of the rows, as the handbook's 7.3 totals them.",
+         [REQUEST, hb]),
+        ("free", 1, "-", "States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability.", always,
+         OC, "No",
+         "The summary the request asks for states the employee count, the total hours and the total dollar liability.",
+         [REQUEST]),
+        ("determination", 10, "Critical value", "States, on the PTO liability page, a total dollar liability of $%s." % f"{TOTAL:,.2f}", total_ok,
+         EA, "Yes",
+         "The cutover memo caps carryover at %.1f hours, accrues four posted periods at the tier over %d and values each balance at the rate on file over %s. The %d rows sum to %s, or %s rounding each posting."
+         % (CAP, PERIODS_PER_YEAR, f"{HOURS_PER_YEAR:,}", len(GOLDEN), _money(TOTAL), _money(TOTAL_POSTED)),
+         [cut, hb, arch, roster, proc, promo, amend, letters, sched]),
         ("determination", 5, "-", "States, on the PTO liability page, balances of %s hours for %s, the %s above 40.0 hours at 06/30/2026 whose balance the cap alone moves." % (
             ", ".join("%.2f" % g[i]["balance"] for i in CAP_ONLY_IDS[:-1]) + " and %.2f" % g[CAP_ONLY_IDS[-1]]["balance"],
-            ", ".join(CAP_ONLY_IDS[:-1]) + " and " + CAP_ONLY_IDS[-1], _WORDS[len(CAP_ONLY_IDS)]), capped_ok),
-        ("determination", 5, "-", "States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083.", five_tiers_ok),
-        ("determination", 7, "-", "States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021.", bridge_ok),
-        ("determination", 6, "-", "States, on the PTO liability page, an accrual of %.4f hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160." % g["TRT-0018"]["accrued"], thornbury_ok),
-        ("determination", 7, "-", "States, on the PTO liability page, an hourly rate of $%.4f for Yolanda Featherstone, TRT-0088." % g["TRT-0088"]["hourly"], rate_ok("TRT-0088")),
-        ("determination", 6, "-", "States, on the PTO liability page, an hourly rate of $%.4f for Belaviv Luk, TRT-0117." % g["TRT-0117"]["hourly"], rate_ok("TRT-0117")),
-        ("determination", 3, "-", "States, on the PTO liability page, an hourly rate of $%.4f for Delphine Marchetti, TRT-0096." % g["TRT-0096"]["hourly"], rate_ok("TRT-0096")),
-        ("determination", 4, "-", "States, on the PTO liability page, a balance of %.2f hours for Beatriz Quintanilla, TRT-0141." % g["TRT-0141"]["balance"], quint_ok),
-        ("determination", 4, "-", "States, on the PTO liability page, no contractor row, CTR-2001 to CTR-2004.", no_contractor),
-        ("determination", 4, "-", "States, on the PTO liability page, no row for TRT-0037, TRT-0049, TRT-0064 or TRT-0006.", no_ended),
-        ("determination", 4, "-", "States, on the PTO liability page, Simone Okonkwo, TRT-0153, and Rafael Ibarra, TRT-0155, at the 80-hour tier with accruals since their start dates.", unloaded_ok),
-        ("determination", 3, "-", "States, on the PTO liability page, a balance of %.2f hours for Sora Jackson, TRT-0002, four posted periods at the 160-hour tier." % g["TRT-0002"]["balance"], periods_ok),
-        ("determination", 2, "-", "States, on the PTO liability page, a balance of %.2f hours for Michael Labeson, TRT-0001, with 40.00 hours of approved time off deducted." % g["TRT-0001"]["balance"], usage_ok),
-        ("bamboohr", 5, "-", "States, in BambooHR, the PTO policy the schedule's tier gives for each of the %d employees whose loaded policy differed." % len(MIGRATED_WRONG_TIER), policies_ok),
-        ("bamboohr", 5, "-", "States, in BambooHR, a PTO balance equal to the schedule's %s balance for every employee on the schedule." % ASOF, balances_ok),
-        ("bamboohr", 2, "-", "States, in BambooHR, a PTO balance row for TRT-0153 and TRT-0155.", unloaded_rows_ok),
+            ", ".join(CAP_ONLY_IDS[:-1]) + " and " + CAP_ONLY_IDS[-1], _WORDS[len(CAP_ONLY_IDS)]), capped_ok,
+         EA, "Yes",
+         "The archive holds these %s %s balances above %.1f hours and the cutover memo caps carryover there. The HRIS report and the load file carry them uncapped, as the field mapping specified."
+         % (_WORDS[len(CAP_ONLY_IDS)], _d(CAP_DATE), CAP),
+         [cut, arch, report, load, mapping]),
+        ("determination", 5, "-", "States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083.", five_tiers_ok,
+         EA, "Yes",
+         "The archive and the offer letters date these five hires two to five years before %s. The load file set HireDate to %s on them and BambooHR assigned the 80-hour policy from that date."
+         % (ASOF, _d(CUTOVER_DATE)),
+         [cut, arch, letters, load, pol]),
+        ("determination", 7, "-", "States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021.", bridge_ok,
+         EA, "Yes",
+         "The archive records Burkenham hired %s, ended %s and rehired %s, a %d-day break. The handbook's 7.6 bridges service across a break under %d days, so his tier is 160 hours."
+         % (_d(a71["hire"]), _d(a71["break_from"]), _d(a71["rehire"]), (a71["rehire"] - a71["break_from"]).days, BRIDGE_UNDER_DAYS),
+         [hb, arch, rehire, wiki_onb]),
+        ("determination", 6, "-", "States, on the PTO liability page, an accrual of %.4f hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160." % g["TRT-0018"]["accrued"], thornbury_ok,
+         EA, "Yes",
+         "The archive dates Thornbury's service from %s, so she reaches five years on %s inside the fourth posted period. The cutover memo moves the tier in that period, so three periods accrue %.4f hours and one %.4f."
+         % (_d(t18["adj"]), _d(t18["adj"].replace(year=ASOF_DATE.year)), t18["accruals"][0], t18["accruals"][3]),
+         [cut, arch, proc, pol]),
+        ("determination", 7, "-", "States, on the PTO liability page, an hourly rate of $%.4f for Yolanda Featherstone, TRT-0088." % g["TRT-0088"]["hourly"], rate_ok("TRT-0088"),
+         EA, "Yes",
+         "The signed promotion approval sets Featherstone's salary at %s from %s and the handbook's 3.2 puts the signed document over the record. BambooHR carries %s. %s over %s is $%.4f."
+         % (_money(SIGNED["TRT-0088"][0]), _d(SIGNED["TRT-0088"][1]), _money(float(BAMBOO["TRT-0088"]["salary"])), _money(SIGNED["TRT-0088"][0]), f"{HOURS_PER_YEAR:,}", g["TRT-0088"]["hourly"]),
+         [promo, hb, arch, emp]),
+        ("determination", 6, "-", "States, on the PTO liability page, an hourly rate of $%.4f for Belaviv Luk, TRT-0117." % g["TRT-0117"]["hourly"], rate_ok("TRT-0117"),
+         EA, "Yes",
+         "The signed amendment sets Luk's salary at %s from %s and the archive recorded it. BambooHR carries the loaded %s, and %s over %s is $%.4f."
+         % (_money(SIGNED["TRT-0117"][0]), _d(SIGNED["TRT-0117"][1]), _money(float(BAMBOO["TRT-0117"]["salary"])), _money(SIGNED["TRT-0117"][0]), f"{HOURS_PER_YEAR:,}", g["TRT-0117"]["hourly"]),
+         [amend, hb, arch, emp]),
+        ("determination", 3, "-", "States, on the PTO liability page, an hourly rate of $%.4f for Delphine Marchetti, TRT-0096." % g["TRT-0096"]["hourly"], rate_ok("TRT-0096"),
+         EA, "Yes",
+         "Marchetti's offer letter carries the Support Specialist step on each anniversary and the handbook's 5.4 sets it at %s. Her anniversary fell %s, so the rate on file is %s, $%.4f an hour."
+         % (_money(STEP), _d(g["TRT-0096"]["adj"].replace(year=ASOF_DATE.year)), _money(g["TRT-0096"]["rate"]), g["TRT-0096"]["hourly"]),
+         [letters, hb, wiki_comp, emp]),
+        ("determination", 4, "-", "States, on the PTO liability page, a balance of %.2f hours for Beatriz Quintanilla, TRT-0141." % g["TRT-0141"]["balance"], quint_ok,
+         EA, "Yes",
+         "The schedule change form moves Quintanilla from %d to %d hours a week on %s and the handbook's 2.2 accrues part-time hours pro-rata under %d. Three periods add %.4f hours and the fourth %.4f to %.2f."
+         % (SCHEDULE_CHANGES["TRT-0141"][0], SCHEDULE_CHANGES["TRT-0141"][1], _d(SCHEDULE_CHANGES["TRT-0141"][2]), PART_TIME_UNDER, q41["accruals"][0], q41["accruals"][3], q41["opening"]),
+         [sched, hb, cut, roster]),
+        ("determination", 4, "-", "States, on the PTO liability page, no contractor row, CTR-2001 to CTR-2004.", no_contractor,
+         OC, "No",
+         "BambooHR carries CTR-2001 to CTR-2004 as active employees and the roster carries no contractor. The handbook bars contractors from paid time off.",
+         [REQUEST, roster, hb, emp]),
+        ("determination", 4, "-", "States, on the PTO liability page, no row for TRT-0037, TRT-0049, TRT-0064 or TRT-0006.", no_ended,
+         OC, "No",
+         "The crosswalk marks %s Terminated, the archive ends each before %s and BambooHR ends TRT-0006 on %s. The cutover memo excludes employment ended by %s."
+         % (", ".join(ended[:-1]) + " and " + ended[-1], _d(CUTOVER_DATE), _d(BAMBOO["TRT-0006"]["termination_date"]), ASOF),
+         [REQUEST, xwalk, arch, cut, emp]),
+        ("determination", 4, "-", "States, on the PTO liability page, Simone Okonkwo, TRT-0153, and Rafael Ibarra, TRT-0155, at the 80-hour tier with accruals since their start dates.", unloaded_ok,
+         EA, "Yes",
+         "Okonkwo started %s and Ibarra %s on the roster and the crosswalk marks both Never Loaded. The cutover memo accrues each posted period at the 80-hour tier, so Okonkwo holds %.2f hours and Ibarra %.2f."
+         % (_d(g["TRT-0153"]["start"]), _d(g["TRT-0155"]["start"]), g["TRT-0153"]["balance"], g["TRT-0155"]["balance"]),
+         [roster, xwalk, offer153, letters, cut, cands]),
+        ("determination", 3, "-", "States, on the PTO liability page, a balance of %.2f hours for Sora Jackson, TRT-0002, four posted periods at the 160-hour tier." % g["TRT-0002"]["balance"], periods_ok,
+         OC, "No",
+         "The procedures memo posts %s pay dates by %s and the fifth pays %s. Jackson opens at %.2f hours in the archive and adds %.4f in each of %s periods at the 160-hour tier, %.2f hours."
+         % (_WORDS[len(POSTED)], ASOF, _d(PERIODS[len(POSTED)][2]), j02["opening"], j02["accruals"][0], _WORDS[len(POSTED)], j02["balance"]),
+         [proc, cut, arch]),
+        ("determination", 2, "-", "States, on the PTO liability page, a balance of %.2f hours for Michael Labeson, TRT-0001, with 40.00 hours of approved time off deducted." % g["TRT-0001"]["balance"], usage_ok,
+         OC, "No",
+         "BambooHR holds Labeson's approved request of %.2f hours from %s to %s. The archive opens him at %.2f hours and four periods at the 160-hour tier add %.2f, so he holds %.2f."
+         % (l01["used"], _d(l01_req["start_date"]), _d(l01_req["end_date"]), l01["opening"], round(sum(l01["accruals"]), 2), l01["balance"]),
+         [arch, cut, req_t]),
+        ("bamboohr", 5, "-", "States, in BambooHR, the PTO policy the schedule's tier gives for each of the %d employees whose loaded policy differed." % len(MIGRATED_WRONG_TIER), policies_ok,
+         EA, "Yes",
+         "The request asks that each PTO policy in BambooHR be the schedule's. Six migrated records carry the 80-hour policy from the loaded %s date, and the archive's dates put five at 120 hours and TRT-0071 at 160."
+         % _d(CUTOVER_DATE),
+         [REQUEST, cut, arch, pol, poltype]),
+        ("bamboohr", 5, "-", "States, in BambooHR, a PTO balance equal to the schedule's %s balance for every employee on the schedule." % ASOF, balances_ok,
+         EA, "Yes",
+         "BambooHR carries the loaded balances, uncapped and at the loaded tiers. The request asks that each PTO balance in BambooHR be the schedule's, so all %d balances read the schedule's %s figures."
+         % (len(GOLDEN), ASOF),
+         [REQUEST, cut, arch, bal_t]),
+        ("bamboohr", 2, "-", "States, in BambooHR, a PTO balance row for TRT-0153 and TRT-0155.", unloaded_rows_ok,
+         OC, "No",
+         "Neither Okonkwo nor Ibarra has a BambooHR row and the crosswalk marks both Never Loaded. The request asks for the PTO balance in BambooHR for every employee on the schedule, so each has a balance row.",
+         [REQUEST, roster, xwalk, bal_t]),
     ]
 
 
@@ -540,11 +669,275 @@ def score_paths():
     out = []
     for key, desc, flags in PATHS:
         s = schedule(**flags)
-        pts = sum(w for fam, w, gate, crit, pred in PLAN if pred(s))
-        failed = [i + 1 for i, (fam, w, gate, crit, pred) in enumerate(PLAN) if not pred(s)]
+        pts = sum(r[1] for r in PLAN if r[4](s))
+        failed = [i + 1 for i, r in enumerate(PLAN) if not r[4](s)]
         tot = round(sum(r["liability"] for r in s), 2)
         out.append((key, desc, pts, failed, tot, len(s)))
     return out
+
+
+# ---------------------------------------------------------------- the rubric (what registers)
+def _rubric():
+    """(verifier kind, criterion type, weight, gate kind, primary, criterion, explanation, refs),
+    the HR 79 T1 tuple, read off the plan's rows. Every row is an App DB row: the deliverable is
+    one wiki page and BambooHR state and no file, so the judge has nothing to open and the
+    database is the only route."""
+    return [(APPDB, typ, w, gate, primary, crit, expl, list(refs))
+            for fam, w, gate, crit, pred, typ, primary, expl, refs in PLAN]
+
+
+RUBRIC = _rubric()
+UPLOAD_PREFIX = "00_task_input_"
+assert TASK_UPLOADS == [n[len(UPLOAD_PREFIX):] for n in TASK_INPUTS]
+
+
+def import_tag(crit):
+    return FORM_TAG if crit == FORM_CRIT else "Final Response"
+
+
+def artifact(ref):
+    """(name, source) for one of the plan's reference strings in the picker's namespace, or
+    None for an app seed table, which the picker's browser does not list."""
+    if ref.startswith("/"):
+        return "filesystem" + ref, "world"
+    if ref in TASK_UPLOADS:
+        return "filesystem/" + ref, "task"
+    return None
+
+
+# frozen timestamps, so the import's md5 is a property of its content and not of the build time
+STAMP = dt.datetime(2026, 8, 31, 9, 0, 0)
+ZIP_STAMP = (2026, 8, 31, 9, 0, 0)
+ISO_STAMP = "2026-08-31T09:00:00Z"
+
+
+def stamp(wb):
+    wb.properties.creator = "Casey Ouk"
+    wb.properties.lastModifiedBy = "Casey Ouk"
+    wb.properties.created = STAMP
+    wb.properties.modified = STAMP
+
+
+def freeze(path):
+    src_zip = zipfile.ZipFile(path)
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as out:
+        for info in src_zip.infolist():
+            data = src_zip.read(info.filename)
+            if info.filename == "docProps/core.xml":
+                text = data.decode("utf8")
+                text, n = re.subn(r"(<dcterms:modified[^>]*>)[^<]+(</dcterms:modified>)",
+                                  r"\g<1>%s\g<2>" % ISO_STAMP, text)
+                assert n == 1, "expected one dcterms:modified in core.xml, found %d" % n
+                data = text.encode("utf8")
+            zi = zipfile.ZipInfo(info.filename, date_time=ZIP_STAMP)
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            zi.external_attr = info.external_attr
+            out.writestr(zi, data)
+    src_zip.close()
+    open(path, "wb").write(buf.getvalue())
+
+
+def check_rubric():
+    """The weights sit in the guide's band for their criterion type, the gate is the only 10,
+    reasoning carries at least half the points, and every criterion is one atomic States."""
+    total = sum(c[2] for c in RUBRIC)
+    assert total == PLAN_TOTAL
+    gates = [c for c in RUBRIC if c[3] != "-"]
+    assert all(c[1] in BANDS for c in RUBRIC), "a criterion type the guide's table does not price"
+    assert all(c[2] in BANDS[c[1]] for c in RUBRIC), "a weight sits outside its band: %s" % [
+        (c[1], c[2], c[5][:50]) for c in RUBRIC if c[2] not in BANDS[c[1]]]
+    assert all((c[2] >= 9) == (c[3] != "-") for c in RUBRIC), "weight 9 or 10 and gate must coincide"
+    assert len(gates) == 1 and gates[0][3] == "Critical value" and gates[0][1] == EA
+    assert all(c[4] in ("Yes", "No") for c in RUBRIC)
+    assert all((c[1] == EA) == (c[4] == "Yes") for c in RUBRIC), (
+        "a primary row is a reasoning row and a reasoning row is primary")
+    ea = sum(c[2] for c in RUBRIC if c[1] == EA)
+    assert ea * 2 >= total, "Expert Assessment under half the weight"
+    assert len(RUBRIC) >= 5
+    assert all(c[0] == APPDB for c in RUBRIC)
+    for c in RUBRIC:
+        crit = c[5]
+        assert crit.startswith("States"), "a row must open with States: " + crit
+        assert not re.search(r"\b(and that|as well as|in addition)\b|;", crit), "stacked: " + crit
+        assert "prompt" not in crit.lower() and ".docx" not in crit and ".pdf" not in crit, crit
+        assert all(ord(ch) < 128 for ch in crit), crit
+        assert c[7], "a row cites nothing: " + crit
+    print("rubric: %d verifiers, %d points, %d gate, EA %.1f%%, OC %.1f%%, %d primary"
+          % (len(RUBRIC), total, len(gates), 100.0 * ea / total, 100.0 * (total - ea) / total,
+             sum(1 for c in RUBRIC if c[4] == "Yes")))
+    return total
+
+
+def check_register():
+    """The judge-facing strings, held to the house register HR 32 settled and HR 79 carries.
+    ASCII only, no colons, semicolons or brackets, no spaced dash, months never spelled, no ISO
+    dates, no grading vocabulary, no self-reference, a source named, at most three sentences and
+    240 characters, no two rows opening alike or carrying one explanation."""
+    SOURCES = ("request", "cutover memo", "handbook", "archive", "roster", "crosswalk", "BambooHR",
+               "procedures memo", "promotion approval", "amendment", "offer letter",
+               "schedule change form", "HRIS report", "field mapping", "load file", "Greenhouse",
+               "Wiki.js", "org chart")
+    MONTHS = re.compile(r"\b(January|February|March|April|May|June|July|August|September|"
+                        r"October|November|December)\s+\d{1,2}(?!\d)")
+    ISO_DATE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
+    SELF_REFERENCE = re.compile(
+        r"\b(this row|that row|these rows|the row|rows? above|rows? below|own rows?|above it|"
+        r"the other rows?|the other (two|three|four)|as the rest|a response|a run|elsewhere)\b",
+        re.I)
+    GRADING = re.compile(
+        r"\b(pass|passes|passing|passed|fail|fails|failing|failed|satisf(y|ies|ied)|"
+        r"penalis\w*|penaliz\w*|scores?|scored|grade[sd]?|grading|grader|"
+        r"verifier|rubric|criterion|criteria)\b", re.I)
+    lengths, firsts = [], []
+    for i, c in enumerate(RUBRIC, 1):
+        crit, e = c[5], c[6]
+        for label, text in (("criteria", crit), ("explanation", e)):
+            assert not MONTHS.search(text), "v%d %s spells a month" % (i, label)
+            assert not ISO_DATE.search(text), "v%d %s carries an ISO date" % (i, label)
+        assert crit.endswith("."), "v%d criteria is not a full sentence" % i
+        assert e.endswith("."), "v%d explanation is not a full sentence" % i
+        assert all(ord(ch) < 128 for ch in e), "v%d explanation is not ASCII" % i
+        assert not any(ch in e for ch in ":;()[]"), "v%d explanation carries a colon, semicolon or bracket: %s" % (i, e)
+        assert not re.search(r"(?<![A-Za-z0-9])-|-(?![A-Za-z0-9])", e), "v%d explanation carries a spaced dash" % i
+        hit = GRADING.search(e)
+        assert hit is None, "v%d explanation describes grading (%r)" % (i, hit.group(0) if hit else "")
+        ref = SELF_REFERENCE.search(e)
+        assert ref is None, "v%d explanation refers to the rubric's own construction (%r)" % (i, ref.group(0) if ref else "")
+        assert any(t in e for t in SOURCES), "v%d names no source: %s" % (i, e)
+        assert len(e) <= 240, "v%d explanation runs to %d chars" % (i, len(e))
+        sentences = len(re.findall(r"\.(?:\s|$)", e))
+        assert sentences <= 3, "v%d explanation runs to %d sentences" % (i, sentences)
+        lengths.append(len(e))
+        firsts.append(" ".join(e.split()[:3]))
+    seen = [c[6] for c in RUBRIC]
+    dupes = sorted({e for e in seen if seen.count(e) > 1})
+    assert not dupes, "explanations repeat verbatim across rows: %r" % dupes[:1]
+    assert len(set(firsts)) == len(firsts), "two explanations open alike: %r" % [
+        f for f in firsts if firsts.count(f) > 1][:1]
+    avg = sum(lengths) / len(lengths)
+    assert avg <= 200, "explanations average %.0f chars" % avg
+    print("register: %d explanations, %d-%d chars, %.0f average"
+          % (len(lengths), min(lengths), max(lengths), avg))
+
+
+IMPORT = os.path.join(PKG, "05_rubric_import.xlsx")
+IMPORT_STATS = {}  # filled by check_import(), read by check_docs()
+IMPORT_HEADER = ["Index", "Verifier Type", "Criteria", "Criteria Explanation",
+                 "Tags", "Criterion Type", "Severity Level", "Numerical Weight",
+                 "Is this a primary criterion?", "Reference Artifacts",
+                 "Grading Target", "Output Dependencies", "Depends on"]
+
+
+def rubric_import():
+    """05_rubric_import.xlsx in the HR 79 T1 shape: one sheet named Rubric, thirteen columns, one
+    row per verifier, every reference artifact the picker's own resolved object."""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Rubric"
+    ws.append(IMPORT_HEADER)
+    for c in ws[1]:
+        c.font = Font(bold=True)
+    for i, (kind, typ, wt, gate, primary, crit, expl, refs) in enumerate(RUBRIC, 1):
+        arts = json.dumps([
+            {"name": name, "index": None, "source": source,
+             "snapshotId": TASK_SNAP if source == "task" else SNAP,
+             "transformations": []}
+            for name, source in filter(None, (artifact(r) for r in refs))])
+        ws.append([i, kind, crit, expl, import_tag(crit), typ,
+                   "Critical" if primary == "Yes" else "Major", wt, primary, arts, None, "", "None"])
+    for col, wd in {"A": 7, "B": 20, "C": 80, "D": 80, "E": 16, "F": 20, "G": 14,
+                    "H": 9, "I": 12, "J": 60, "K": 30, "L": 38, "M": 11}.items():
+        ws.column_dimensions[col].width = wd
+    for row in ws.iter_rows(min_row=2):
+        for c in row:
+            c.alignment = Alignment(vertical="top", wrap_text=True)
+    stamp(wb)
+    wb.save(IMPORT)
+    freeze(IMPORT)
+    return IMPORT
+
+
+def check_import():
+    """The file on disk is the plan, row for row, in the form the picker parses."""
+    rows = list(load_workbook(IMPORT)["Rubric"].iter_rows(values_only=True))
+    hdr, body = list(rows[0]), rows[1:]
+    assert hdr == IMPORT_HEADER, "the import's columns are not the HR 79 T1 shape: %s" % hdr
+    assert len(body) == len(RUBRIC), "the import carries %d rows, the rubric %d" % (len(body), len(RUBRIC))
+    col = {name: n for n, name in enumerate(hdr)}
+    with open(os.path.join(HERE, "rubric_plan.csv"), encoding="utf-8") as f:
+        csv_rows = list(csv.DictReader(f))
+    assert len(csv_rows) == len(RUBRIC)
+    for sid in (SNAP, TASK_SNAP):
+        assert re.fullmatch(r"snap_[0-9a-f]{32}", sid), (
+            "a snapshot id is not one read off an export, do not load this file: %r" % sid)
+    cited_task, world_files, citations = set(), set(), 0
+    selection = {"filesystem/" + f for f in WORLD_FILES}
+    for n, (r, c, v) in enumerate(zip(body, csv_rows, RUBRIC), 1):
+        kind, typ, wt, _gate, primary, crit, expl, refs = v
+        assert r[col["Index"]] == n == int(c["Index"]), "v%d is out of order" % n
+        assert r[col["Criteria"]] == c["Criterion"] == crit, "v%d criteria differ" % n
+        assert r[col["Criteria Explanation"]] == c["Criteria Explanation"] == expl, "v%d explanation differs" % n
+        assert str(r[col["Numerical Weight"]]) == c["Weight"] == str(wt), "v%d weight differs" % n
+        assert r[col["Is this a primary criterion?"]] == c["Is Primary Objective"] == primary, n
+        assert r[col["Verifier Type"]] == c["Verifier Type"] == kind, n
+        assert "Programmatic" not in str(r[col["Verifier Type"]]), (
+            "v%d carries the guide's spelling of the App DB type; the picker spells it Programatic" % n)
+        want_tag = FORM_TAG if "to two decimals" in crit else "Final Response"
+        assert r[col["Tags"]] == want_tag, "v%d tags %r, wanted %r" % (n, r[col["Tags"]], want_tag)
+        assert r[col["Tags"]] in IMPORT_TAGS, n
+        assert r[col["Criterion Type"]] in IMPORT_DB_DROPDOWN, (
+            "v%d Criterion Type %r is not in the dropdown the code-verifier form offers" % (n, r[col["Criterion Type"]]))
+        assert r[col["Criterion Type"]] == typ == c["Criterion Type"], "v%d criterion type is not the record's" % n
+        assert r[col["Severity Level"]] == ("Critical" if primary == "Yes" else "Major"), n
+        assert r[col["Grading Target"]] is None, "v%d carries a grading target on an App DB row" % n
+        assert (r[col["Output Dependencies"]] or "") == "", (
+            "v%d carries an output dependency, and no row here grades a file" % n)
+        assert r[col["Depends on"]] == "None", n
+        arts = json.loads(r[col["Reference Artifacts"]])
+        assert arts, "v%d cites no reference artifact" % n
+        citations += len(arts)
+        for a in arts:
+            assert set(a) == {"name", "index", "source", "snapshotId", "transformations"}, (
+                "v%d cites an artifact that is not the picker's resolved object" % n)
+            assert a["source"] in ("world", "task"), n
+            assert a["snapshotId"] == (TASK_SNAP if a["source"] == "task" else SNAP), n
+            if a["source"] == "task":
+                assert a["name"].split("/")[-1] in TASK_UPLOADS, n
+                cited_task.add(a["name"].split("/")[-1])
+            else:
+                assert a["name"] in selection, (
+                    "v%d cites %s, which the selection block does not carry" % (n, a["name"]))
+                world_files.add(a["name"])
+            assert not a["name"].startswith(("filesystem/greenhouse/", "filesystem/bamboohr/",
+                                             "filesystem/wiki_js/")), (
+                "v%d cites an app seed table as a world file" % n)
+        names = [a["name"] for a in arts]
+        for ref in refs:
+            if ref.startswith("/"):
+                assert "filesystem" + ref in names, "v%d drops the world reference %r" % (n, ref)
+            elif ref in TASK_UPLOADS:
+                assert "filesystem/" + ref in names, "v%d drops the task reference %r" % (n, ref)
+            else:
+                assert ref in APP_TABLES, "v%d cites an app table outside the selection: %r" % (n, ref)
+    for name in world_files:
+        assert os.path.exists(os.path.join(WORLD, name[len("filesystem/"):])), \
+            "the import cites %s, which is not in the world archive" % name
+    assert set(cited_task) == set(TASK_UPLOADS), "the 1.4 upload is cited by no row"
+    print("import: %d rows, %d columns, %d citations over %d world files and %d upload"
+          % (len(body), len(hdr), citations, len(world_files), len(cited_task)))
+    IMPORT_STATS.update(citations=citations, world_files=len(world_files))
+    return citations, len(world_files)
+
+
+def rubric_table():
+    """The rubric as 02_task_metadata.md publishes it; check_docs() holds 02 to every cell."""
+    lines = ["| # | Family | Type | Wt | Gate | Primary | Criterion | Explanation |",
+             "|---|---|---|---|---|---|---|---|"]
+    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
+        lines.append("| %d | %s | %s | %d | %s | %s | %s | %s |"
+                     % (i, fam, "EA" if typ == EA else "OC", w, gate, primary, crit, expl))
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------- guards
@@ -655,10 +1048,10 @@ def check_plan():
     return fam, scores
 
 
-def check_register():
+def check_documents_ascii():
     """Every package document is ASCII; the house register's dashes and quotes."""
     for name in ("01_prompt.md", "02_task_metadata.md", "06_failure_analysis.md",
-                 "08_section_1_3_step_plan.md", "README.md", "qc/README.md",
+                 "08_section_1_3_step_plan.md", "09_rubric_import.md", "README.md", "qc/README.md",
                  "build/task_input_source.md"):
         path = os.path.join(PKG, name)
         if not os.path.exists(path):
@@ -675,7 +1068,9 @@ def check_docs():
         quoted = " ".join(l[2:] for l in text.splitlines() if l.startswith("> "))
         assert PROMPT in " ".join(quoted.split()), "%s does not blockquote the PROMPT constant verbatim" % name
     meta = open(os.path.join(PKG, "02_task_metadata.md"), encoding="utf8").read()
-    for fig in (f"${TOTAL:,.2f}", f"{TOTAL_HOURS:,.2f}", "52 ", TASK_NAME, PAGE, TASK_SNAP, md5(os.path.join(PKG, TASK_INPUTS[0]))):
+    for fig in (f"${TOTAL:,.2f}", f"{TOTAL_HOURS:,.2f}", "52 ", TASK_NAME, PAGE, TASK_SNAP, SNAP,
+                md5(os.path.join(PKG, TASK_INPUTS[0])),
+                "%d rows" % len(RUBRIC), "%d points" % PLAN_TOTAL):
         assert fig in meta, "02 lacks the figure %r" % fig
     allowed = {f"${TOTAL:,.2f}", f"${TOTAL_POSTED:,.2f}", "$90,862.13", "$118,000.00", "$148,200.00",
                "$104,000.00", "$138,000.00", "$61,000.00", "$58,000.00", "$92,000.00", "$3,000.00"}
@@ -684,8 +1079,17 @@ def check_docs():
         assert fig in allowed, "02 carries a dollar figure the build did not write: %s" % fig
     for f in WORLD_FILES + APP_TABLES:
         assert "\n%s\n" % f in meta, "02's selection block lacks %s" % f
-    for i, (fam, w, gate, crit, pred) in enumerate(PLAN, 1):
+    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
         assert crit in meta, "02 lacks planned row %d: %s" % (i, crit[:60])
+        assert expl in meta, "02 publishes a stale explanation for row %d: %s" % (i, expl[:60])
+    assert md5(IMPORT) in meta, "02 publishes a stale md5 for the import, this build wrote %s" % md5(IMPORT)
+    nine = open(os.path.join(PKG, "09_rubric_import.md"), encoding="utf8").read()
+    if not IMPORT_STATS:
+        check_import()
+    for fig in ("%d rows" % len(RUBRIC), "%d points" % PLAN_TOTAL, SNAP, TASK_SNAP, md5(IMPORT),
+                "%d primary" % sum(1 for c in RUBRIC if c[4] == "Yes"), APPDB, FORM_TAG,
+                "%d citations over %d of the" % (IMPORT_STATS["citations"], IMPORT_STATS["world_files"])):
+        assert fig in nine, "09 lacks the figure %r" % fig
     fa = open(os.path.join(PKG, "06_failure_analysis.md"), encoding="utf8").read()
     for key, desc, pts, failed, tot, n in score_paths():
         assert "%s | " % key in fa and "%d of %d" % (pts, PLAN_TOTAL) in fa, "06 lacks %s at %d of %d" % (key, pts, PLAN_TOTAL)
@@ -699,7 +1103,7 @@ def check_docs():
     assert inputs == TASK_INPUTS, "the task inputs on disk are %s" % inputs
     for f in inputs:
         assert os.path.splitext(f)[1] in (".pdf", ".csv", ".png", ".jpg"), f
-    check_register()
+    check_documents_ascii()
     print("docs: prompt %d chars, %d words, md5 %s" % (len(PROMPT), len(PROMPT.split()),
                                                         hashlib.md5(PROMPT.encode()).hexdigest()))
 
@@ -721,9 +1125,10 @@ def write_previews():
     q = os.path.join(HERE, "rubric_plan.csv")
     with open(q, "w", newline="", encoding="utf8") as fh:
         w = csv.writer(fh)
-        w.writerow(["Index", "Family", "Weight", "Gate", "Criterion"])
-        for i, (fam, wt, gate, crit, pred) in enumerate(PLAN, 1):
-            w.writerow([i, fam, wt, gate, crit])
+        w.writerow(["Index", "Family", "Weight", "Gate", "Criterion", "Verifier Type", "Criterion Type",
+                    "Is Primary Objective", "Criteria Explanation", "Reference Artifacts"])
+        for i, (fam, wt, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
+            w.writerow([i, fam, wt, gate, crit, APPDB, typ, primary, expl, "; ".join(refs)])
     return p, q
 
 
@@ -733,10 +1138,6 @@ SYW = os.path.join(PKG, "03_show_your_work.xlsx")
 def _w(n):
     """A small count in words, as the package documents write it."""
     return _WORDS[n] if 0 <= n < len(_WORDS) else str(n)
-
-
-def _money(x):
-    return "$" + f"{x:,.2f}"
 
 
 def _syw_sources():
@@ -804,7 +1205,7 @@ def write_show_your_work():
         ws.append(list(row))
     ws = wb.create_sheet("Verifiers")
     ws.append(["#", "Verifier", "Weight", "Gate"])
-    for i, (fam, w, gate, crit, pred) in enumerate(PLAN, 1):
+    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
         ws.append([i, crit, w, gate])
     ws.append([])
     ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed, and it matches the schedule's only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
@@ -867,19 +1268,26 @@ def path_table():
 def main():
     check_world()
     fam, scores = check_plan()
+    check_rubric()
+    check_register()
     p, q = write_previews()
     s = write_show_your_work()
+    imp = rubric_import()
+    check_import()
     print("plan: %d rows, %d points, families %s" % (len(PLAN), PLAN_TOTAL, fam))
     for key, desc, pts, failed, tot, n in scores:
         print("  %s %3d of %d, %5.1f%%  rows %2d  total $%12s  fails %s" % (key, pts, PLAN_TOTAL, 100.0 * pts / PLAN_TOTAL, n, f"{tot:,.2f}", failed))
     print("md5 %s  %s" % (md5(p), os.path.basename(p)))
     print("md5 %s  %s" % (md5(q), os.path.basename(q)))
     print("md5 %s  %s" % (md5(s), os.path.basename(s)))
+    print("md5 %s  %s" % (md5(imp), os.path.basename(imp)))
     if "--docs" in sys.argv:
         check_show_your_work()
         check_docs()
     if "--table" in sys.argv:
         print(path_table())
+        print()
+        print(rubric_table())
 
 
 if __name__ == "__main__":

@@ -69,5 +69,5 @@ record and what landed wrong. T1 v2 was built from that record, the memo naming 
 reconciliation, and retired on 09/20/2026 on four Gemini runs meaning 98.5%: with the pointers
 gone the tier still reads the tree whole and applies the memo's own definition of a current
 employee. A population reconciliation is not a determination this tier gets wrong in this world,
-and the next package needs a different ask. T2, the PTO liability schedule at 08/31/2026, was built on 09/20/2026 at the prompt half on that lesson: a rule application over 52 people where every record the run opens prints a finished wrong number, the memo naming no rule. Its run set is owed. What is still unmeasured, a grading snapshot's column
+and the next package needs a different ask. T2, the PTO liability schedule at 08/31/2026, was built on 09/20/2026 at the prompt half on that lesson: a rule application over 52 people where every record the run opens prints a finished wrong number, the memo naming no rule. Its five Gemini runs of 09/20/2026 read 23.9%, so the rubric half is being built: the import shipped the same day in the HR 79 T1 shape from the plan's rows, and the verifier code, the battery and the golden page are owed. What is still unmeasured, a grading snapshot's column
 names and the import toast, is recorded there as open. Do not invent any of it.
