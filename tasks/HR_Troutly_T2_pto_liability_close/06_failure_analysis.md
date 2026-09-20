@@ -20,9 +20,9 @@ and scored by the plan's own predicates, so the arithmetic here recomputes on ev
 |---|---|---|---|---|
 | P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 8 of 87, 9.2% |
 | P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 24 of 87, 27.6% |
-| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 24 of 87, 27.6% |
-| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 29 of 87, 33.3% |
-| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 42 of 87, 48.3% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 29 of 87, 33.3% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 34 of 87, 39.1% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 47 of 87, 54.0% |
 | P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 65 of 87, 74.7% |
 | P6 | the heal | 52 | $92,739.54 | 87 of 87, 100.0% |
 
@@ -32,10 +32,14 @@ accrual, none of which the page carries. The reviewer decision rules read the ba
 tier cell, and the predicates now read what the rules read, so every row grades the output alone.
 P2 fell from 29 to 24, P3 from 34 to 29 and P4 from 47 to 42; G1 and G3 score the same under both
 readings. The registered mean of 45% below was computed on the earlier numbers and stands as
-written; the same mix, two runs on P3, two on P4 and one past P5, reads 47.6% under the corrected
+written; the same mix, two runs on P3, two on P4 and one past P5, reads 52.2% under the corrected
 table, on the same side of the 40% line. Also corrected 09/20/2026: the gate was planned at 15
 on a platform scale of 1 to 10. It carries 10, the top of the scale, the plan totals 87, and
-every score in this record is restated on 87. No path and no run changes side of the 40% line.
+every score in this record is restated on 87. No path and no run changes side of the 40% line. Also corrected 09/20/2026, from the question
+of whether the rows stack. Read on the balance, row 6 had come to depend on the tier rules
+through TRT-0018 and TRT-0043 and failed on P2, P3 and P4 with rows 7 and 9. It now names the
+five capped employees whose balance the cap alone moves, so the cap row fails on the cap and
+nothing else. P2 reads 29, P3 34 and P4 47. The five runs are unchanged, all uncapped.
 
 **The modal failing path is P3 or P4.** A run that reads the cutover memo applies the cap and the
 four periods, because both are explicit; a run that reads the archive takes the service dates
