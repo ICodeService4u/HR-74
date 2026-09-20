@@ -807,11 +807,9 @@ def write_show_your_work():
     for i, (fam, w, gate, crit, pred) in enumerate(PLAN, 1):
         ws.append([i, crit, w, gate])
     ws.append([])
-    ws.append(["Note", "The determination carries %d of %d points and the gate is the total. Every row is read from the Wiki.js pages table or the BambooHR tables." % (sum(r[1] for r in PLAN if r[0] == "determination"), PLAN_TOTAL)])
-    ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed. The reviewer rules allow it one cent of tolerance, and it matches the schedule's within that only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
+    ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed, and it matches the schedule's only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
     ws.append(["Note", "Each witness row grades one rule on the employees that rule alone moves, so one wrong cell fails a rule once and never twice. Where the rule touches many, the row reads a group, the %s capped or the five loaded tiers. Where the world applies it to one person, the bridge, the anniversary, the step and the part-time schedule, the row reads that person. Where it touches everyone, the periods and the usage, one clean witness proves the application." % _WORDS[len(CAP_WITNESS_IDS)]])
     ws.append(["Note", "Rows 2, 14, 15 and 16 grade the population on the set of IDs. Rows 19 to 21 grade BambooHR on its tables."])
-    ws.append(["Note", "Drop one rule and one more row fails. The registered paths in 02_task_metadata.md are the proof."])
     ws = wb.create_sheet("Row assembly")
     ws.append(["Step", "Result"])
     for row in _syw_assembly():
