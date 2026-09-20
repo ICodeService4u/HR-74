@@ -88,9 +88,13 @@ ok.append(control("plan: weight band", BLD, '("determination", 15, "Critical val
 ok.append(control("plan: the gate demoted off the total", BLD, '("determination", 15, "Critical value"', '("determination", 10, "Critical value"', BLD))
 ok.append(control("plan: a row not opening on States", BLD, '"States that a Wiki.js page titled %s is published." % PAGE', '"A Wiki.js page titled %s is published." % PAGE', BLD))
 ok.append(control("plan: the free base over a tenth", BLD, '("free", 2, "-", "States, on the PTO liability page, the %d current employees', '("free", 9, "-", "States, on the PTO liability page, the %d current employees', BLD))
-ok.append(control("plan: the golden not scoring every point", BLD, 'return "TRT-0018" in b and _same(b["TRT-0018"]["accrued"], g["TRT-0018"]["accrued"], 0.0001)',
-                  'return "TRT-0018" in b and _same(b["TRT-0018"]["accrued"], 24.6154, 0.0001)', BLD))
+ok.append(control("plan: the golden not scoring every point", BLD, 'return bal_ok("TRT-0018", s)',
+                  'return "TRT-0018" in by(s) and _same(by(s)["TRT-0018"]["balance"], 24.6154, 0.005)', BLD))
+ok.append(control("plan: a hours row read off a column the page does not carry", BLD, 'return bal_ok("TRT-0141", s)',
+                  'return "TRT-0141" in by(s) and _same(by(s)["TRT-0141"]["accrued"], 8.8462, 0.0001) and False', BLD))
 ok.append(control("plan: P0 scoring over a fifth", BLD, "return _same(t, TOTAL, 0.005) or _same(t, TOTAL_POSTED, 0.005)", "return True", BLD))
+# ---- the show-your-work guard
+ok.append(control("syw: a total the build did not write", BLD, 'total_cell = _money(TOTAL)', 'total_cell = _money(TOTAL + 1)', BLD, ["--docs"]))
 # ---- the docs guards
 ok.append(control("docs: the prompt blockquote", PROMPT_MD, "about the August 2026 close", "about the August close", BLD, ["--docs"]))
 ok.append(control("docs: a stale figure in the record", META_MD, "$92,739.54", "$92,739.45", BLD, ["--docs"]))

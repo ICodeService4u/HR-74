@@ -1,4 +1,4 @@
-Employee ID,Name,Department,Adjusted service date,Tier,Opening 06/30/2026,Opening capped,Accrual p1,Accrual p2,Accrual p3,Accrual p4,Used,Balance 08/31/2026,Balance (posted rounding),Annual rate,Hourly rate,Liability
+Employee ID,Name,Department,Adjusted service date,Tier,Opening 06/30/2026,Opening capped,Accrual p1,Accrual p2,Accrual p3,Accrual p4,Used,Balance 08/31/2026,"Balance, posted rounding",Annual rate,Hourly rate,Liability
 TRT-0001,Michael Labeson,Finance and Corporate,03/04/2019,160,38.25,38.25,6.1538,6.1538,6.1538,6.1538,40.00,22.87,22.85,215000.00,103.3654,2363.97
 TRT-0002,Sora Jackson,Engineering,03/04/2019,160,38.00,38.00,6.1538,6.1538,6.1538,6.1538,0.00,62.62,62.60,205000.00,98.5577,6171.68
 TRT-0005,Mikelle Hosana,Engineering,05/20/2019,160,92.50,40.00,6.1538,6.1538,6.1538,6.1538,0.00,64.62,64.60,187510.00,90.1490,5825.43

@@ -39,7 +39,7 @@ TASK_INPUTS = ["00_task_input_pto_liability_request.pdf"]
 TASK_UPLOADS = ["pto_liability_request.pdf"]
 ASOF = "08/31/2026"
 SNAP = "snap_c6f6a0879f3d47a19048ee80d7529157"  # world_snapshot_id, unchanged across 13 exports
-TASK_SNAP = "SNAPSHOT_ID_NOT_YET_READ"  # task_data_id of the T2 upload, read off its first export
+TASK_SNAP = "snap_45e68b376f2547dca61408b65d8ba774"  # task_data_id of the T2 upload, read off G1 on 09/20/2026
 
 # ---------------------------------------------------------------- world readers
 def _csv(app, table):
@@ -430,9 +430,13 @@ def _row_checks():
     def rows_ok(s):
         return set(by(s)) == set(g)
 
-    def capped_ok(s):
+    def bal_ok(i, s):
         b = by(s)
-        return all(i in b and _same(b[i]["opening"], CAP) for i in CAPPED_IDS)
+        return i in b and (_same(b[i]["balance"], g[i]["balance"], 0.005) or _same(b[i]["balance"], g[i]["balance_posted"], 0.005))
+
+    def capped_ok(s):
+        # the page carries no opening column: reviewer rule 5 reads the balance cell
+        return all(bal_ok(i, s) for i in CAPPED_IDS)
 
     def five_tiers_ok(s):
         b = by(s)
@@ -440,19 +444,19 @@ def _row_checks():
         return all(i in b and b[i]["tier"] == g[i]["tier"] for i in ids)
 
     def bridge_ok(s):
+        # reviewer rule 6 reads the tier cell; 160 is reached only with service bridged
         b = by(s)
-        return "TRT-0071" in b and b["TRT-0071"]["tier"] == 160 and _same(b["TRT-0071"]["accrued"], g["TRT-0071"]["accrued"], 0.0001)
+        return "TRT-0071" in b and b["TRT-0071"]["tier"] == 160
 
     def thornbury_ok(s):
-        b = by(s)
-        return "TRT-0018" in b and _same(b["TRT-0018"]["accrued"], g["TRT-0018"]["accrued"], 0.0001)
+        # the page carries no accrual column: reviewer rule 5 reads the balance cell
+        return bal_ok("TRT-0018", s)
 
     def rate_ok(i):
         return lambda s: i in by(s) and _same(by(s)[i]["hourly"], g[i]["hourly"], 0.00005)
 
     def quint_ok(s):
-        b = by(s)
-        return "TRT-0141" in b and _same(b["TRT-0141"]["balance"], g["TRT-0141"]["balance"], 0.005)
+        return bal_ok("TRT-0141", s)
 
     def no_contractor(s):
         return not any(i.startswith("CTR-") for i in by(s))
@@ -465,12 +469,10 @@ def _row_checks():
         return all(i in b and b[i]["tier"] == 80 and b[i]["accrued"] > 0 for i in UNLOADED_IDS)
 
     def periods_ok(s):
-        b = by(s)
-        return "TRT-0002" in b and _same(b["TRT-0002"]["balance"], g["TRT-0002"]["balance"], 0.005)
+        return bal_ok("TRT-0002", s)
 
     def usage_ok(s):
-        b = by(s)
-        return "TRT-0001" in b and _same(b["TRT-0001"]["balance"], g["TRT-0001"]["balance"], 0.005)
+        return bal_ok("TRT-0001", s)
 
     def policies_ok(s):
         b = by(s)
@@ -688,7 +690,7 @@ def write_previews():
         w = csv.writer(fh)
         w.writerow(["Employee ID", "Name", "Department", "Adjusted service date", "Tier", "Opening 06/30/2026",
                     "Opening capped", "Accrual p1", "Accrual p2", "Accrual p3", "Accrual p4", "Used",
-                    "Balance 08/31/2026", "Balance (posted rounding)", "Annual rate", "Hourly rate", "Liability"])
+                    "Balance 08/31/2026", "Balance, posted rounding", "Annual rate", "Hourly rate", "Liability"])
         for r in GOLDEN:
             w.writerow([r["id"], r["name"], r["dept"], _d(r["adj"]), r["tier"], "%.2f" % r["opening_raw"],
                         "%.2f" % r["opening"]] + ["%.4f" % a for a in r["accruals"]] +
@@ -704,6 +706,125 @@ def write_previews():
     return p, q
 
 
+SYW = os.path.join(PKG, "03_show_your_work.xlsx")
+_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
+FAMILY_LABEL = {"free": "The page and its form", "determination": "The determination", "bamboohr": "BambooHR brought to the schedule"}
+
+
+def _w(n):
+    """A small count in words, as the package documents write it."""
+    return _WORDS[n] if 0 <= n < len(_WORDS) else str(n)
+
+
+def _money(x):
+    return "$" + f"{x:,.2f}"
+
+
+def _syw_sources():
+    g = GOLDEN_BY_ID
+    top = max(CAPPED_IDS, key=lambda i: g[i]["opening_raw"])
+    used = sum(USED.values())
+    return [
+        ("The rules from 07/01/2026", "PTO policy cutover memo of 06/20/2026, /" + CUTOVER,
+         "Biweekly accrual at the annual tier over 26, posted on the pay date; carryover capped at %.1f hours at 06/30/2026; tiers by adjusted service date, the change in the period containing the anniversary; valued at the rate on file over %s; ended employees out; wiki pages do not set policy." % (CAP, f"{HOURS_PER_YEAR:,}")),
+        ("What the handbook adds", "Employee Handbook v3, /" + HANDBOOK,
+         "Section 7 incorporates the memo; 2.2 part-time accrual pro-rata under %d hours; 7.6 service bridges on a break under %d days; 5.4 the $%s Support Specialist step; 3.2 the signed document over the record; 7.3 totals are the sum of the rounded rows." % (PART_TIME_UNDER, BRIDGE_UNDER_DAYS, f"{STEP:,.2f}")),
+        ("The superseded rules", "PTO Policy 2025, /" + POLICY_2025 + ", and the Paid Time Off wiki page, /" + WIKI_PTO,
+         "Monthly accrual on the 1st and unlimited carryover, replaced 07/01/2026. The wiki page was last edited 01/2025."),
+        ("The current employees", "Master employee roster of 08/31/2026, /" + ROSTER + ", and the crosswalk of 08/28/2026, /" + CROSSWALK,
+         "%d active employees. BambooHR carries 57 active rows: four contractors, three employees whose employment ended 03/20, 05/08 and 06/15/2026, and no row for TRT-0153 and TRT-0155, Never Loaded on the crosswalk." % len(GOLDEN)),
+        ("The opening balances", "SplinterHR final archive of 07/28/2026, Balances tab, /" + ARCHIVE,
+         "%d balances at 06/30/2026; %s above %.1f hours, %s at %.2f the highest. The HRIS report, the load file and the July close carry them uncapped." % (len(ARCHIVE_BAL), _w(len(CAPPED_IDS)), CAP, top, g[top]["opening_raw"])),
+        ("The posted periods", "Payroll procedures memo of 06/25/2026, /" + PROCEDURES,
+         "Pay dates %s and %s, posted by %s; %s is the fifth and is not posted." % (", ".join(_d(p[2]) for p in POSTED[:-1]), _d(POSTED[-1][2]), ASOF, _d(PERIODS[len(POSTED)][2]))),
+        ("The service dates", "The archive's Employees tab and the historical offer letters, /" + OFFERS_HIST,
+         "%s migrated records read 07/01/2026 in BambooHR and on the roster and carry their true dates in the archive and the letters. TRT-0071 hired %s, ended 08/25/2023, rehired 04/22/2024: a break under %d days, bridged under handbook 7.6." % (_w(sum(1 for e in ROSTER_ROWS if e["adj_roster"] == CUTOVER_DATE and e["id"] in ARCHIVE_EMP)).capitalize(), _d(g["TRT-0071"]["adj"]), BRIDGE_UNDER_DAYS)),
+        ("The tier change in the window", "The archive's dates and the memo's timing rule",
+         "TRT-0018 reaches five years inside the fourth period: three periods at 120 and one at 160, %.4f hours accrued." % g["TRT-0018"]["accrued"]),
+        ("The signed pay changes", "Promotion approval TRT-0088 of 06/10/2026, /" + PROMOTION_0088 + ", and comp amendment TRT-0117 of 05/12/2026, /" + AMENDMENT_0117,
+         "$%s from %s and $%s from %s, signed. BambooHR, the roster and payroll carry the loaded rates." % (f"{SIGNED['TRT-0088'][0]:,.2f}", _d(SIGNED['TRT-0088'][1]), f"{SIGNED['TRT-0117'][0]:,.2f}", _d(SIGNED['TRT-0117'][1]))),
+        ("The step", "Marchetti's offer letter in the historical letters and handbook 5.4",
+         "TRT-0096 steps $%s on her 08/17/2026 anniversary: $%s on file at %s." % (f"{STEP:,.2f}", f"{g['TRT-0096']['rate']:,.2f}", ASOF)),
+        ("The part-time schedule", "Schedule change form TRT-0141 of 08/10/2026, /" + SCHEDULE_0141,
+         "%d hours to %d hours effective %s; pro-rata under %d hours, so three periods at %d and one at %d." % (SCHEDULE_CHANGES["TRT-0141"][0], SCHEDULE_CHANGES["TRT-0141"][1], _d(SCHEDULE_CHANGES["TRT-0141"][2]), PART_TIME_UNDER, SCHEDULE_CHANGES["TRT-0141"][0], SCHEDULE_CHANGES["TRT-0141"][1])),
+        ("The two unloaded hires", "The roster, the signed offer /" + OFFER_0153 + ", letter 13 of the historical letters and Greenhouse",
+         "Okonkwo started %s at $%s, moved from 07/13/2026 by the thread of 07/09/2026; Ibarra %s at $%s. Both accrue at 80 from the period containing the start, as BambooHR credited TRT-0150: %.2f and %.2f hours." % (_d(g["TRT-0153"]["start"]), f"{g['TRT-0153']['rate']:,.2f}", _d(g["TRT-0155"]["start"]), f"{g['TRT-0155']['rate']:,.2f}", g["TRT-0153"]["balance"], g["TRT-0155"]["balance"])),
+        ("Approved time off", "BambooHR TimeOffRequest",
+         "%d approved requests, %.2f hours, all in July; TRT-0001 %.2f hours." % (sum(1 for r in _csv("bamboohr", "TimeOffRequest.csv") if r["status"] == "approved" and CUTOVER_DATE <= _date(r["start_date"]) <= ASOF_DATE), used, USED["TRT-0001"])),
+        ("The July close", "/" + CLOSE_JULY,
+         "The requester's method: the HRIS balance, tier and rate per row, three ended employees inside, $90,862.13 booked."),
+        ("The BambooHR tables", "Employee, EmployeePolicy, TimeOffBalance, TimeOffPolicy",
+         "57 active rows, the loaded policies, %s of them wrong, and the loaded balances the run brings to the schedule." % _w(len(MIGRATED_WRONG_TIER))),
+    ]
+
+
+def _syw_assembly():
+    return [
+        ("The population", "%d from the roster and the org chart: BambooHR's 57 active less four contractors less three ended plus the two unloaded hires." % len(GOLDEN)),
+        ("The rules", "The cutover memo over the 2025 policy and the wiki page; the handbook's bridging, part-time, step and signed-document rules."),
+        ("The opening balances", "The archive's 06/30/2026 balance capped at %.2f; %s capped; the two hires at 0.00." % (CAP, _w(len(CAPPED_IDS)))),
+        ("The service dates and tiers", "The archive's and the letters' dates over the loaded 07/01/2026; TRT-0071 bridged to %s at 160; five migrated records at 120; TRT-0018 to 160 in the fourth period." % _d(GOLDEN_BY_ID["TRT-0071"]["adj"])),
+        ("The accruals", "Four posted periods at the tier over %d to four decimals, the period containing a start credited in full; TRT-0141 pro-rata at 25 then 32 hours." % PERIODS_PER_YEAR),
+        ("The usage", "%.2f approved hours deducted, %.2f on TRT-0001." % (sum(USED.values()), USED["TRT-0001"])),
+        ("The rates", "The rate on file over %s to four decimals: TRT-0088 at %s, TRT-0117 at %s and TRT-0096 at %s by the signed documents and the step." % (f"{HOURS_PER_YEAR:,}", _money(GOLDEN_BY_ID['TRT-0088']['rate']), _money(GOLDEN_BY_ID['TRT-0117']['rate']), _money(GOLDEN_BY_ID['TRT-0096']['rate']))),
+        ("The rows and the totals", "Balance to two decimals, liability to the cent, the total the sum of the rounded rows: %s hours and %s, %s under posted rounding." % (f"{TOTAL_HOURS:,.2f}", _money(TOTAL), _money(TOTAL_POSTED))),
+        ("The page", "%s: the summary above the table, seven columns, %d rows keyed by ID, published." % (PAGE, len(GOLDEN))),
+        ("BambooHR", "%s policies reassigned, %d balances set, rows created for %s." % (_w(len(MIGRATED_WRONG_TIER)).capitalize(), len(GOLDEN), " and ".join(UNLOADED_IDS))),
+    ]
+
+
+def write_show_your_work():
+    """03_show_your_work.xlsx: the sources, the planned rows, the assembly and the schedule, every
+    value from the build, every cell ASCII."""
+    from openpyxl import Workbook
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Sources"
+    ws.append(["Fact", "Source", "Value"])
+    for row in _syw_sources():
+        ws.append(list(row))
+    ws = wb.create_sheet("Verifiers")
+    ws.append(["#", "Verifier", "Family", "Weight", "Gate"])
+    for i, (fam, w, gate, crit, pred) in enumerate(PLAN, 1):
+        ws.append([i, crit, FAMILY_LABEL[fam], w, gate])
+    ws.append([])
+    ws.append(["Note", "The determination carries %d of %d points; the gate is the total. Every row is read from the Wiki.js pages table or the BambooHR tables." % (sum(r[1] for r in PLAN if r[0] == "determination"), PLAN_TOTAL)])
+    ws = wb.create_sheet("Row assembly")
+    ws.append(["Step", "Result"])
+    for row in _syw_assembly():
+        ws.append(list(row))
+    ws = wb.create_sheet("Schedule")
+    ws.append(["Employee ID", "Name", "Department", "Adjusted service date", "Tier", "Opening 06/30/2026",
+               "Opening capped", "Accrual p1", "Accrual p2", "Accrual p3", "Accrual p4", "Used",
+               "Balance 08/31/2026", "Balance, posted rounding", "Annual rate", "Hourly rate", "Liability"])
+    for r in GOLDEN:
+        ws.append([r["id"], r["name"], r["dept"], _d(r["adj"]), r["tier"], "%.2f" % r["opening_raw"], "%.2f" % r["opening"]]
+                  + ["%.4f" % a for a in r["accruals"]]
+                  + ["%.2f" % r["used"], "%.2f" % r["balance"], "%.2f" % r["balance_posted"], _money(r["rate"]), "$%.4f" % r["hourly"], _money(r["liability"])])
+    total_cell = _money(TOTAL)
+    ws.append(["TOTAL", "", "", "", "", "", "", "", "", "", "", "", f"{TOTAL_HOURS:,.2f}", "", "", "", total_cell])
+    names = {e["name"] for e in ROSTER_ROWS}  # a person's name is a world fact and keeps the world's spelling
+    for sheet in wb:
+        for row in sheet.iter_rows():
+            for c in row:
+                if isinstance(c.value, str) and c.value not in names:
+                    assert all(ord(ch) < 128 for ch in c.value), "show-your-work is not ASCII: %r" % c.value[:60]
+    wb.save(SYW)
+    return SYW
+
+
+def check_show_your_work():
+    """The show-your-work on disk carries the plan's rows and the schedule's totals."""
+    wb = load_workbook(SYW)
+    assert wb.sheetnames == ["Sources", "Verifiers", "Row assembly", "Schedule"], wb.sheetnames
+    rows = [r for r in wb["Verifiers"].iter_rows(values_only=True) if r and isinstance(r[0], int)]
+    assert [r[1] for r in rows] == [p[3] for p in PLAN], "the show-your-work's verifier rows are not the plan's"
+    last = [r for r in wb["Schedule"].iter_rows(values_only=True) if r and r[0] == "TOTAL"][-1]
+    assert last[16] == _money(TOTAL) and last[12] == f"{TOTAL_HOURS:,.2f}", "the show-your-work's totals are not the build's: %s" % (last,)
+    n = sum(1 for r in wb["Schedule"].iter_rows(values_only=True) if r and str(r[0]).startswith("TRT-"))
+    assert n == len(GOLDEN), n
+
+
 def path_table():
     lines = ["| Path | What the run does | Rows | Total it prints | Score |", "|---|---|---|---|---|"]
     for key, desc, pts, failed, tot, n in score_paths():
@@ -715,12 +836,15 @@ def main():
     check_world()
     fam, scores = check_plan()
     p, q = write_previews()
+    s = write_show_your_work()
     print("plan: %d rows, %d points, families %s" % (len(PLAN), PLAN_TOTAL, fam))
     for key, desc, pts, failed, tot, n in scores:
         print("  %s %3d of %d, %5.1f%%  rows %2d  total $%12s  fails %s" % (key, pts, PLAN_TOTAL, 100.0 * pts / PLAN_TOTAL, n, f"{tot:,.2f}", failed))
     print("md5 %s  %s" % (md5(p), os.path.basename(p)))
     print("md5 %s  %s" % (md5(q), os.path.basename(q)))
+    print("md5 %s  %s" % (md5(s), os.path.basename(s)))
     if "--docs" in sys.argv:
+        check_show_your_work()
         check_docs()
     if "--table" in sys.argv:
         print(path_table())
