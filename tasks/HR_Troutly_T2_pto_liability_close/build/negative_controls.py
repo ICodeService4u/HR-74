@@ -20,6 +20,9 @@ REPO = os.path.dirname(os.path.dirname(PKG))
 SRC = os.path.join(PKG, "build/task_input_source.md")
 BLD = os.path.join(PKG, "build/build_package_artifacts.py")
 TIB = os.path.join(PKG, "build/build_task_input.py")
+ENG = os.path.join(PKG, "build/verifier_engine.py")
+SCN = os.path.join(PKG, "qc/scenarios.py")
+VH = os.path.join(PKG, "qc/verifier_harness.py")
 PROMPT_MD = os.path.join(PKG, "01_prompt.md")
 META_MD = os.path.join(PKG, "02_task_metadata.md")
 FA_MD = os.path.join(PKG, "06_failure_analysis.md")
@@ -32,11 +35,15 @@ def run(script, args=()):
     return subprocess.run([sys.executable, script, *args], cwd=PKG, capture_output=True, text=True)
 
 
-def control(label, path, old, new, script, args=(), expect=None):
+def control(label, path, old, new, script, args=(), expect=None, pre=None):
+    """Plant `new` for `old` in `path`, run `script` (after `pre`, which regenerates what the
+    planted file feeds, the row files from the engine), expect red, revert."""
     original = open(path, encoding="utf8").read()
     assert old in original, "control %r: anchor not found" % label
     open(path, "w", encoding="utf8").write(original.replace(old, new, 1))
     try:
+        if pre:
+            run(pre)
         r = run(script, args)
         red = r.returncode != 0
         out = (r.stderr or r.stdout).strip()
@@ -164,6 +171,47 @@ ok.append(control("import: the sheet not named Rubric", BLD, '    ws.title = "Ru
 ok.append(control("import: a column out of the HR 79 T1 order", BLD,
     'IMPORT_HEADER = ["Index", "Verifier Type", "Criteria", "Criteria Explanation",',
     'IMPORT_HEADER = ["Index", "Criteria", "Verifier Type", "Criteria Explanation",', BLD))
+# ---- the verifiers, through the harness: a defect in the engine must fail the battery
+ok.append(control("verifier: the key matched as a substring", ENG,
+    '        if re.fullmatch(ID_RE, n) or re.fullmatch(ID_RE + r" \\(.*\\)", n):\n            return n.split(" (")[0].upper()',
+    '        m = re.search(ID_RE, n)\n        if m:\n            return m.group(0).upper()', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the employee table taken by count alone", ENG,
+    "                score = (1 if emails >= len(rows) // 2 else 0, len(set(nums)))", "                score = (0, len(set(nums)))", VH, pre=BLD))
+ok.append(control("verifier: a band around a stated balance", ENG,
+    "TOL_HOURS, TOL_RATE, TOL_MONEY = 0.005, 0.00005, 0.005", "TOL_HOURS, TOL_RATE, TOL_MONEY = 0.011, 0.00005, 0.005", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the gate falling back to the rows' sum past a stated total", ENG,
+    '        if stated:\n            return False, "the page states %r and none is the total" % (stated[:6],)\n', '', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the layout row passing two tables", ENG,
+    '        if len(page.emp_tables) > 1:\n            return False, "%d tables carry employee rows; the request asks for one" % len(page.emp_tables)\n', '', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the absence floor removed", ENG,
+    '        if len(keyed) < S["min_rows"]:', '        if len(keyed) < 0:', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a table's own id column read as the employee reference", ENG,
+    '        order = [ci for ci in range(len(rows[0])) if ci != own] + ([own] if own is not None else [])',
+    '        order = list(range(len(rows[0])))', VH, expect="WRONG", pre=BLD))
+ok.append(control("verifier: the policy table taken as the first carrying the names", ENG,
+    '                if len(found) == 3 and len(vals) == len(set(vals)) and all(v in POLICY_NAMES or not v for v in vals):',
+    '                if len(found) == 3:', VH, expect="WRONG", pre=BLD))
+ok.append(control("verifier: a duplicate balance row read as the first", ENG,
+    '        if len(cur) != 1:\n            return None, "%d balance rows for %s in 2026, %r; the balance is ambiguous" % (len(cur), num, cur)',
+    '        if not cur:\n            return None, "no 2026 balance row for %s" % num', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a run's narration read instead of the database", ENG,
+    '        pages = _load_pages(ctx, SPEC["page"], notes)',
+    '        pages = _load_pages(ctx, SPEC["page"], notes) or [_Page(SPEC["page"], _clean(ctx.final_answer), True, "final answer")]', VH, pre=BLD))
+ok.append(control("battery: an expectation planted wrong", SCN,
+    '     {8}, "a stated two-decimal value is graded to the cent; its neighbour is not it"),',
+    '     set(), "a stated two-decimal value is graded to the cent; its neighbour is not it"),', VH, expect="FALSE PASS"))
+ok.append(control("battery: the fixture's ids not the ids G1 observed", SCN,
+    'EMP_ID = {e["employee_number"]: str(i) for i, e in enumerate(SEED_EMP, 1)}',
+    'EMP_ID = {e["employee_number"]: str(i) for i, e in enumerate(SEED_EMP, 2)}', VH, expect="ids G1 observed"))
+ok.append(control("spec: a value row keyed on another employee", BLD,
+    'bal("TRT-0005"), tier("TRT-0043", 120), tier("TRT-0071", 160), bal("TRT-0018"),',
+    'bal("TRT-0009"), tier("TRT-0043", 120), tier("TRT-0071", 160), bal("TRT-0018"),', BLD, expect="spec keyed"))
+ok.append(control("spec: a set row reading the created rows", BLD,
+    'dict(target="bamboohr", kind="policies", expected={i: TIER_POLICY[g[i]["tier"]] for i in LOADED_IDS}),',
+    'dict(target="bamboohr", kind="policies", expected={i: TIER_POLICY[g[i]["tier"]] for i in GOLDEN_BY_ID}),', BLD))
+ok.append(control("golden: a total the schedule did not give", BLD,
+    '             "- Total dollar liability: $%s" % f"{total:,.2f}", "",',
+    '             "- Total dollar liability: $%s" % f"{total + 1:,.2f}", "",', BLD, expect="golden"))
 # ---- the show-your-work guard
 ok.append(control("syw: a total the build did not write", BLD, 'total_cell = _money(TOTAL)', 'total_cell = _money(TOTAL + 1)', BLD, ["--docs"]))
 ok.append(control("syw: a semicolon joining two clauses", BLD, 'Ended employees out. Wiki pages do not set policy.', 'Ended employees out; wiki pages do not set policy.', BLD, ["--docs"]))
@@ -189,7 +237,7 @@ print("\n%d of %d controls went red" % (sum(ok), len(ok)))
 # import among them. The rebuild below is the guard.
 print("\nrebuilding the artifacts the controls dirtied")
 failed = False
-for script, args in ((TIB, ()), (BLD, ("--docs",))):
+for script, args in ((TIB, ()), (BLD, ("--docs",)), (VH, ())):
     rebuild = run(script, args)
     out = (rebuild.stderr if rebuild.returncode else rebuild.stdout).strip()
     print(out.splitlines()[-1] if out else "")

@@ -146,8 +146,10 @@ def verdicts(rows, prose, header, page_meta, pol, bal, layout=False):
            and total_stated,
         5: bool(rows) and all(r["raw"][0] and r["raw"][1] for r in rows.values()),
         6: bool(rows) and layout,
+        # the gate reads a stated total; the rows' sum counts only when no total is stated at all,
+        # as the engine reads it
         7: any(_same(m, B.TOTAL, 0.01) or _same(m, B.TOTAL_POSTED, 0.01) for m in stated_money)
-           or _same(row_sum, B.TOTAL, 0.01) or _same(row_sum, B.TOTAL_POSTED, 0.01),
+           or (not stated_money and (_same(row_sum, B.TOTAL, 0.01) or _same(row_sum, B.TOTAL_POSTED, 0.01))),
         8: bal_ok("TRT-0005"),
         9: "TRT-0043" in rows and rows["TRT-0043"]["tier"] == 120,
         10: "TRT-0071" in rows and rows["TRT-0071"]["tier"] == 160,
@@ -220,17 +222,8 @@ def score(set_name, details=False):
 
 
 def _render(sched):
-    """A page in the memo's shape from a computed schedule, for the self-check."""
-    hours = round(sum(r["balance"] for r in sched), 2)
-    total = round(sum(r["liability"] for r in sched), 2)
-    lines = ["# %s" % B.PAGE, "", "## Summary", "", "- Employees on the schedule: %d" % len(sched),
-             "- Total hours: %s" % f"{hours:,.2f}", "- Total dollar liability: $%s" % f"{total:,.2f}", "",
-             "| Employee ID | Name | Department | Annual PTO tier | PTO balance at 08/31/2026 | Hourly rate | Liability |",
-             "|---|---|---|---|---|---|---|"]
-    for r in sched:
-        lines.append("| %s | %s | %s | %d | %.2f | %.4f | $%s |" % (
-            r["id"], r["name"], r["dept"], r["tier"], r["balance"], r["hourly"], f"{r['liability']:,.2f}"))
-    return "\n".join(lines)
+    """A page in the request's shape from a computed schedule, the builder's own renderer."""
+    return B.render_page(sched)
 
 
 def self_check():
