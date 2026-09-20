@@ -176,65 +176,36 @@ View - August 2026 and Staffed Role View - August 2026, the synth's set for T1: 
 `PTO Liability Request` is T1's task re-pointed to this prompt and input. A platform grading of
 these runs is against those rows and says nothing; the record scores from the archived bytes.
 
-## The task-field paragraph, midpoint, 09/20/2026
+## The task-field paragraph, 09/20/2026
 
-For the Additional Notes box on one Gemini trajectory, in the guide's shape: the wrong values in
-one sentence, up to three causes each with the step where the run diverged and what it should
-have done, and one sentence on why the output is unacceptable. Steps are the platform's tool-call
-count, one assistant turn each. G1 is the paragraph to enter; G2 and G3 are on file for the same
-field if the pod asks for another trajectory. G4, traj_75b173ce1cb641fc9fcf09419ee67caf, repeats
-G1's output with one cause different: it never opened the promotion approval or the comp
-amendment, so its second cause is a search failure rather than a choice against the signed
-document. G5, traj_8805c80d23144ec2bd53b3381f89acef, repeats G2's output, and at step 184 also
-removed the policies and balances of CTR-2002, CTR-2003, CTR-2004, TRT-0037, TRT-0049, TRT-0064 from BambooHR, records outside the
-schedule that no row grades.
+For the Additional Notes box on one Gemini trajectory, three sentences: what the run did and the
+figure it reported, its own evidence and the step where it set the rule aside and what it should
+have done, and why the output is unacceptable with the numbers. Steps are the platform's
+tool-call count, one assistant turn each. G1 is the paragraph to enter.
 
-**G1, traj_4f6423feac9e4f80a389b67ad71a5b0d.** Gemini publishes PTO Liability - 08/31/2026 at 52
-rows, 1,760.94 hours and $111,455.78, the HRIS time off report copied row for row over the memo's
-population, where the schedule is 1,522.17 hours and $92,739.54. At step 24 it prints the cutover
-memo, including "Carryover into the new system is capped at 40.0 hours as of 06/30/2026; the
-excess is forfeited", and at step 179 its schedule script still sets every migrated balance from
-the report, "balance = round(hris_bals[emp_id], 2)", applying the memo's accrual only to the two
-hires the report does not carry, where it should have opened the eleven employees above the cap
-at 40.00 hours, TRT-0005 at 40.00 rather than 92.50, and accrued four periods from there. At steps
-113 and 114 it prints the signed promotion approval, $118,000.00 from 06/16/2026, and the signed
-comp amendment, $148,200.00 from 05/16/2026, then at step 115 checks the roster against payroll
-history only and keeps the loaded $104,000.00 and $138,000.00, where the memo values at the rate
-on file and the handbook puts the signed document over the record: $56.7308 and $71.2500 an hour.
-At step 179 it also reads the adjusted service date off the roster, 07/01/2026 on nine migrated
-records, so five of them print 80 hours instead of 120 and TRT-0071 prints 80 unbridged instead
-of 160, where the archive's hire dates and the handbook's 365-day bridge set the tier. The output
-is unacceptable because it overstates the liability by $18,716.24 and prints a wrong balance, tier
-or rate on 20 of the 52 rows, and BambooHR is left carrying the same figures on every row but the
-two it created.
+**G1, traj_4f6423feac9e4f80a389b67ad71a5b0d.** Gemini copies the HRIS time off report into PTO
+Liability - 08/31/2026 and reports $111,455.78 of liability on 1,760.94 hours. Its own step 24
+prints the cutover memo's "Carryover into the new system is capped at 40.0 hours as of
+06/30/2026; the excess is forfeited", and at step 179 it sets the memo aside and takes every
+balance from the report, "balance = round(hris_bals[emp_id], 2)", confirming them at step 190
+because they match BambooHR, where it should have capped the eleven openings at 40.00 hours,
+tiered the nine migrated records on their archive dates, valued TRT-0088 and TRT-0117 at their
+signed rates, and carried $92,739.54 on 1,522.17 hours into the page and BambooHR. The output is
+unacceptable because it overstates the liability by $18,716.24 and credits eleven of the 52
+employees with hours the policy forfeited on 06/30/2026.
 
-**G2, traj_43e4ed4770124156985eee8883199d9a.** Gemini publishes PTO Liability - 08/31/2026 at 50
-rows, 1,751.71 hours and $111,100.39, the HRIS time off report copied row for row with two current
-employees left off, where the schedule is 52 rows, 1,522.17 hours and $92,739.54. At step 14 it
-prints the cutover memo's cap sentence, and at step 137 its schedule script sets every balance
-from the report anyway, "bal = round(float(hris_map[emp_id]), 2)", where it should have opened the
-eleven employees above the cap at 40.00 hours and accrued four periods from there. At step 124 it
-prints both signed pay changes, $118,000.00 and $148,200.00, and keeps the loaded $104,000.00 and
-$138,000.00, where the memo values at the rate on file and the handbook puts the signed document
-over the record. At step 160 its page states that TRT-0153 and TRT-0155 "have zero recorded PTO
-accruals/balances on file" and omits them, and at steps 146 and 147 its only BambooHR writes are a
-policy re-assignment that changes nothing and a zero-hour adjustment the app rejects, where the
-roster and the signed offers carry their start dates and salaries and the memo accrues from the
-period containing the start: 6.15 and 3.08 hours, and two rows to create. The output is
+**G2, traj_43e4ed4770124156985eee8883199d9a.** Gemini copies the HRIS time off report into PTO
+Liability - 08/31/2026, drops Simone Okonkwo and Rafael Ibarra, and reports $111,100.39 on
+1,751.71 hours for 50 employees. Its own step 14 prints the memo's 40.0-hour cap and its step 137
+takes every balance from the report anyway, "bal = round(float(hris_map[emp_id]), 2)", and at
+step 160 it writes that the two hires "have zero recorded PTO accruals/balances on file" because
+the crosswalk reads Never Loaded, where it should have capped the eleven openings, tiered the
+migrated records on their archive dates, accrued the two hires from their start dates at 6.15
+and 3.08 hours, and carried $92,739.54 on 52 rows into the page and BambooHR. The output is
 unacceptable because it overstates the liability by $18,360.85 on the rows it prints, omits two
 current employees, and leaves BambooHR untouched.
 
-**G3, traj_e0bfaf50ef7d451fbacfa96c7639178e.** Gemini publishes PTO Liability - 08/31/2026 at 52
-rows, 1,760.94 hours and $111,455.78, the HRIS time off report copied row for row, where the
-schedule is 1,522.17 hours and $92,739.54. At step 18 it prints the cutover memo's cap sentence,
-and at step 166 its schedule script takes "BambooHR balances for existing employees" and hard-codes
-each tier from BambooHR's policy name, where it should have opened the eleven employees above the
-cap at 40.00 hours and set each tier from the adjusted service date. At step 47 its own script
-prints TRT-0071's archive record, hired 03/08/2021, terminated 08/25/2023, rehired 04/22/2024, and
-at step 166 it leaves him in its "Under 2 Years" list at 80, where the handbook bridges a break
-under 365 days and the tier is 160. At step 123 it prints both signed pay changes, $118,000.00 and
-$148,200.00, and keeps the loaded $104,000.00 and $138,000.00, where the memo values at the rate on
-file and the handbook puts the signed document over the record. The output is unacceptable
-because it overstates the liability by $18,716.24 and prints a wrong balance, tier or rate on 20
-of the 52 rows, and BambooHR is left carrying the same figures on every row but the two it
-created.
+G3, traj_e0bfaf50ef7d451fbacfa96c7639178e, and G4, traj_75b173ce1cb641fc9fcf09419ee67caf, take
+G1's shape: the cap printed at steps 18 and 11, every balance from the report at steps 166 and
+149. G5, traj_8805c80d23144ec2bd53b3381f89acef, takes G2's: the cap at step 23, the report at
+step 143, the two hires dropped.
