@@ -6,7 +6,7 @@ world lacks ships as a 1.4 task input rather than as a world edit. That is the r
 every other task in the world valid, and it is the lever HR 32 proved on its T24 and T25 and HR 79
 proved on its T1.
 
-**Two packages exist, T1 and T1 v2, each retired on its first run set.** Both are built to the HR 79 T1 shape, which twenty-two
+**Three packages exist: T1 and T1 v2, each retired on its first run set, and T2, built at the prompt half on their record.** Both are built to the HR 79 T1 shape, which twenty-two
 packages, four hundred pull requests and seven task AutoQC rounds bought, and everything in
 `../HR-79/tasks/README.md` that is not about HR 79's own apps applies here. The four rules from it
 that no world-side rule covers are in the root `CLAUDE.md`.
@@ -15,6 +15,7 @@ that no world-side rule covers are in the root `CLAUDE.md`.
 |---|---|---|
 | `HR_Troutly_T1_august_operating_review` | The recruiting lead's 08/31/2026 request for two Wiki.js pages, an approved-hiring view and a staffed-role view, for the 09/10/2026 operating review | Built and **retired 09/19/2026**. 35 verifiers, 113 points, 1 gate, every row App DB on the Wiki.js pages table, battery 1365 of 1365, one 1.4 input on the Filesystem target, two golden pages. Registered modal failing path 32.7% and Gemini mean 38%; **measured Gemini mean 96.5%** on five runs, nine of nine runs reconciling the population, so the rule registered before the runs retired it. The record, the run set and the lesson are kept |
 | `HR_Troutly_T1v2_august_operating_review` | The same request with the memo stripped of every source, figure and reconciliation it had named, and a current employee and each status value defined instead | Built 09/19/2026 from T1's traces and **retired 09/20/2026**. **24 verifiers, 83 points, 1 gate**, the population 67% of the points, the free base 8%; battery **864 of 864** with the three failing paths as pages, P1 32.5% and P1b 37.3%. Registered Gemini mean 58%; **measured 98.5%** on four runs, four of four at 52 with no pointer in the memo, so the rule registered before the runs retired it. Task data id `snap_fbf9dc06005743a28e8d6fd2238c7f5f`. The fifth Gemini run and the GPT Sol runs are owed for the record only |
+| `HR_Troutly_T2_pto_liability_close` | The Finance Manager's 09/01/2026 request for the PTO liability at 08/31/2026 for the August close: one Wiki.js page with a row per current employee and BambooHR brought to it | Built 09/20/2026 **at the prompt half** on the T1 and v2 record. The determination is a rule application over 52 people where every record prints a finished wrong number: the 40.0-hour cap, biweekly accrual by adjusted service date with a rehire bridged and an anniversary timed, two signed rates and a step the load dropped, a part-time schedule, four posted periods; 1,522.17 hours and $92,739.54 against the July close's $90,862.13. A 21-row plan at 92 points, seven registered paths, P3 37.0% and P4 51.1%, registered Gemini mean 45%, dated. The run set, the task data id and the rubric half are owed; the rubric half is built only under 40% |
 
 ## The rules every package here is built to
 
