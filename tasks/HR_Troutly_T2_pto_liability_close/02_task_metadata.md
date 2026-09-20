@@ -333,8 +333,8 @@ world and the package retires.
 
 ## Platform state
 
-Measured off the G1, G2 and G3 exports of 09/20/2026: the task runs on the platform as `PTO Liability Request`, task version
-17 at G1 and G3 and 18 at G2, the builder's PROMPT verbatim, the 1.4 upload under task data id
+Measured off the five Gemini exports of 09/20/2026: the task runs on the platform as `PTO Liability Request`, task version
+17 at G1 and G3 and 18 at G2, G4 and G5, the builder's PROMPT verbatim, the 1.4 upload under task data id
 `snap_45e68b376f2547dca61408b65d8ba774`, and it carries T1's twenty synth verifiers, which target
 Approved Hiring View - August 2026 and Staffed Role View - August 2026. What each field has to hold:
 
@@ -353,9 +353,9 @@ Approved Hiring View - August 2026 and Staffed Role View - August 2026. What eac
 
 1. **The task data id**: read off G1 on 09/20/2026, `snap_45e68b376f2547dca61408b65d8ba774`, carried
    by the builder. Closed.
-2. **The first run set.** Three of five Gemini 3.8 Flash landed 09/20/2026: G1 and G3 P1 row for
-   row at 26.1%, G2 P1 less the two unloaded hires at 17.4%, mean 23.2%; two Gemini and three GPT
-   Sol 5.6 are owed. `qc/archive_run_set.py` and
+2. **The first run set.** The five Gemini 3.8 Flash landed 09/20/2026: G1, G3 and G4 P1 row for
+   row at 26.1%, G2 and G5 P1 less the two unloaded hires at 17.4%, mean 22.6%. Three GPT Sol 5.6
+   are owed for the record. `qc/archive_run_set.py` and
    `qc/score_run_set.py` archive and score them from the output alone.
 3. **The BambooHR time-off tools write the rows the plan reads**: measured on G1 and G3.
    `employees_create` returned ids 59 and 60 for TRT-0153 and TRT-0155, `time_off_assign_policy`
@@ -363,7 +363,7 @@ Approved Hiring View - August 2026 and Staffed Role View - August 2026. What eac
    toolbelt on G1 and through the shell on G3. Closed.
 4. **The pages and BambooHR tables' shape in a grading snapshot**, still unmeasured. The exports
    carry no snapshot; the record rebuilds the BambooHR state from the app's own returned results.
-5. **The rubric half**, built only under 40%.
+5. **The rubric half.** The five Gemini runs read 22.6%: built next from `build/rubric_plan.csv`.
 6. **The platform task's verifier set is T1's.** The twenty rows on the exports target the two T1
    pages. Before any platform grading is read, they have to be replaced by the plan's rows or removed.
    The prompt AutoQC round of 09/20/2026 raised the same mismatch and was disputed on the platform:

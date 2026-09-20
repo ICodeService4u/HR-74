@@ -1,7 +1,8 @@
 # T2 - PTO Liability Schedule and BambooHR PTO Records
 
-**Status: built 09/20/2026 at the prompt half; three of the five Gemini runs landed the same day at
-a 23.2% mean, two on the registered P1 path and one under it.** The second HR 74 ask, built on the
+**Status: built 09/20/2026 at the prompt half; the five Gemini runs landed the same day at a 22.6% mean,
+three on the registered P1 path and two under it, and the registered rule fires: the rubric half
+is built next.** The second HR 74 ask, built on the
 measured record of T1 and T1 v2: thirteen Gemini trajectories healed a population reconciliation
 with and without pointers, so the next ask had to be a determination the tier gets wrong, not a
 lookup. This one is the PTO liability at 08/31/2026, a rule application over 52 people where
@@ -13,9 +14,9 @@ if they fail.
 |---|---|---|
 | Built | 09/20/2026 | the memo, the prompt, 31 selections, 22 world files, the golden schedule recomputed from the world, a 21-row plan at 92 points, seven registered paths, predictions dated |
 | Negative controls | 09/20/2026 | see the table below, from `build/negative_controls.py` |
-| Run set | 09/20/2026, three of eight | Gemini 3.8 Flash: G1 and G3 P1 row for row, $111,455.78, 24 of 92, 26.1%; G2 P1 less the two unloaded hires, $111,100.39, 16 of 92, 17.4%; mean 23.2%, scored from the output alone; two Gemini and three GPT Sol 5.6 owed |
+| Run set | 09/20/2026, five of eight | Gemini 3.8 Flash: G1, G3 and G4 P1 row for row, $111,455.78, 24 of 92, 26.1%; G2 and G5 P1 less the two unloaded hires, $111,100.39, 16 of 92, 17.4%; mean 22.6%, scored from the output alone; three GPT Sol 5.6 owed for the record |
 | Prompt round 1 | 09/20/2026 | Two major findings: Self-Contained Tasks on TRT-0153 and TRT-0155, and Outcome-Determining Choices on the T1 verifier set and the population. Both disputed on the platform the same day; transcribed to `qc/findings/prompt_round1_09-20-2026.md`, answered in `qc/README.md` |
-| Rubric half | conditional | built from `build/rubric_plan.csv` only under 40% |
+| Rubric half | owed | the five Gemini runs read 22.6%, under 40%: built next from `build/rubric_plan.csv`, the verifier code tested against a fixture with the five archived pages |
 
 ## The ask, in one paragraph
 
@@ -31,10 +32,11 @@ part-time schedule changed. 1,522.17 hours and $92,739.54; the July close booked
 
 ## Measured so far
 
-G1 and G3 both print the HRIS report's numbers over the memo's population: P1 row for row, 24 of 92.
-G2 prints the same numbers less the two unloaded hires, which it read as carrying no liability
-because they carried no record: 16 of 92. All three opened the cutover memo and both signed pay
-documents and applied none of them where a record already carried a number. The scorer reads the page as the app returned it and the
+G1, G3 and G4 print the HRIS report's numbers over the memo's population: P1 row for row, 24 of 92.
+G2 and G5 print the same numbers less the two unloaded hires, which they read as carrying no
+liability because they carried no record: 16 of 92. All five opened the cutover memo, four opened
+both signed pay documents, and none applied a rule where a record already carried a number. Five
+of five under 40%: the registered rule fires and the rubric half is built next. The scorer reads the page as the app returned it and the
 BambooHR state from the app's own results, and nothing the run said. The exports carry T1's twenty
 synth verifiers, so no platform score on these runs means anything; `06_failure_analysis.md`
 carries the record and `qc/README.md` the register.
@@ -55,7 +57,7 @@ carries the record and `qc/README.md` the register.
 | `build/negative_controls.py` | Every guard made to fail once |
 | `qc/README.md`, `qc/findings/` | The AutoQC register and the verbatim archive |
 | `qc/archive_run_set.py`, `qc/score_run_set.py` | The archiver and the scorer, each with a `--self-check`: the page and the BambooHR writes read off either route as the app returned them, scored by the reviewer decision rules against the registered paths |
-| `qc/findings/run_set_09-20-2026/` | G1's, G2's and G3's pages, their BambooHR writes and `runs.json`, read off the exports |
+| `qc/findings/run_set_09-20-2026/` | The five Gemini runs' pages, their BambooHR writes and `runs.json`, read off the exports |
 
 Not shipped at the prompt half: the golden page, the rubric import, the verifier engine and row
 files and the battery, each generated from the builder and the plan if the run set fails. The
@@ -72,7 +74,7 @@ python3 build/negative_controls.py
 python3 ../check_selection_blocks.py
 python3 qc/archive_run_set.py --self-check
 python3 qc/score_run_set.py --self-check
-python3 qc/archive_run_set.py --set run_set_09-20-2026 G1=/path/G1.json G2=/path/G2.json G3=/path/G3.json
+python3 qc/archive_run_set.py --set run_set_09-20-2026 G1=/path/G1.json G2=/path/G2.json G3=/path/G3.json G4=/path/G4.json G5=/path/G5.json
 python3 qc/score_run_set.py --details
 ```
 

@@ -2,8 +2,8 @@
 
 The field is a numbered **Checkpoints** table, one column headed "Checkpoint - what the model must
 do". Fourteen rows. The step count was predicted over 100 on the platform's count and measured on
-09/20/2026 at 209, 165 and 213 tool calls on G1, G2 and G3, one assistant turn each. Entered at
-the midpoint of the run set, three of five Gemini runs at a 23.2% mean.
+09/20/2026 at 209, 165, 213, 192 and 197 tool calls on G1 to G5, one assistant turn each. The five
+Gemini runs read a 22.6% mean.
 
 ---
 
