@@ -9,7 +9,7 @@ these predictions rather than over them, the way T1's and v2's records do.
 ## The plan the predictions are scored against
 
 21 planned rows, 87 points, one gate, as registered before the runs. The determination carried 70 points, 80.5%. BambooHR
-brought to the schedule carried 12, 13.8%. The page and its form carried 5, 5.7%. Task round 1 of 09/20/2026 restructured the set to 28 rows and 89 points with no registered weight moved, and the re-scored tables sit under the measured record below. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
+brought to the schedule carried 12, 13.8%. The page and its form carried 5, 5.7%. Task round 1 of 09/20/2026 restructured the set to 28 rows and 89 points with no registered weight moved, and task round 2 the same day to 43 rows and 96 points; the re-scored tables sit under the measured record below. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
 
 ## The registered paths
 
@@ -225,6 +225,44 @@ the same archived bytes:
 so each run gains two points on two more; the failing rows are the same rules under new numbers.
 P3 reads 40.4% on this set against 39.1% before, the two free points, and the five runs sit where
 they sat, three on P1 and two under it.
+
+## Re-scored on the set task round 2 left, 09/20/2026
+
+The second rubric round read the 28-row import and the set was rebuilt the same day: the form
+row split from the reconciliation, the request's ID and date lines and the tier on every row as
+rows of their own, the two BambooHR set rows split to one record a row at 1, the six policies the
+schedule moves and the five balances that mirror a page rule, with a guard at 1 over the 44
+policies and another over the 33 balances the schedule leaves as loaded, and a Greenhouse guard at
+1. No page weight moved, the BambooHR family carries 15 against 12, and `qc/README.md` carries
+the verdicts. The paths and the five runs re-score on the 43 rows and 96 points as the builder and
+`qc/score_run_set.py` print them, from the same archived bytes:
+
+| Path | What the run does | Rows | Total it prints | Score |
+|---|---|---|---|---|
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 17 of 96, 17.7% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 32 of 96, 33.3% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 38 of 96, 39.6% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 49 of 96, 51.0% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 62 of 96, 64.6% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 78 of 96, 81.2% |
+| P6 | the heal | 52 | $92,739.54 | 96 of 96, 100.0% |
+
+| Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
+|---|---|---|---|---|---|---|---|---|
+| G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 31 of 96, 32.3% | 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39 |
+| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 24 of 96, 25.0% | 2, 10, 11, 12, 13, 14, 15, 16, 17, 18, 24, 25, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 41, 42 |
+| G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 31 of 96, 32.3% | 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39 |
+| G4 | gemini-3.8-flash | 192 | 192 | 52 | $111,455.78 | P1 | 32 of 96, 33.3% | 10, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39 |
+| G5 | gemini-3.8-flash | 197 | 197 | 50 | $111,100.39 | none | 23 of 96, 24.0% | 2, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 24, 25, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 41, 42 |
+
+**Mean 29.4%, against 25.6% on the round-1 set and 23.9% on the plan.** The four added form rows
+and the Greenhouse guard are points every run earns, except the date row, which G1, G3 and G5
+fail: each wrote August 31, 2026 in its prose against the request's MM/DD/YYYY. The two BambooHR
+guards pass on the untouched BambooHR every run left, 2 points, and the eleven per-record rows
+fail on every run as the two set rows did, so the BambooHR family costs the tier one point more
+than before. The failing rows are the same rules under new numbers: three runs on P1 at 32 or 31
+of 96 and two under it at 24 or 23. P1 reads 33.3% on this set, under the bar with room, and the
+decision rule is unchanged: a Gemini set under 40% on this rubric ships the package.
 
 ## The task-field paragraph, 09/20/2026
 

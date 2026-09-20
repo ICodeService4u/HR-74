@@ -175,6 +175,13 @@ def _is_id(cell):
     return re.fullmatch(ID_RE, _norm(cell)) is not None
 
 
+def _is_name(cell):
+    """A cell that reads as a person's name: non-empty, no digit, not an ID, not a total word."""
+    n = _norm(cell)
+    return bool(n) and not re.search(r"\d", n) and not _is_id(n) \
+        and not re.search(r"\b(total|totals|subtotal|sum|average|count)\b", n)
+
+
 def _key_of(row):
     """The whole-cell ID that keys a row, or None. A key is a whole cell, or a whole cell with a
     note in parentheses beside it."""
@@ -193,16 +200,41 @@ class _Page(object):
     def __init__(self, title, body, published, route):
         self.title, self.body, self.published, self.route = title, body, published, route
         self.tables = _tables(body)
-        self.emp_tables = [(h, [r for r in rows if _key_of(r)], first)
-                           for h, rows, first in self.tables if any(_key_of(r) for r in rows)]
+        # an employee table is a table carrying at least one keyed row; its unkeyed rows are kept
+        # so a total line, a note or an employee row missing its ID can be told apart
+        self.emp_tables = [(h, rows, first) for h, rows, first in self.tables if any(_key_of(r) for r in rows)]
 
     def keyed(self):
         """{ID: (headers, row)} over every employee table; a duplicate key keeps the first."""
         out = {}
         for h, rows, first in self.emp_tables:
             for r in rows:
-                out.setdefault(_key_of(r), (h, r))
+                k = _key_of(r)
+                if k:
+                    out.setdefault(k, (h, r))
         return out
+
+    def unkeyed_named(self, notes):
+        """The unkeyed rows on the employee tables that carry a name: (headers, row, has a figure).
+        With a balance or a liability beside the name it is an employee row missing its ID, and it
+        counts and sums as one; without a figure it is a note, which counts for nothing."""
+        out = []
+        for h, rows, first in self.emp_tables:
+            ni = self.col(h, "name", notes)
+            for r in rows:
+                if _key_of(r):
+                    continue
+                name = r[ni] if ni is not None and ni < len(r) else ""
+                if not _is_name(name):
+                    continue
+                figs = [_num(r[i]) for i in (self.col(h, "balance", notes), self.col(h, "liability", notes))
+                        if i is not None and i < len(r)]
+                out.append((h, r, any(f is not None for f in figs)))
+        return out
+
+    def employee_rows(self, notes):
+        """Every employee row: the keyed rows and the unkeyed rows that carry a name and a figure."""
+        return list(self.keyed().values()) + [(h, r) for h, r, fig in self.unkeyed_named(notes) if fig]
 
     def col(self, headers, want, notes):
         """The index of the wanted column on this header, by hint words first, by the request's
@@ -359,7 +391,6 @@ def _run_page(kind, page, notes, metrics):
         if not keyed:
             return False, "no employee rows"
         bad = []
-        sums = {"balance": 0.0, "liability": 0.0}
         pats = {"balance": r"-?[\d,]+\.\d{2}(?:\s*(?:hours|hrs))?", "rate": r"\$?\s?[\d,]+\.\d{4}",
                 "liability": r"-?\$?\s?[\d,]+\.\d{2}"}
         for k, (h, r) in keyed.items():
@@ -368,29 +399,62 @@ def _run_page(kind, page, notes, metrics):
                 cell = r[i] if i is not None and i < len(r) else ""
                 if not re.fullmatch(pat, _norm(cell)):
                     bad.append((k, want, cell))
-                elif want in sums:
-                    sums[want] += _num(cell) or 0.0
         metrics["bad_cells"] = len(bad)
         if bad:
             return False, "%d cells outside the form, first %r" % (len(bad), bad[0])
-        prose = _prose(page.body)
-        stated = _money_figures(prose) + [x for h, rows, f in page.tables for r in rows if not _key_of(r) for c in r for x in _money_figures(c)]
-        total_ok = any(abs(x - round(sums["liability"], 2)) <= 0.01 for x in stated)
-        notes.append("every cell in form; rows sum to %.2f; stated dollar figures %r" % (sums["liability"], stated[:8]))
-        if not total_ok:
-            return False, "no stated total equals the sum of the rows, %.2f" % sums["liability"]
-        return True, "%d rows in form and the total is the sum of the rows" % len(keyed)
+        return True, "%d rows in form" % len(keyed)
+    if kind == "reconcile":
+        if not keyed:
+            return False, "no employee rows"
+        emp = page.employee_rows(notes)
+        total = 0.0
+        for h, r in emp:
+            i = page.col(h, "liability", notes)
+            total += (_num(r[i]) if i is not None and i < len(r) else None) or 0.0
+        total = round(total, 2)
+        emp_ids = {id(r) for h, r in emp}
+        stated = _money_figures(_prose(page.body)) + [x for h, rows, f in page.tables for r in rows if id(r) not in emp_ids for c in r for x in _money_figures(c)]
+        metrics["row_sum"] = total
+        metrics["employee_rows"] = len(emp)
+        notes.append("rows sum to %.2f; stated dollar figures %r" % (total, stated[:8]))
+        if not stated:
+            return False, "no total is stated"
+        if any(abs(x - total) <= 0.01 for x in stated):
+            return True, "a stated total equals the sum of the rows, %.2f" % total
+        return False, "no stated total equals the sum of the rows, %.2f" % total
+    if kind == "id_rows":
+        if not page.emp_tables:
+            return False, "no employee table"
+        bad = [r[0] if r else "" for h, r, fig in page.unkeyed_named(notes)]
+        metrics["rows_without_id"] = len(bad)
+        if bad:
+            return False, "%d rows carry a name and no employee ID, first %r" % (len(bad), bad[0])
+        return True, "an employee ID on every one of %d rows" % len(keyed)
+    if kind == "dates":
+        body = page.body
+        iso = re.findall(r"\b\d{4}-\d{2}-\d{2}\b", body)
+        spelled = re.findall(r"\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}(?!\d)"
+                             r"(?:st|nd|rd|th)?,?\s+\d{4}", body, flags=re.I)
+        dmy = re.findall(r"\b\d{1,2}\.\d{1,2}\.\d{4}\b", body)
+        us = re.findall(r"\b\d{2}/\d{2}/\d{4}\b", body)
+        metrics["us_dates"] = len(us)
+        if iso or spelled or dmy:
+            return False, "dates outside MM/DD/YYYY: %r" % (iso + spelled + dmy)[:3]
+        if not us:
+            return False, "no MM/DD/YYYY date on the page"
+        return True, "%d dates, all MM/DD/YYYY" % len(us)
     if kind == "summary":
         if not keyed:
             return False, "no employee rows"
+        emp = page.employee_rows(notes)
         prose = _norm(_prose(page.body))
-        count_ok = re.search(r"(?<!\d)%d(?!\d)" % len(keyed), prose) is not None
-        hours = round(sum(_num(r[page.col(h, "balance", notes)] or "") or 0.0 for h, r in keyed.values()), 2)
-        dollars = round(sum(_num(r[page.col(h, "liability", notes)] or "") or 0.0 for h, r in keyed.values()), 2)
+        count_ok = re.search(r"(?<!\d)%d(?!\d)" % len(emp), prose) is not None
+        hours = round(sum(_num(r[page.col(h, "balance", notes)] or "") or 0.0 for h, r in emp), 2)
+        dollars = round(sum(_num(r[page.col(h, "liability", notes)] or "") or 0.0 for h, r in emp), 2)
         hours_ok = any(abs(x - hours) <= 0.01 for x in _hour_figures(prose))
-        money_ok = any(abs(x - dollars) <= 0.01 for x in _money_figures(prose))
-        notes.append("summary: count %d stated=%s, hours %.2f stated=%s, dollars %.2f stated=%s"
-                     % (len(keyed), count_ok, hours, hours_ok, dollars, money_ok))
+        money_ok = bool(_money_figures(prose))
+        notes.append("summary: count %d stated=%s, hours %.2f stated=%s, a dollar figure stated=%s (rows sum to %.2f)"
+                     % (len(emp), count_ok, hours, hours_ok, money_ok, dollars))
         if count_ok and hours_ok and money_ok:
             return True, "the count, the total hours and the total liability are stated"
         return False, "the summary lacks %s" % ", ".join(x for x, ok in (("the count", count_ok), ("the total hours", hours_ok), ("the total liability", money_ok)) if not ok)
@@ -399,14 +463,15 @@ def _run_page(kind, page, notes, metrics):
             return False, "no employee rows"
         blank = []
         for k, (h, r) in keyed.items():
-            for want in ("name", "department"):
+            for want in ("name", "department", "tier"):
                 i = page.col(h, want, notes)
-                if i is None or i >= len(r) or not _norm(r[i]) or _is_id(r[i]):
-                    blank.append((k, want))
+                cell = r[i] if i is not None and i < len(r) else ""
+                if not _norm(cell) or _is_id(cell) or (want == "tier" and _tier(cell) is None):
+                    blank.append((k, want, cell))
         metrics["blank_cells"] = len(blank)
         if blank:
-            return False, "%d rows lack a name or a department, first %r" % (len(blank), blank[0])
-        return True, "a name and a department on all %d rows" % len(keyed)
+            return False, "%d rows lack a name, a department or a tier, first %r" % (len(blank), blank[0])
+        return True, "a name, a department and a tier on all %d rows" % len(keyed)
     if kind == "layout":
         if not page.emp_tables:
             return False, "no employee table"
@@ -415,7 +480,7 @@ def _run_page(kind, page, notes, metrics):
         first = page.emp_tables[0][2]
         before = "\n".join(page.body.split("\n")[:first])
         before_prose = _norm(_prose(before))
-        count_ok = re.search(r"(?<!\d)%d(?!\d)" % len(keyed), before_prose) is not None
+        count_ok = re.search(r"(?<!\d)%d(?!\d)" % len(page.employee_rows(notes)), before_prose) is not None
         money_ok = bool(_money_figures(before_prose))
         notes.append("one employee table at line %d; before it the count is %s and a dollar figure is %s"
                      % (first, "stated" if count_ok else "absent", "stated" if money_ok else "absent"))
@@ -705,6 +770,13 @@ def _run_bamboo(kind, bam, notes, metrics):
         metrics["wrong"] = len(bad)
         notes.append("balances checked on %d employees, %d differ: %r" % (len(S["expected"]), len(bad), bad[:6]))
         return not bad, "%d of %d balances match the schedule" % (len(S["expected"]) - len(bad), len(S["expected"]))
+    if kind == "policy":
+        num = S["key"].upper()
+        if num not in bam.emp_by_num:
+            return False, "no employee row carries %s" % num
+        got = bam.assign.get(num)
+        notes.append("row %s: current policy %r, expected %r" % (num, got, S["expected"]))
+        return got == _norm(S["expected"]), "policy %r" % got
     if kind == "balance_row":
         num = S["key"].upper()
         if num not in bam.emp_by_num:
@@ -718,6 +790,59 @@ def _run_bamboo(kind, bam, notes, metrics):
     return False, "unknown check kind %r" % kind
 
 
+def _gh_norm(v):
+    """A cell as the seed and the live app would both spell it: lower, trimmed, booleans as 1 and
+    0, numbers without a trailing .0, a datetime cut to its date."""
+    s = _text(v).strip().lower()
+    if s in ("", "none", "null"):
+        return None
+    if s in ("true", "t", "yes"):
+        return "1"
+    if s in ("false", "f", "no"):
+        return "0"
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", s):
+        return s[:10]
+    try:
+        f = float(s)
+        return str(int(f)) if f == int(f) else repr(f)
+    except ValueError:
+        return s
+
+
+def _run_greenhouse(ctx, notes, metrics):
+    """Every seed table is found in the snapshot by content and carries exactly its seed rows: the
+    same row count, and every seed row's values present on one live row."""
+    S = SPEC
+    names = [n for n in ctx.list_tables() if "page" not in n.lower()]
+    live = {}
+    for n in names:
+        cols, rows = _load(ctx, n)
+        live[n] = [set(x for x in (_gh_norm(v) for v in r) if x is not None) for r in rows]
+    bad, seen = [], 0
+    for table, seed_rows in sorted(S["seed"].items()):
+        seed = [set(r) for r in seed_rows]
+        best = None
+        for n, lrows in live.items():
+            matched = sum(1 for sr in seed if any(sr <= lr for lr in lrows))
+            if matched * 2 >= len(seed) and (best is None or matched > best[1] or (matched == best[1] and table in n.lower())):
+                best = (n, matched, len(lrows))
+        if not best:
+            bad.append((table, "no live table carries half of its %d seed rows" % len(seed)))
+            notes.append("seed table %s: not found in the snapshot" % table)
+            continue
+        n, matched, count = best
+        seen += 1
+        notes.append("seed table %s -> %s: %d live rows against %d seed rows, %d seed rows matched"
+                     % (table, n, count, len(seed), matched))
+        if count != len(seed) or matched != len(seed):
+            bad.append((table, "%d live rows for %d seed rows, %d matched" % (count, len(seed), matched)))
+    metrics["tables"] = seen
+    metrics["changed"] = len(bad)
+    if bad:
+        return False, "%d of %d Greenhouse tables changed or unseen: %r" % (len(bad), len(S["seed"]), bad[:4])
+    return True, "all %d Greenhouse tables carry their seed rows and no other" % seen
+
+
 def check(ctx):
     notes, metrics = [], {}
 
@@ -725,6 +850,11 @@ def check(ctx):
         return {"passed": False, "details": "\n".join(notes + ["", "FAILED - " + reason]), "metrics": metrics}
 
     try:
+        if SPEC["target"] == "greenhouse":
+            ok, why = _run_greenhouse(ctx, notes, metrics)
+            if ok:
+                return {"passed": True, "metrics": metrics, "details": "\n".join(notes + ["", "PASSED - " + why])}
+            return fail(why)
         if SPEC["target"] == "bamboohr":
             bam = _Bamboo(ctx, notes)
             ok, why = _run_bamboo(SPEC["kind"], bam, notes, metrics)
