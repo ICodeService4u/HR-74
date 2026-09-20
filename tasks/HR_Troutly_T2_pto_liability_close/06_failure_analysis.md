@@ -1,6 +1,6 @@
 # Failure analysis - predictions registered before any run (09/20/2026)
 
-**Two of the five Gemini trajectories have run; the measured record is at the end.** Everything
+**Three of the five Gemini trajectories have run; the measured record is at the end.** Everything
 above it is a prediction with a date on it. When the run
 set lands, archive each run's page and its BambooHR rows under `qc/findings/run_set_MM-DD-YYYY/`
 with a `runs.json`, score it against the registered paths, and write the measured record under
@@ -100,9 +100,9 @@ Every planned row is an App DB row. Before reading a zero as a failure of the ru
 row it considered. T1's harness fixture matched the platform's `get_page` route on thirteen of
 thirteen runs; the BambooHR tables' shape in a grading snapshot is unmeasured.
 
-## Measured 09/20/2026 - G1 and G3, two of the five Gemini 3.8 Flash runs
+## Measured 09/20/2026 - G1, G2 and G3, three of the five Gemini 3.8 Flash runs
 
-Both exports landed on 09/20/2026 and are archived under `qc/findings/run_set_09-20-2026/` by
+Three exports landed on 09/20/2026 and are archived under `qc/findings/run_set_09-20-2026/` by
 `qc/archive_run_set.py`: each page as the app returned it to the run's own get_page call, every
 BambooHR write with the app's result, and `runs.json` read off the exports. `python3
 qc/score_run_set.py` prints the table from those bytes and nothing else: not the final answer, not

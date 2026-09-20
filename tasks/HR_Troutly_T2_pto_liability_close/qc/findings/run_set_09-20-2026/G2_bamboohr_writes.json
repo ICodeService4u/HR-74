@@ -1,0 +1,100 @@
+{
+ "id_to_employee_number": {
+  "1": "TRT-0001",
+  "2": "TRT-0018",
+  "3": "TRT-0037",
+  "4": "TRT-0049",
+  "5": "TRT-0002",
+  "6": "TRT-0012",
+  "7": "CTR-2001",
+  "8": "CTR-2002",
+  "9": "CTR-2003",
+  "10": "CTR-2004",
+  "11": "TRT-0005",
+  "12": "TRT-0006",
+  "13": "TRT-0009",
+  "14": "TRT-0014",
+  "15": "TRT-0021",
+  "16": "TRT-0066",
+  "17": "TRT-0023",
+  "18": "TRT-0027",
+  "19": "TRT-0029",
+  "20": "TRT-0031",
+  "21": "TRT-0154",
+  "22": "TRT-0034",
+  "23": "TRT-0040",
+  "24": "TRT-0043",
+  "25": "TRT-0045",
+  "26": "TRT-0047",
+  "27": "TRT-0051",
+  "28": "TRT-0052",
+  "29": "TRT-0055",
+  "30": "TRT-0058",
+  "31": "TRT-0062",
+  "32": "TRT-0064",
+  "33": "TRT-0069",
+  "34": "TRT-0071",
+  "35": "TRT-0074",
+  "36": "TRT-0076",
+  "37": "TRT-0079",
+  "38": "TRT-0083",
+  "39": "TRT-0086",
+  "40": "TRT-0088",
+  "41": "TRT-0091",
+  "42": "TRT-0093",
+  "43": "TRT-0096",
+  "44": "TRT-0099",
+  "45": "TRT-0102",
+  "46": "TRT-0105",
+  "47": "TRT-0108",
+  "48": "TRT-0110",
+  "49": "TRT-0113",
+  "50": "TRT-0117",
+  "51": "TRT-0119",
+  "52": "TRT-0122",
+  "53": "TRT-0128",
+  "54": "TRT-0131",
+  "55": "TRT-0135",
+  "56": "TRT-0141",
+  "57": "TRT-0150",
+  "58": "TRT-0156"
+ },
+ "writes": [
+  {
+   "seq": 146,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "timeOffPolicyId": 3,
+      "accrualStartDate": "2019-03-04"
+     }
+    ],
+    "employeeId": "1"
+   },
+   "result": {
+    "assigned": [],
+    "removed": []
+   }
+  },
+  {
+   "seq": 147,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "note": "August 2026 close reconciliation",
+    "amount": 0,
+    "timeOffTypeId": 1,
+    "date": "2026-08-31",
+    "employeeId": "1"
+   },
+   "result": {
+    "error": {
+     "code": 422,
+     "message": "Adjustment amount cannot be zero"
+    }
+   }
+  }
+ ]
+}
