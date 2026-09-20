@@ -808,7 +808,7 @@ def write_show_your_work():
         ws.append([i, crit, w, gate])
     ws.append([])
     ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed, and it matches the schedule's only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
-    ws.append(["Note", "Rows 6 to 18 each test one rule on the people that rule alone moves. One wrong cell fails a rule once and never twice. Where a rule touches everyone, one clean case stands for all and the gate checks the rest."])
+    ws.append(["Note", "Rows 6 to 18 each test one rule on the people that rule alone moves. One wrong cell fails a rule once and never twice. Two rules apply to all 52 people, the four pay periods and the time off taken. Each is tested on one person whose number no other rule changes, and the total checks everyone else."])
     ws.append(["Note", "Rows 2, 14, 15 and 16 grade the population on the set of IDs. Rows 19 to 21 grade BambooHR on its tables."])
     ws = wb.create_sheet("Row assembly")
     ws.append(["Step", "Result"])
