@@ -1375,7 +1375,7 @@ def check_plan():
 
 def check_documents_ascii():
     """Every package document is ASCII; the house register's dashes and quotes."""
-    for name in ("01_prompt.md", "02_task_metadata.md", "06_failure_analysis.md",
+    for name in ("01_prompt.md", "02_task_metadata.md", "06_failure_analysis.md", "07_paste_guide.md",
                  "08_section_1_3_step_plan.md", "09_rubric_import.md", "README.md", "qc/README.md",
                  "build/task_input_source.md"):
         path = os.path.join(PKG, name)
@@ -1419,6 +1419,15 @@ def check_docs():
     for key, desc, pts, failed, tot, n in score_paths():
         assert "%s | " % key in fa and "%d of %d" % (pts, PLAN_TOTAL) in fa, "06 lacks %s at %d of %d" % (key, pts, PLAN_TOTAL)
     assert md5(os.path.join(PKG, GOLDEN_FILE)) in meta, "02 publishes a stale md5 for the golden page, this build wrote %s" % md5(os.path.join(PKG, GOLDEN_FILE))
+    # 07 is written by qc/write_paste_guide.py from these rows; it has to carry every row as built
+    guide = open(os.path.join(PKG, "07_paste_guide.md"), encoding="utf8").read()
+    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs, spec) in enumerate(PLAN, 1):
+        assert crit in guide, "07 lacks row %d: %s" % (i, crit[:60])
+        assert "qc/verifiers/row%02d_%s.py" % (i, slug(crit)) in guide, "07 lacks the row file for row %d" % i
+        assert "| Target app | `%s` |" % TARGET_APP[spec["target"]] in guide, "07 lacks the target app of row %d" % i
+    for fig in (md5(IMPORT), "%d rows" % len(RUBRIC), "%d points" % PLAN_TOTAL, "**DB only**"):
+        assert fig in guide, "07 lacks the figure %r" % fig
+    assert guide.count("### Row ") == len(RUBRIC), "07 carries %d row blocks for %d rows" % (guide.count("### Row "), len(RUBRIC))
     readme = open(os.path.join(PKG, "README.md"), encoding="utf8").read()
     shipped = [f for f in sorted(os.listdir(PKG)) if f[0].isdigit()]
     shipped += ["build/" + f for f in sorted(os.listdir(HERE)) if not f.startswith("__")]

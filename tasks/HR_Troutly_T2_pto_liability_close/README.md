@@ -62,6 +62,7 @@ carries the record and `qc/README.md` the register.
 | `04_golden_output_PTO_Liability.md` | The golden page, generated from the schedule in the request's shape |
 | `05_rubric_import.xlsx` / `09_rubric_import.md` | The file that registers, and its mappings, with the verifier record |
 | `06_failure_analysis.md` | The predictions, dated, with the honest note and the decision rule |
+| `07_paste_guide.md` | The paste, row by row: every code-verifier form field, the tag, the reference artifacts, the file to paste and the test-run verdict the untouched task should give, written by `qc/write_paste_guide.py` from the plan's rows |
 | `08_section_1_3_step_plan.md` | The checkpoint table, held until the bar is measured |
 | `build/build_task_input.py`, `build/task_input_source.md` | The memo source and its renderer with the leak guards |
 | `build/build_package_artifacts.py` | The one builder: the schedule from the world's bytes, the paths, the plan, the import, the golden page, the row files, the guards |
@@ -72,6 +73,7 @@ carries the record and `qc/README.md` the register.
 | `qc/ctx.py`, `qc/run_battery.py` | The verifier skill's stand-in `ctx` and battery runner |
 | `qc/scenarios.py`, `qc/verifier_harness.py` | The 76-snapshot battery and the runner over all rows |
 | `qc/verifiers/` | The 43 generated row files |
+| `qc/write_paste_guide.py` | Writes `07_paste_guide.md` from the rows, running every row file against the untouched task for the expected test-run line |
 | `qc/archive_run_set.py`, `qc/score_run_set.py` | The archiver and the scorer, each with a `--self-check`: the page and the BambooHR writes read off either route as the app returned them, scored by the reviewer decision rules against the registered paths |
 | `qc/findings/run_set_09-20-2026/` | The five Gemini runs' pages, their BambooHR writes and `runs.json`, read off the exports |
 
@@ -87,6 +89,7 @@ python3 build/build_task_input.py
 python3 build/build_package_artifacts.py --docs
 python3 build/build_package_artifacts.py --table     # the path table and the rubric table 02 carries
 python3 qc/verifier_harness.py             # every verifier against every scenario
+python3 qc/write_paste_guide.py            # 07, the paste row by row, after the harness is green
 python3 build/negative_controls.py
 python3 ../check_selection_blocks.py
 python3 qc/archive_run_set.py --self-check
@@ -199,6 +202,8 @@ python3 qc/score_run_set.py --details
 | docs: a stale import md5 in the record | RED |
 | docs: a stale import md5 in the mappings document | RED |
 | docs: a stale citation count in the mappings document | RED |
+| docs: a stale criterion in the paste guide | RED |
+| docs: a row file missing from the paste guide | RED |
 | selection: a wildcard in the block | RED |
 
-**101 of 101 controls went red**, 09/20/2026, the verifier controls among them: a defect planted in the engine, the battery, a spec or the golden fails the harness or the builder, and the closing rebuild left the tree clean at the published md5s and the battery at 3268 of 3268. Three of the verifier controls came back green on their first run on the 28-row set, each a battery that could not see the planted defect, and the battery was sharpened rather than the control dropped; task round 2 added eleven controls for its rows, the Greenhouse guard passing on a row count, a policy row passing any policy, a band around the reconciled total, the date row blind to ISO dates, the tier dropped from the every-row columns and a total line read as a named row among them.
+**103 of 103 controls went red**, 09/20/2026, the verifier controls among them: a defect planted in the engine, the battery, a spec or the golden fails the harness or the builder, and the closing rebuild left the tree clean at the published md5s and the battery at 3268 of 3268. Three of the verifier controls came back green on their first run on the 28-row set, each a battery that could not see the planted defect, and the battery was sharpened rather than the control dropped; task round 2 added eleven controls for its rows, the Greenhouse guard passing on a row count, a policy row passing any policy, a band around the reconciled total, the date row blind to ISO dates, the tier dropped from the every-row columns and a total line read as a named row among them. The paste guide, 07, carries two of its own: a criterion and a row file planted stale in it fail the docs build.

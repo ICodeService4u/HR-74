@@ -28,6 +28,7 @@ META_MD = os.path.join(PKG, "02_task_metadata.md")
 FA_MD = os.path.join(PKG, "06_failure_analysis.md")
 README_MD = os.path.join(PKG, "README.md")
 NINE_MD = os.path.join(PKG, "09_rubric_import.md")
+GUIDE_MD = os.path.join(PKG, "07_paste_guide.md")
 SELECT = os.path.join(REPO, "tasks", "check_selection_blocks.py")
 
 
@@ -256,6 +257,11 @@ ok.append(control("docs: a stale explanation in the record's rubric table", BLD,
 ok.append(control("docs: a stale import md5 in the record", META_MD, "c509e60e0bbae335bc41d3e859ca57cc", "c509e60e0bbae335bc41d3e859ca57cd", BLD, ["--docs"], expect="stale md5 for the import"))
 ok.append(control("docs: a stale import md5 in the mappings document", NINE_MD, "c509e60e0bbae335bc41d3e859ca57cc", "c509e60e0bbae335bc41d3e859ca57cd", BLD, ["--docs"], expect="09 lacks the figure"))
 ok.append(control("docs: a stale citation count in the mappings document", NINE_MD, "139 citations over 17 of the", "138 citations over 17 of the", BLD, ["--docs"], expect="09 lacks the figure"))
+ok.append(control("docs: a stale criterion in the paste guide", GUIDE_MD,
+    "States, in Greenhouse, every table as seeded, with no row added, changed or removed.",
+    "States, in Greenhouse, every table as seeded.", BLD, ["--docs"], expect="07 lacks row"))
+ok.append(control("docs: a row file missing from the paste guide", GUIDE_MD,
+    "`qc/verifiers/row43_states_in_greenhouse_every_table_as_seeded_with.py`", "`qc/verifiers/row44_states_in_greenhouse.py`", BLD, ["--docs"], expect="07 lacks the row file"))
 ok.append(control("selection: a wildcard in the block", META_MD, "\nbamboohr/Employee.csv\n", "\nbamboohr/*.csv\n", SELECT))
 
 print("\n%d of %d controls went red" % (sum(ok), len(ok)))
