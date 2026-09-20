@@ -37,7 +37,9 @@ def run(script, args=()):
 
 def control(label, path, old, new, script, args=(), expect=None, pre=None):
     """Plant `new` for `old` in `path`, run `script` (after `pre`, which regenerates what the
-    planted file feeds, the row files from the engine), expect red, revert."""
+    planted file feeds, the row files from the engine), expect red, revert. After the revert
+    `pre` runs again, so the row files carry the clean engine and not the planted one: without
+    that, the control after a verifier control measured five mismatches for its own one."""
     original = open(path, encoding="utf8").read()
     assert old in original, "control %r: anchor not found" % label
     open(path, "w", encoding="utf8").write(original.replace(old, new, 1))
@@ -52,6 +54,8 @@ def control(label, path, old, new, script, args=(), expect=None, pre=None):
             red = red and expect in (r.stderr + r.stdout)
     finally:
         open(path, "w", encoding="utf8").write(original)
+        if pre:
+            run(pre)
     print("%-6s %-60s %s" % ("RED" if red else "GREEN!!", label, msg[:100]))
     return red
 
@@ -95,7 +99,7 @@ ok.append(control("world: the population", BLD, 'if f["population"]:\n        pe
 ok.append(control("plan: weight band", BLD, '("determination", 10, "Critical value"', '("determination", 15, "Critical value"', BLD))
 ok.append(control("plan: the gate demoted off the total", BLD, '("determination", 10, "Critical value"', '("determination", 9, "Critical value"', BLD))
 ok.append(control("plan: a row not opening on States", BLD, '"States that a Wiki.js page titled %s is published." % PAGE', '"A Wiki.js page titled %s is published." % PAGE', BLD))
-ok.append(control("plan: the free base over a tenth", BLD, '("free", 2, "-", "States, on the PTO liability page, the %d current employees', '("free", 9, "-", "States, on the PTO liability page, the %d current employees', BLD))
+ok.append(control("plan: the free base over an eighth", BLD, '("free", 2, "-", "States, on the PTO liability page, the %d current employees', '("free", 9, "-", "States, on the PTO liability page, the %d current employees', BLD))
 ok.append(control("plan: the golden not scoring every point", BLD, 'return bal_ok("TRT-0018", s)',
                   'return "TRT-0018" in by(s) and _same(by(s)["TRT-0018"]["balance"], 24.6154, 0.005)', BLD))
 ok.append(control("plan: a hours row read off a column the page does not carry", BLD, 'return bal_ok("TRT-0141", s)',
@@ -113,9 +117,9 @@ ok.append(control("rubric: a stacked criterion", BLD,
     '"States, on the PTO liability page, no contractor row, CTR-2001 to CTR-2004, and that no ended employee is on it."', BLD, expect="stacked"))
 # ---- the register: every rule the explanations are held to, made to fail once
 ok.append(control("register: punctuation", BLD,
-    "as the handbook's 7.3 totals them.", "as the handbook (7.3) totals them.", BLD, expect="colon, semicolon or bracket"))
+    "and the handbook's 7.3 totals the rounded rows the same way.", "and the handbook (7.3) totals the rounded rows the same way.", BLD, expect="colon, semicolon or bracket"))
 ok.append(control("register: a spaced dash", BLD,
-    "as the handbook's 7.3 totals them.", "as the handbook's 7.3 - totals them.", BLD, expect="spaced dash"))
+    "and the handbook's 7.3 totals the rounded rows the same way.", "and the handbook's 7.3 - totals the rounded rows the same way.", BLD, expect="spaced dash"))
 ok.append(control("register: a spelled month", BLD,
     'approved request of %.2f hours from %s to %s.', 'approved request of %.2f hours from %s to %s, filed July 6.', BLD, expect="spells a month"))
 ok.append(control("register: an ISO date", BLD,
@@ -135,10 +139,10 @@ ok.append(control("register: two rows carrying one explanation verbatim", BLD,
     '"The request lists employee ID, name, department, annual PTO tier, PTO balance, hourly rate and dollar liability as the table\'s columns, and the roster carries every name and department."',
     '"BambooHR carries CTR-2001 to CTR-2004 as active employees and the roster carries no contractor. The handbook bars contractors from paid time off."', BLD, expect="repeat verbatim"))
 ok.append(control("import: the layout row losing its Style / formatting tag", BLD,
-    'FORM_ROWS = (FORM_CRIT, LAYOUT_CRIT)', 'FORM_ROWS = (FORM_CRIT,)', BLD, expect="tags"))
+    'FORM_ROWS = (FORM_CRIT, ID_CRIT, DATES_CRIT, LAYOUT_CRIT)', 'FORM_ROWS = (FORM_CRIT, ID_CRIT, DATES_CRIT)', BLD, expect="tags"))
 ok.append(control("world: the loaded population", BLD, 'assert len(LOADED_IDS) == 50', 'assert len(LOADED_IDS) == 52', BLD))
 ok.append(control("plan: a set row reading the two created rows too", BLD,
-    '        return all(bal_ok(i, s) for i in LOADED_IDS)', '        return all(bal_ok(i, s) for i in GOLDEN_BY_ID)', BLD, expect="reads a created row too"))
+    '        return all(bal_ok(i, s) for i in BALANCE_SAME)', '        return all(bal_ok(i, s) for i in GOLDEN_BY_ID)', BLD, expect="reads a created row too"))
 ok.append(control("plan: a created-row row passing with the row absent", BLD,
     '"States, in BambooHR, a PTO balance of %.2f hours for Rafael Ibarra, TRT-0155." % g["TRT-0155"]["balance"], lambda s: bal_ok("TRT-0155", s),',
     '"States, in BambooHR, a PTO balance of %.2f hours for Rafael Ibarra, TRT-0155." % g["TRT-0155"]["balance"], always,', BLD, expect="passes with the row absent"))
@@ -197,9 +201,24 @@ ok.append(control("verifier: a duplicate balance row read as the first", ENG,
 ok.append(control("verifier: a run's narration read instead of the database", ENG,
     '        pages = _load_pages(ctx, SPEC["page"], notes)',
     '        pages = _load_pages(ctx, SPEC["page"], notes) or [_Page(SPEC["page"], _clean(ctx.final_answer), True, "final answer")]', VH, pre=BLD))
+ok.append(control("verifier: the Greenhouse guard passing on a row count alone", ENG,
+    '        if count != len(seed) or matched != len(seed):', '        if count != len(seed):', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a policy row passing any assigned policy", ENG,
+    '        return got == _norm(S["expected"]), "policy %r" % got', '        return got is not None, "policy %r" % got', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a band around the stated total in the reconciliation", ENG,
+    '        if any(abs(x - total) <= 0.01 for x in stated):', '        if any(abs(x - total) <= 1.0 for x in stated):', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the date row blind to ISO dates", ENG,
+    '        if iso or spelled or dmy:', '        if spelled or dmy:', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the tier dropped from the every-row columns", ENG,
+    '            for want in ("name", "department", "tier"):', '            for want in ("name", "department"):', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a total line read as a named employee row", ENG,
+    '        and not re.search(r"\\b(total|totals|subtotal|sum|average|count)\\b", n)', '        and True', VH, expect="WRONG", pre=BLD))
+ok.append(control("battery: a Greenhouse edit expected to pass", SCN,
+    'greenhouse=greenhouse_tables(edit=("applications", 1, "status", "rejected"))), {GH},',
+    'greenhouse=greenhouse_tables(edit=("applications", 1, "status", "rejected"))), set(),', VH, expect="WRONG"))
 ok.append(control("battery: an expectation planted wrong", SCN,
-    '     {8}, "a stated two-decimal value is graded to the cent; its neighbour is not it"),',
-    '     set(), "a stated two-decimal value is graded to the cent; its neighbour is not it"),', VH, expect="FALSE PASS"))
+    '     {11}, "a stated two-decimal value is graded to the cent; its neighbour is not it"),',
+    '     {11, 12}, "a stated two-decimal value is graded to the cent; its neighbour is not it"),', VH, expect="FALSE PASS"))
 ok.append(control("battery: the fixture's ids not the ids G1 observed", SCN,
     'EMP_ID = {e["employee_number"]: str(i) for i, e in enumerate(SEED_EMP, 1)}',
     'EMP_ID = {e["employee_number"]: str(i) for i, e in enumerate(SEED_EMP, 2)}', VH, expect="ids G1 observed"))
@@ -207,8 +226,17 @@ ok.append(control("spec: a value row keyed on another employee", BLD,
     'bal("TRT-0005"), tier("TRT-0043", 120), tier("TRT-0071", 160), bal("TRT-0018"),',
     'bal("TRT-0009"), tier("TRT-0043", 120), tier("TRT-0071", 160), bal("TRT-0018"),', BLD, expect="spec keyed"))
 ok.append(control("spec: a set row reading the created rows", BLD,
-    'dict(target="bamboohr", kind="policies", expected={i: TIER_POLICY[g[i]["tier"]] for i in LOADED_IDS}),',
+    'dict(target="bamboohr", kind="policies", expected={i: TIER_POLICY[g[i]["tier"]] for i in POLICY_SAME}),',
     'dict(target="bamboohr", kind="policies", expected={i: TIER_POLICY[g[i]["tier"]] for i in GOLDEN_BY_ID}),', BLD))
+ok.append(control("spec: a policy row expecting a policy its criterion does not name", BLD,
+    'kind="policy", key=i, expected=TIER_POLICY[g[i]["tier"]]) for i in POLICY_MOVED]', 'kind="policy", key=i, expected="PTO Under 2 Years") for i in POLICY_MOVED]', BLD, expect="spec expects a policy"))
+ok.append(control("spec: a guard reading a record the schedule moves", BLD,
+    'kind="balances", expected={i: [g[i]["balance"], g[i]["balance_posted"]] for i in BALANCE_SAME}),',
+    'kind="balances", expected={i: [g[i]["balance"], g[i]["balance_posted"]] for i in LOADED_IDS}),', BLD))
+ok.append(control("world: the records the schedule leaves as loaded", BLD,
+    'assert POLICY_MOVED == MIGRATED_WRONG_TIER and len(POLICY_SAME) == 44, len(POLICY_SAME)', 'assert POLICY_MOVED == MIGRATED_WRONG_TIER and len(POLICY_SAME) == 45, len(POLICY_SAME)', BLD))
+ok.append(control("plan: the guards that pass on inaction over a twentieth", BLD,
+    '("bamboohr", 1, "-", "States, in BambooHR, no PTO policy change', '("bamboohr", 4, "-", "States, in BambooHR, no PTO policy change', BLD, expect="over a twentieth"))
 ok.append(control("golden: a total the schedule did not give", BLD,
     '             "- Total dollar liability: $%s" % f"{total:,.2f}", "",',
     '             "- Total dollar liability: $%s" % f"{total + 1:,.2f}", "",', BLD, expect="golden"))
@@ -218,16 +246,16 @@ ok.append(control("syw: a semicolon joining two clauses", BLD, 'Ended employees 
 # ---- the docs guards
 ok.append(control("docs: the prompt blockquote", PROMPT_MD, "about the August 2026 close", "about the August close", BLD, ["--docs"]))
 ok.append(control("docs: a stale figure in the record", META_MD, "$92,739.54", "$92,739.45", BLD, ["--docs"]))
-ok.append(control("docs: a stale path score in the predictions", FA_MD, "| 36 of 89, 40.4% |", "| 35 of 89, 39.3% |", BLD, ["--docs"], expect="06 lacks P3"))
+ok.append(control("docs: a stale path score in the predictions", FA_MD, "| 49 of 96, 51.0% |", "| 48 of 96, 50.0% |", BLD, ["--docs"], expect="06 lacks P3"))
 ok.append(control("docs: a planned row missing from the record", META_MD, "States, on the PTO liability page, no contractor row, CTR-2001 to CTR-2004.", "States, on the PTO liability page, no contractor row.", BLD, ["--docs"]))
 ok.append(control("docs: a selection dropped from the block", META_MD, "\nHR/Benefits/2026-08-10_Schedule_Change_TRT-0141.pdf\n", "\n", BLD, ["--docs"]))
 ok.append(control("docs: a file missing from the README", README_MD, "`build/task_input_source.md`", "`build/task_input_sources.md`", BLD, ["--docs"]))
 ok.append(control("docs: a non-ASCII character in a package document", META_MD, "## Fences", "## Fences " + "\u2014", BLD, ["--docs"]))
 ok.append(control("docs: a stale explanation in the record's rubric table", BLD,
     "The handbook bars contractors from paid time off.", "The handbook bars contractors from paid leave.", BLD, ["--docs"], expect="stale explanation"))
-ok.append(control("docs: a stale import md5 in the record", META_MD, "65c0814cd454787c5a5ea3203200deb1", "65c0814cd454787c5a5ea3203200deb0", BLD, ["--docs"], expect="stale md5 for the import"))
-ok.append(control("docs: a stale import md5 in the mappings document", NINE_MD, "65c0814cd454787c5a5ea3203200deb1", "65c0814cd454787c5a5ea3203200deb0", BLD, ["--docs"], expect="09 lacks the figure"))
-ok.append(control("docs: a stale citation count in the mappings document", NINE_MD, "92 citations over 17 of the", "91 citations over 17 of the", BLD, ["--docs"], expect="09 lacks the figure"))
+ok.append(control("docs: a stale import md5 in the record", META_MD, "c509e60e0bbae335bc41d3e859ca57cc", "c509e60e0bbae335bc41d3e859ca57cd", BLD, ["--docs"], expect="stale md5 for the import"))
+ok.append(control("docs: a stale import md5 in the mappings document", NINE_MD, "c509e60e0bbae335bc41d3e859ca57cc", "c509e60e0bbae335bc41d3e859ca57cd", BLD, ["--docs"], expect="09 lacks the figure"))
+ok.append(control("docs: a stale citation count in the mappings document", NINE_MD, "139 citations over 17 of the", "138 citations over 17 of the", BLD, ["--docs"], expect="09 lacks the figure"))
 ok.append(control("selection: a wildcard in the block", META_MD, "\nbamboohr/Employee.csv\n", "\nbamboohr/*.csv\n", SELECT))
 
 print("\n%d of %d controls went red" % (sum(ok), len(ok)))
