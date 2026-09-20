@@ -83,7 +83,7 @@ The cell families, and the bytes behind them:
 | **1E** Tightly scoped outputs | Two pages, one or two tables each, one summary each. 24 verifiers, all App DB, on thirteen world files and eleven app tables |
 | **1F** Self-sufficient | Solvable from the request, the world files and the three apps alone. The one input uploads through 1.4 on the Filesystem target, measured at 9 of 9 on T1 |
 | **1G** Purposeful | No persona. The prompt names the request, the two sources and the two deliverables |
-| **2A** Genuinely challenging | **Unmeasured, predicted.** The registered modal failing paths score 27 of 83, 32.5% and 31 of 83, 37.3%; the free base is 7 of 83, 8.4%. The registered Gemini mean and the decision rule are in `06_failure_analysis.md`, dated before any v2 run, with the honest note that v1's traces make the heal likely |
+| **2A** Genuinely challenging | **Measured 09/20/2026: not met.** The registered modal failing paths score 27 of 83, 32.5% and 31 of 83, 37.3%; the free base is 7 of 83, 8.4%; the registered Gemini mean was 58%. Four Gemini runs meant 98.5%, four of four at 52 with no pointer in the memo. `06_failure_analysis.md` carries the record under the predictions |
 
 **Withheld from the prompt and from the task input** (machine-asserted by
 `build/build_task_input.py`): every source record, page, chart, roster, plan document and minutes

@@ -1,8 +1,7 @@
 # 08 - The section 1.3 step plan in the checkpoint form the guide asks for (T1 v2, 09/19/2026)
 
 The field is a numbered **Checkpoints** table, one column headed "Checkpoint - what the model must
-do". Thirteen rows. The step count is estimated from T1's measured 74 to 95 Gemini tool calls on
-the same reads; verify it from the first completed v2 Gemini trajectory and replace the estimate.
+do". Thirteen rows. The step count measured on the four v2 Gemini trajectories of 09/20/2026 is 74 to 90 tool calls and 69 to 90 assistant turns, none at 100; T1 measured 74 to 95 tool calls on the same reads.
 
 ---
 

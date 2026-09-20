@@ -2,13 +2,14 @@
 
 **One prompt round has run on v2, and no task round.** The prompt round of 09/20/2026 is archived
 verbatim at `findings/prompt_round1_09-20-2026.md` and answered below. It landed before any v2
-trajectory. Archive each later round verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or
+trajectory. The run set of the same day is at `findings/run_set_09-20-2026/` and retired the
+package; `../06_failure_analysis.md` carries it. Archive each later round verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or
 `findings/task_roundN_MM-DD-YYYY.md` before triaging it, and keep the verdicts here. T1's prompt
 round of 09/19/2026 is answered in v2's design and recorded in `../01_prompt.md`.
 
 | Round | Date | Findings | Verdict |
 |---|---|---|---|
-| Prompt round 1 | 09/20/2026 | One major. Outcome-Determining Choices: the memo never says the roster overrides BambooHR, BambooHR carries 53 non-contractor active rows against the roster's 52, and the round reads the two as defensible outputs. It asks for a source hierarchy naming the roster as authoritative | **Disputed, and the run set decides.** The hierarchy asked for is the clause T1 carried and measured: nine of nine runs healed the population when the memo named the sources. The memo's definition is a fact, not a choice. Three of the 53 read Terminated on the crosswalk, with termination dates of 03/20/2026, 05/08/2026 and 06/15/2026 on the SplinterHR archive, and are on neither the August org chart nor the roster. Two of the 52 read Never Loaded, each with a Greenhouse hire and an org chart box. Handbook 3.2 makes the HRIS the system of record and in the same clause says a record can disagree with a signed document and be corrected. A stale Active flag is not employment. The verifiers the round read are the synth's twenty; the package's rubric grades the set of 52, not a count. Under 40% on five Gemini runs the finding is the measured failure; over 60% the package retires on its own rule and the finding is moot |
+| Prompt round 1 | 09/20/2026 | One major. Outcome-Determining Choices: the memo never says the roster overrides BambooHR, BambooHR carries 53 non-contractor active rows against the roster's 52, and the round reads the two as defensible outputs. It asks for a source hierarchy naming the roster as authoritative | **Disputed, and the run set decides.** The hierarchy asked for is the clause T1 carried and measured: nine of nine runs healed the population when the memo named the sources. The memo's definition is a fact, not a choice. Three of the 53 read Terminated on the crosswalk, with termination dates of 03/20/2026, 05/08/2026 and 06/15/2026 on the SplinterHR archive, and are on neither the August org chart nor the roster. Two of the 52 read Never Loaded, each with a Greenhouse hire and an org chart box. Handbook 3.2 makes the HRIS the system of record and in the same clause says a record can disagree with a signed document and be corrected. A stale Active flag is not employment. The verifiers the round read are the synth's twenty; the package's rubric grades the set of 52, not a count. Under 40% on five Gemini runs the finding is the measured failure; over 60% the package retires on its own rule and the finding is moot. The set of 09/20/2026 decided it: four of four runs produced 52 and none carried 53 past a sentence |
 
 ## The verifier harness
 

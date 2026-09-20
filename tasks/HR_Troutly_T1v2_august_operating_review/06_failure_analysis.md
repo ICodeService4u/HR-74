@@ -103,3 +103,63 @@ Every row is an App DB row. Before reading a zero as a failure of the run, read 
 page row matching the title and every table row it considered. T1's harness fixture matched the
 platform's `get_page` route on nine of nine runs; the grading snapshot's column names remain
 unmeasured, and the engine handles real names, the documented layout and a fallback.
+
+## Measured 09/20/2026 - the first v2 run set, four of the five Gemini 3.8 Flash runs
+
+Four of the five Gemini exports landed on 09/20/2026 and are archived under
+`qc/findings/run_set_09-20-2026/` by `qc/archive_run_set.py`, each run's two pages as its
+create_page call carried them, `runs.json` read off the exports. `python3 qc/score_run_set.py
+--set run_set_09-20-2026` prints the table. All four carry the task data id
+`snap_fbf9dc06005743a28e8d6fd2238c7f5f`, T1's world snapshot, task version 15, the builder's PROMPT verbatim
+and 24 selections.
+
+| Run | Model | Tool calls | Assistant turns | Score | Rows failed |
+|---|---|---|---|---|---|
+| G1 | gemini-3.8-flash | 90 | 90 | 83 of 83, 100.0% | none |
+| G2 | gemini-3.8-flash | 74 | 69 | 78 of 83, 94.0% | 18 |
+| G3 | gemini-3.8-flash | 84 | 84 | 83 of 83, 100.0% | none |
+| G4 | gemini-3.8-flash | 90 | 84 | 83 of 83, 100.0% | none |
+
+**Gemini mean 98.5% on four runs, against a registered 58% and a retirement line of 60%.** The
+fifth run cannot move the decision: a zero on it leaves the five-run mean at 78.8%. **v2 retired on
+the rule registered above on 09/19/2026.** The population healed with the pointers gone, and the
+lever is measured insufficient for this tier in this world.
+
+**The one failed row is a false zero.** G2 states the six department counts in a table under the
+summary heading. Reviewer rule 8 accepts a table there; the engine's prose reading does not, the
+gap T1's record already named. By the rules on file all four runs score 83 of 83. Not fixed: the
+package retires and the verifier has no consumer.
+
+**How the runs got there, read off the traces.** Every run opened the memo first, reached the
+Board plan and the minutes by its 25th tool call, the roster and the crosswalk by its 31st, and
+the org chart and the archive by its 45th, pointed at none of them. None ran a recursive listing;
+each walked the tree folder by folder in the shell, 50 to 61 shell calls a run. The pointers T1
+removed decided nothing about whether the deciding files were read.
+
+**What decided the population was the definition.** Each run quoted "A current employee is
+anyone employed by Troutly on 08/31/2026" and reasoned from it that a terminated person and a
+contractor are not employed, then read the crosswalk's Terminated and Never Loaded and the
+roster's 52 as the facts under that rule. G2: "BambooHR, as I noted, was showing an inflated
+count due to including contractors, stale terminated employee data, and missing new hires." G3:
+"The core question became: who was truly employed by Troutly on August 31st, 2026? Terminated
+employees are excluded." G4 attributed to the memo a sentence it does not carry, that contractors
+are not employed, and still landed on 52. The clause the prompt AutoQC round required as a pinned
+choice, and the memo carried to answer it, is a rule the tier applies once it holds it.
+
+**The Board reading held on every run.** REQ-2026-036, 037 and 038 Not approved and $612,000.00
+on four of four, with no authority clause in the memo. Each run read the wiki page's eight roles
+and set them aside against the Board plan.
+
+**The step gate.** 74 to 90 tool calls and 69 to 90 assistant turns; no run reached 100 steps on
+the guide's count. T1 measured 74 to 95 tool calls on the same reads.
+
+**What this measures, for the record.** T1 measured that naming the sources heals the population.
+v2 measures that not naming them does not unheal it: the deciding files sit in a 69-file tree the
+tier reads whole, and the definition the round required is itself the rule. A 52-employee
+reconciliation in this world is not a determination Gemini 3.8 Flash gets wrong, and under the
+house rule no third memo rescues it. The fifth Gemini run and the GPT Sol runs are owed for the
+record, not for the decision.
+
+**The prompt AutoQC round's finding, against the set.** The round read 53 and 52 as two
+defensible outputs. Four of four runs produced 52, and none carried 53 past a sentence. The
+dispute stands on the data and is moot on the retirement.
