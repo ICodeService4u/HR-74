@@ -726,33 +726,33 @@ def _syw_sources():
     used = sum(USED.values())
     return [
         ("The rules from 07/01/2026", "PTO policy cutover memo of 06/20/2026, /" + CUTOVER,
-         "Biweekly accrual at the annual tier over 26, posted on the pay date; carryover capped at %.1f hours at 06/30/2026; tiers by adjusted service date, the change in the period containing the anniversary; valued at the rate on file over %s; ended employees out; wiki pages do not set policy." % (CAP, f"{HOURS_PER_YEAR:,}")),
+         "Biweekly accrual at the annual tier over 26, posted on the pay date. Carryover capped at %.1f hours at 06/30/2026. Tiers by adjusted service date, the change in the period containing the anniversary. Valued at the rate on file over %s. Ended employees out. Wiki pages do not set policy." % (CAP, f"{HOURS_PER_YEAR:,}")),
         ("What the handbook adds", "Employee Handbook v3, /" + HANDBOOK,
-         "Section 7 incorporates the memo; 2.2 part-time accrual pro-rata under %d hours; 7.6 service bridges on a break under %d days; 5.4 the $%s Support Specialist step; 3.2 the signed document over the record; 7.3 totals are the sum of the rounded rows." % (PART_TIME_UNDER, BRIDGE_UNDER_DAYS, f"{STEP:,.2f}")),
+         "Section 7 incorporates the memo. 2.2 accrues part-time pro-rata under %d hours. 7.6 bridges service on a break under %d days. 5.4 carries the $%s Support Specialist step. 3.2 puts the signed document over the record. 7.3 totals the rounded rows." % (PART_TIME_UNDER, BRIDGE_UNDER_DAYS, f"{STEP:,.2f}")),
         ("The superseded rules", "PTO Policy 2025, /" + POLICY_2025 + ", and the Paid Time Off wiki page, /" + WIKI_PTO,
          "Monthly accrual on the 1st and unlimited carryover, replaced 07/01/2026. The wiki page was last edited 01/2025."),
         ("The current employees", "Master employee roster of 08/31/2026, /" + ROSTER + ", and the crosswalk of 08/28/2026, /" + CROSSWALK,
-         "%d active employees. BambooHR carries 57 active rows: four contractors, three employees whose employment ended 03/20, 05/08 and 06/15/2026, and no row for TRT-0153 and TRT-0155, Never Loaded on the crosswalk." % len(GOLDEN)),
+         "%d active employees. BambooHR carries 57 active rows. Four are contractors, three are employees whose employment ended 03/20, 05/08 and 06/15/2026, and TRT-0153 and TRT-0155 have no row, Never Loaded on the crosswalk." % len(GOLDEN)),
         ("The opening balances", "SplinterHR final archive of 07/28/2026, Balances tab, /" + ARCHIVE,
-         "%d balances at 06/30/2026; %s above %.1f hours, %s at %.2f the highest. The HRIS report, the load file and the July close carry them uncapped." % (len(ARCHIVE_BAL), _w(len(CAPPED_IDS)), CAP, top, g[top]["opening_raw"])),
+         "%d balances at 06/30/2026. %s are above %.1f hours, %s at %.2f the highest. The HRIS report, the load file and the July close carry them uncapped." % (len(ARCHIVE_BAL), _w(len(CAPPED_IDS)).capitalize(), CAP, top, g[top]["opening_raw"])),
         ("The posted periods", "Payroll procedures memo of 06/25/2026, /" + PROCEDURES,
-         "Pay dates %s and %s, posted by %s; %s is the fifth and is not posted." % (", ".join(_d(p[2]) for p in POSTED[:-1]), _d(POSTED[-1][2]), ASOF, _d(PERIODS[len(POSTED)][2]))),
+         "Pay dates %s and %s, posted by %s. The fifth pays %s and is not posted." % (", ".join(_d(p[2]) for p in POSTED[:-1]), _d(POSTED[-1][2]), ASOF, _d(PERIODS[len(POSTED)][2]))),
         ("The service dates", "The archive's Employees tab and the historical offer letters, /" + OFFERS_HIST,
-         "%s migrated records read 07/01/2026 in BambooHR and on the roster and carry their true dates in the archive and the letters. TRT-0071 hired %s, ended 08/25/2023, rehired 04/22/2024: a break under %d days, bridged under handbook 7.6." % (_w(sum(1 for e in ROSTER_ROWS if e["adj_roster"] == CUTOVER_DATE and e["id"] in ARCHIVE_EMP)).capitalize(), _d(g["TRT-0071"]["adj"]), BRIDGE_UNDER_DAYS)),
+         "%s migrated records read 07/01/2026 in BambooHR and on the roster and carry their true dates in the archive and the letters. TRT-0071 was hired %s, ended 08/25/2023 and was rehired 04/22/2024, a break under %d days, bridged under handbook 7.6." % (_w(sum(1 for e in ROSTER_ROWS if e["adj_roster"] == CUTOVER_DATE and e["id"] in ARCHIVE_EMP)).capitalize(), _d(g["TRT-0071"]["adj"]), BRIDGE_UNDER_DAYS)),
         ("The tier change in the window", "The archive's dates and the memo's timing rule",
-         "TRT-0018 reaches five years inside the fourth period: three periods at 120 and one at 160, %.4f hours accrued." % g["TRT-0018"]["accrued"]),
+         "TRT-0018 reaches five years inside the fourth period. Three periods at 120 and one at 160, %.4f hours accrued." % g["TRT-0018"]["accrued"]),
         ("The signed pay changes", "Promotion approval TRT-0088 of 06/10/2026, /" + PROMOTION_0088 + ", and comp amendment TRT-0117 of 05/12/2026, /" + AMENDMENT_0117,
          "$%s from %s and $%s from %s, signed. BambooHR, the roster and payroll carry the loaded rates." % (f"{SIGNED['TRT-0088'][0]:,.2f}", _d(SIGNED['TRT-0088'][1]), f"{SIGNED['TRT-0117'][0]:,.2f}", _d(SIGNED['TRT-0117'][1]))),
         ("The step", "Marchetti's offer letter in the historical letters and handbook 5.4",
-         "TRT-0096 steps $%s on her 08/17/2026 anniversary: $%s on file at %s." % (f"{STEP:,.2f}", f"{g['TRT-0096']['rate']:,.2f}", ASOF)),
+         "TRT-0096 steps $%s on her 08/17/2026 anniversary to $%s on file at %s." % (f"{STEP:,.2f}", f"{g['TRT-0096']['rate']:,.2f}", ASOF)),
         ("The part-time schedule", "Schedule change form TRT-0141 of 08/10/2026, /" + SCHEDULE_0141,
-         "%d hours to %d hours effective %s; pro-rata under %d hours, so three periods at %d and one at %d." % (SCHEDULE_CHANGES["TRT-0141"][0], SCHEDULE_CHANGES["TRT-0141"][1], _d(SCHEDULE_CHANGES["TRT-0141"][2]), PART_TIME_UNDER, SCHEDULE_CHANGES["TRT-0141"][0], SCHEDULE_CHANGES["TRT-0141"][1])),
+         "%d hours to %d hours effective %s. Pro-rata under %d hours, so three periods at %d and one at %d." % (SCHEDULE_CHANGES["TRT-0141"][0], SCHEDULE_CHANGES["TRT-0141"][1], _d(SCHEDULE_CHANGES["TRT-0141"][2]), PART_TIME_UNDER, SCHEDULE_CHANGES["TRT-0141"][0], SCHEDULE_CHANGES["TRT-0141"][1])),
         ("The two unloaded hires", "The roster, the signed offer /" + OFFER_0153 + ", letter 13 of the historical letters and Greenhouse",
-         "Okonkwo started %s at $%s, moved from 07/13/2026 by the thread of 07/09/2026; Ibarra %s at $%s. Both accrue at 80 from the period containing the start, as BambooHR credited TRT-0150: %.2f and %.2f hours." % (_d(g["TRT-0153"]["start"]), f"{g['TRT-0153']['rate']:,.2f}", _d(g["TRT-0155"]["start"]), f"{g['TRT-0155']['rate']:,.2f}", g["TRT-0153"]["balance"], g["TRT-0155"]["balance"])),
+         "Okonkwo started %s at $%s, moved from 07/13/2026 by the thread of 07/09/2026. Ibarra started %s at $%s. Both accrue at 80 from the period containing the start, as BambooHR credited TRT-0150, %.2f and %.2f hours." % (_d(g["TRT-0153"]["start"]), f"{g['TRT-0153']['rate']:,.2f}", _d(g["TRT-0155"]["start"]), f"{g['TRT-0155']['rate']:,.2f}", g["TRT-0153"]["balance"], g["TRT-0155"]["balance"])),
         ("Approved time off", "BambooHR TimeOffRequest",
-         "%d approved requests, %.2f hours, all in July; TRT-0001 %.2f hours." % (sum(1 for r in _csv("bamboohr", "TimeOffRequest.csv") if r["status"] == "approved" and CUTOVER_DATE <= _date(r["start_date"]) <= ASOF_DATE), used, USED["TRT-0001"])),
+         "%d approved requests, %.2f hours, all in July. TRT-0001 used %.2f hours." % (sum(1 for r in _csv("bamboohr", "TimeOffRequest.csv") if r["status"] == "approved" and CUTOVER_DATE <= _date(r["start_date"]) <= ASOF_DATE), used, USED["TRT-0001"])),
         ("The July close", "/" + CLOSE_JULY,
-         "The requester's method: the HRIS balance, tier and rate per row, three ended employees inside, $90,862.13 booked."),
+         "The requester's method. The HRIS balance, tier and rate per row, three ended employees inside, $90,862.13 booked."),
         ("The BambooHR tables", "Employee, EmployeePolicy, TimeOffBalance, TimeOffPolicy",
          "57 active rows, the loaded policies, %s of them wrong, and the loaded balances the run brings to the schedule." % _w(len(MIGRATED_WRONG_TIER))),
     ]
@@ -760,15 +760,15 @@ def _syw_sources():
 
 def _syw_assembly():
     return [
-        ("The population", "%d from the roster and the org chart: BambooHR's 57 active less four contractors less three ended plus the two unloaded hires." % len(GOLDEN)),
-        ("The rules", "The cutover memo over the 2025 policy and the wiki page; the handbook's bridging, part-time, step and signed-document rules."),
-        ("The opening balances", "The archive's 06/30/2026 balance capped at %.2f; %s capped; the two hires at 0.00." % (CAP, _w(len(CAPPED_IDS)))),
-        ("The service dates and tiers", "The archive's and the letters' dates over the loaded 07/01/2026; TRT-0071 bridged to %s at 160; five migrated records at 120; TRT-0018 to 160 in the fourth period." % _d(GOLDEN_BY_ID["TRT-0071"]["adj"])),
-        ("The accruals", "Four posted periods at the tier over %d to four decimals, the period containing a start credited in full; TRT-0141 pro-rata at 25 then 32 hours." % PERIODS_PER_YEAR),
+        ("The population", "%d from the roster and the org chart. BambooHR's 57 active less four contractors less three ended plus the two unloaded hires." % len(GOLDEN)),
+        ("The rules", "The cutover memo over the 2025 policy and the wiki page. The handbook's bridging, part-time, step and signed-document rules."),
+        ("The opening balances", "The archive's 06/30/2026 balance capped at %.2f. %s capped. The two hires at 0.00." % (CAP, _w(len(CAPPED_IDS)).capitalize())),
+        ("The service dates and tiers", "The archive's and the letters' dates over the loaded 07/01/2026. TRT-0071 bridged to %s at 160. Five migrated records at 120. TRT-0018 to 160 in the fourth period." % _d(GOLDEN_BY_ID["TRT-0071"]["adj"])),
+        ("The accruals", "Four posted periods at the tier over %d to four decimals, the period containing a start credited in full. TRT-0141 pro-rata at 25 then 32 hours." % PERIODS_PER_YEAR),
         ("The usage", "%.2f approved hours deducted, %.2f on TRT-0001." % (sum(USED.values()), USED["TRT-0001"])),
-        ("The rates", "The rate on file over %s to four decimals: TRT-0088 at %s, TRT-0117 at %s and TRT-0096 at %s by the signed documents and the step." % (f"{HOURS_PER_YEAR:,}", _money(GOLDEN_BY_ID['TRT-0088']['rate']), _money(GOLDEN_BY_ID['TRT-0117']['rate']), _money(GOLDEN_BY_ID['TRT-0096']['rate']))),
-        ("The rows and the totals", "Balance to two decimals, liability to the cent, the total the sum of the rounded rows: %s hours and %s, %s under posted rounding." % (f"{TOTAL_HOURS:,.2f}", _money(TOTAL), _money(TOTAL_POSTED))),
-        ("The page", "%s: the summary above the table, seven columns, %d rows keyed by ID, published." % (PAGE, len(GOLDEN))),
+        ("The rates", "The rate on file over %s to four decimals. TRT-0088 at %s, TRT-0117 at %s and TRT-0096 at %s by the signed documents and the step." % (f"{HOURS_PER_YEAR:,}", _money(GOLDEN_BY_ID['TRT-0088']['rate']), _money(GOLDEN_BY_ID['TRT-0117']['rate']), _money(GOLDEN_BY_ID['TRT-0096']['rate']))),
+        ("The rows and the totals", "Balance to two decimals, liability to the cent, the total the sum of the rounded rows. %s hours and %s, %s under posted rounding." % (f"{TOTAL_HOURS:,.2f}", _money(TOTAL), _money(TOTAL_POSTED))),
+        ("The page", "%s. The summary above the table, seven columns, %d rows keyed by ID, published." % (PAGE, len(GOLDEN))),
         ("BambooHR", "%s policies reassigned, %d balances set, rows created for %s." % (_w(len(MIGRATED_WRONG_TIER)).capitalize(), len(GOLDEN), " and ".join(UNLOADED_IDS))),
     ]
 
@@ -788,7 +788,7 @@ def write_show_your_work():
     for i, (fam, w, gate, crit, pred) in enumerate(PLAN, 1):
         ws.append([i, crit, FAMILY_LABEL[fam], w, gate])
     ws.append([])
-    ws.append(["Note", "The determination carries %d of %d points; the gate is the total. Every row is read from the Wiki.js pages table or the BambooHR tables." % (sum(r[1] for r in PLAN if r[0] == "determination"), PLAN_TOTAL)])
+    ws.append(["Note", "The determination carries %d of %d points and the gate is the total. Every row is read from the Wiki.js pages table or the BambooHR tables." % (sum(r[1] for r in PLAN if r[0] == "determination"), PLAN_TOTAL)])
     ws = wb.create_sheet("Row assembly")
     ws.append(["Step", "Result"])
     for row in _syw_assembly():
@@ -816,6 +816,7 @@ def write_show_your_work():
             for c in row:
                 if isinstance(c.value, str) and c.value not in names:
                     assert all(ord(ch) < 128 for ch in c.value), "show-your-work is not ASCII: %r" % c.value[:60]
+                    assert ";" not in c.value and ":" not in c.value, "show-your-work joins clauses with ; or : where the register writes a new sentence: %r" % c.value[:60]
                 c.alignment = Alignment(wrap_text=sheet.title != "Schedule", vertical="top")
                 if c.row == 1:
                     c.font = Font(bold=True)
