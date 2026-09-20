@@ -391,8 +391,8 @@ MIGRATED_WRONG_TIER = sorted(r["id"] for r in GOLDEN if r["id"] in BAMBOO_POLICY
 UNLOADED_IDS = sorted(r["id"] for r in GOLDEN if r["id"] not in BAMBOO)
 
 
-def _cap_only_witnesses():
-    """The capped employees whose balance the cap alone moves: one tier across the window equal to
+def _cap_only_ids():
+    """The capped employees whose balance the cap alone moves. One tier across the window equal to
     the loaded policy, no time off, no schedule change, no signed rate. A row read on their balance
     cells fails on the cap and on nothing else."""
     out = []
@@ -405,7 +405,7 @@ def _cap_only_witnesses():
     return out
 
 
-CAP_WITNESS_IDS = _cap_only_witnesses()
+CAP_ONLY_IDS = _cap_only_ids()
 _WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
 CONTRACTOR_IDS = sorted(k for k, b in BAMBOO.items() if k.startswith("CTR-"))
 ENDED_IN_BAMBOO = sorted(k for k, b in BAMBOO.items() if b["status"] == "Active"
@@ -455,7 +455,7 @@ def _row_checks():
     def capped_ok(s):
         # the page carries no opening column: reviewer rule 5 reads the balance cell, on the
         # employees whose balance the cap alone moves, so the row fails on the cap and nothing else
-        return all(bal_ok(i, s) for i in CAP_WITNESS_IDS)
+        return all(bal_ok(i, s) for i in CAP_ONLY_IDS)
 
     def five_tiers_ok(s):
         b = by(s)
@@ -512,8 +512,8 @@ def _row_checks():
         ("free", 1, "-", "States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability.", always),
         ("determination", 10, "Critical value", "States, on the PTO liability page, a total dollar liability of $%s." % f"{TOTAL:,.2f}", total_ok),
         ("determination", 5, "-", "States, on the PTO liability page, balances of %s hours for %s, the %s above 40.0 hours at 06/30/2026 whose balance the cap alone moves." % (
-            ", ".join("%.2f" % g[i]["balance"] for i in CAP_WITNESS_IDS[:-1]) + " and %.2f" % g[CAP_WITNESS_IDS[-1]]["balance"],
-            ", ".join(CAP_WITNESS_IDS[:-1]) + " and " + CAP_WITNESS_IDS[-1], _WORDS[len(CAP_WITNESS_IDS)]), capped_ok),
+            ", ".join("%.2f" % g[i]["balance"] for i in CAP_ONLY_IDS[:-1]) + " and %.2f" % g[CAP_ONLY_IDS[-1]]["balance"],
+            ", ".join(CAP_ONLY_IDS[:-1]) + " and " + CAP_ONLY_IDS[-1], _WORDS[len(CAP_ONLY_IDS)]), capped_ok),
         ("determination", 5, "-", "States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083.", five_tiers_ok),
         ("determination", 7, "-", "States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021.", bridge_ok),
         ("determination", 6, "-", "States, on the PTO liability page, an accrual of %.4f hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160." % g["TRT-0018"]["accrued"], thornbury_ok),
@@ -808,7 +808,7 @@ def write_show_your_work():
         ws.append([i, crit, w, gate])
     ws.append([])
     ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed, and it matches the schedule's only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
-    ws.append(["Note", "Each witness row tests one rule. It reads only the employees whose numbers change when that rule is missed and nothing else is. That is why one wrong cell fails a rule once and never twice. Some rules touch several people, so the row reads several. The cap reads %s capped employees and the tiers read five migrated records. Some rules touch one person in this world. The bridge, the anniversary, the step and the part-time schedule each read that one person. Two rules touch everyone, the four pay periods and the time off taken. For those the row reads one person, Sora Jackson for the periods and Michael Labeson for the time off. If a run got the rule right for that one person, it got the rule right. The gate checks the other 51 through the total." % _WORDS[len(CAP_WITNESS_IDS)]])
+    ws.append(["Note", "Rows 6 to 18 each test one rule. Each reads only the employees whose numbers change when that rule is missed and nothing else is. That is why one wrong cell fails a rule once and never twice. Some rules touch several people, so the row reads several. The cap reads %s capped employees and the tiers read five migrated records. Some rules touch one person in this world. The bridge, the anniversary, the step and the part-time schedule each read that one person. Two rules touch everyone, the four pay periods and the time off taken. For those the row reads one person, Sora Jackson for the periods and Michael Labeson for the time off. If a run got the rule right for that one person, it got the rule right. The gate checks the other 51 through the total." % _WORDS[len(CAP_ONLY_IDS)]])
     ws.append(["Note", "Rows 2, 14, 15 and 16 grade the population on the set of IDs. Rows 19 to 21 grade BambooHR on its tables."])
     ws = wb.create_sheet("Row assembly")
     ws.append(["Step", "Result"])

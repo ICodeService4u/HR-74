@@ -38,9 +38,8 @@ Three families, and the share of the 87 points each carries:
 
 **How 364 cells are graded by 21 rows without stacking.** The page is 52 rows by seven columns
 and every cell is a function of the population and six rules. The gate reads the total, which
-is the sum of every cell, so any wrong cell anywhere fails one atomic claim. Each rule then has
-one witness row, read on employees where that rule alone moves the cell, so no two rows fail
-for the same reason. The cap on the five capped employees with one tier across the window and no
+is the sum of every cell, so any wrong cell anywhere fails one atomic claim. Each rule then has one row of its own, rows 6 to 18, read on the employees where that rule
+alone moves the cell, so no two rows fail for the same reason. The cap on the five capped employees with one tier across the window and no
 time off. The loaded tiers on the five migrated records whose tier cell is wrong. The bridge on
 TRT-0071's tier cell. The in-window change on TRT-0018, the only anniversary in the window,
 whose balance also needs the cap, a world fact the record notes. The signed rates and the step
