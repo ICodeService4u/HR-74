@@ -4,7 +4,7 @@ Index,Family,Weight,Gate,Criterion
 3,free,1,-,"States, on the PTO liability page, hours to two decimals, hourly rates to four decimals, dollars to the cent and a total equal to the sum of the rows."
 4,free,1,-,"States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability."
 5,determination,10,Critical value,"States, on the PTO liability page, a total dollar liability of $92,739.54."
-6,determination,5,-,"States, on the PTO liability page, an opening balance of 40.00 hours for each of the 11 employees whose 06/30/2026 balance exceeded 40.0 hours."
+6,determination,5,-,"States, on the PTO liability page, balances of 64.62, 64.62, 58.46, 58.46 and 58.46 hours for TRT-0005, TRT-0009, TRT-0014, TRT-0023 and TRT-0040, the five above 40.0 hours at 06/30/2026 whose balance the cap alone moves."
 7,determination,5,-,"States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083."
 8,determination,7,-,"States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021."
 9,determination,6,-,"States, on the PTO liability page, an accrual of 20.0000 hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160."

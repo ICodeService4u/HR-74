@@ -18,7 +18,7 @@
 | **Rubric import** | Not built at the prompt half. The task data id is the sentinel `SNAPSHOT_ID_NOT_YET_READ` until it is read off the first export; the world id is T1's, `snap_c6f6a0879f3d47a19048ee80d7529157` |
 | **Rubric plan** | **21 planned rows, 87 points, 1 gate**, in `build/rubric_plan.csv` and below, the registered paths scored against it by `build/build_package_artifacts.py` on every build. Verifier code, the battery and the import are built only if the first run set fails, by the decision of 09/20/2026 |
 | **Human time estimate** | 14 hours |
-| **Spec 2A** | **Unmeasured, predicted.** The registered failing paths score 29 of 87, 33.3% and 42 of 87, 48.3%; the free base is 5 of 87, 5.7%; the registered Gemini mean is 45%, with the decision rule and the honest note in `06_failure_analysis.md`, dated before any run |
+| **Spec 2A** | **Unmeasured, predicted.** The registered failing paths score 34 of 87, 39.1% and 47 of 87, 54.0%; the free base is 5 of 87, 5.7%; the registered Gemini mean is 45%, with the decision rule and the honest note in `06_failure_analysis.md`, dated before any run |
 
 ## The prompt
 
@@ -35,6 +35,19 @@ Three families, and the share of the 87 points each carries:
 | **The determination.** The liability at 08/31/2026: the cap, the tiers from adjusted service dates with the rehire bridged and the anniversary timed, the signed rates and the step, the part-time schedule, the population, the posted periods and the usage, and the total they give | 5 to 18 | 70 | 80.5% |
 | **BambooHR brought to the schedule.** The six policies, the 52 balances, the two rows created | 19 to 21 | 12 | 13.8% |
 | **The page and its form.** Published, 52 rows keyed by ID, the form, the summary | 1 to 4 | 5 | 5.7% |
+
+**How 364 cells are graded by 21 rows without stacking.** The page is 52 rows by seven columns
+and every cell is a function of the population and six rules. The gate reads the total, which
+is the sum of every cell, so any wrong cell anywhere fails one atomic claim. Each rule then has
+one witness row, read on employees where that rule alone moves the cell, so no two rows fail
+for the same reason. The cap on the five capped employees with one tier across the window and no
+time off. The loaded tiers on the five migrated records whose tier cell is wrong. The bridge on
+TRT-0071's tier cell. The in-window change on TRT-0018, the only anniversary in the window,
+whose balance also needs the cap, a world fact the record notes. The signed rates and the step
+on three rate cells. The part-time rule on TRT-0141, the period count on TRT-0002, the usage
+on TRT-0001. The population is read as a set on rows 2, 14, 15 and 16, and BambooHR as tables
+on rows 19 to 21. The registered ladder below is the proof: each path drops one rule and fails
+one more row.
 
 **The registered paths**, each the golden with rules dropped, recomputed by the builder:
 
@@ -286,7 +299,7 @@ summary clause; the gate is the summary's total.
 | 3 | free | 1 | - | States, on the PTO liability page, hours to two decimals, hourly rates to four decimals, dollars to the cent and a total equal to the sum of the rows. |
 | 4 | free | 1 | - | States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability. |
 | 5 | determination | 10 | Critical value | States, on the PTO liability page, a total dollar liability of $92,739.54. |
-| 6 | determination | 5 | - | States, on the PTO liability page, an opening balance of 40.00 hours for each of the 11 employees whose 06/30/2026 balance exceeded 40.0 hours. |
+| 6 | determination | 5 | - | States, on the PTO liability page, balances of 64.62, 64.62, 58.46, 58.46 and 58.46 hours for TRT-0005, TRT-0009, TRT-0014, TRT-0023 and TRT-0040, the five above 40.0 hours at 06/30/2026 whose balance the cap alone moves. |
 | 7 | determination | 5 | - | States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083. |
 | 8 | determination | 7 | - | States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021. |
 | 9 | determination | 6 | - | States, on the PTO liability page, an accrual of 20.0000 hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160. |

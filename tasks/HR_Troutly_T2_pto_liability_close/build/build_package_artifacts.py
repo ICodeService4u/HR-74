@@ -389,6 +389,24 @@ CAPPED_IDS = sorted(r["id"] for r in GOLDEN if r["opening_raw"] > CAP)
 MIGRATED_WRONG_TIER = sorted(r["id"] for r in GOLDEN if r["id"] in BAMBOO_POLICY
                              and POLICY_TIER[BAMBOO_POLICY[r["id"]]] != r["tier"])
 UNLOADED_IDS = sorted(r["id"] for r in GOLDEN if r["id"] not in BAMBOO)
+
+
+def _cap_only_witnesses():
+    """The capped employees whose balance the cap alone moves: one tier across the window equal to
+    the loaded policy, no time off, no schedule change, no signed rate. A row read on their balance
+    cells fails on the cap and on nothing else."""
+    out = []
+    for i in CAPPED_IDS:
+        r = GOLDEN_BY_ID[i]
+        tiers = {tier_at(r["adj"], pe) for (ps, pe, pay) in POSTED}
+        if len(tiers) == 1 and POLICY_TIER.get(BAMBOO_POLICY.get(i, "")) in tiers and r["used"] == 0 \
+                and i not in SCHEDULE_CHANGES and i not in SIGNED:
+            out.append(i)
+    return out
+
+
+CAP_WITNESS_IDS = _cap_only_witnesses()
+_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
 CONTRACTOR_IDS = sorted(k for k, b in BAMBOO.items() if k.startswith("CTR-"))
 ENDED_IN_BAMBOO = sorted(k for k, b in BAMBOO.items() if b["status"] == "Active"
                          and k not in GOLDEN_BY_ID and not k.startswith("CTR-"))
@@ -435,8 +453,9 @@ def _row_checks():
         return i in b and (_same(b[i]["balance"], g[i]["balance"], 0.005) or _same(b[i]["balance"], g[i]["balance_posted"], 0.005))
 
     def capped_ok(s):
-        # the page carries no opening column: reviewer rule 5 reads the balance cell
-        return all(bal_ok(i, s) for i in CAPPED_IDS)
+        # the page carries no opening column: reviewer rule 5 reads the balance cell, on the
+        # employees whose balance the cap alone moves, so the row fails on the cap and nothing else
+        return all(bal_ok(i, s) for i in CAP_WITNESS_IDS)
 
     def five_tiers_ok(s):
         b = by(s)
@@ -492,7 +511,9 @@ def _row_checks():
         ("free", 1, "-", "States, on the PTO liability page, hours to two decimals, hourly rates to four decimals, dollars to the cent and a total equal to the sum of the rows.", always),
         ("free", 1, "-", "States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability.", always),
         ("determination", 10, "Critical value", "States, on the PTO liability page, a total dollar liability of $%s." % f"{TOTAL:,.2f}", total_ok),
-        ("determination", 5, "-", "States, on the PTO liability page, an opening balance of 40.00 hours for each of the %d employees whose 06/30/2026 balance exceeded 40.0 hours." % len(CAPPED_IDS), capped_ok),
+        ("determination", 5, "-", "States, on the PTO liability page, balances of %s hours for %s, the %s above 40.0 hours at 06/30/2026 whose balance the cap alone moves." % (
+            ", ".join("%.2f" % g[i]["balance"] for i in CAP_WITNESS_IDS[:-1]) + " and %.2f" % g[CAP_WITNESS_IDS[-1]]["balance"],
+            ", ".join(CAP_WITNESS_IDS[:-1]) + " and " + CAP_WITNESS_IDS[-1], _WORDS[len(CAP_WITNESS_IDS)]), capped_ok),
         ("determination", 5, "-", "States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083.", five_tiers_ok),
         ("determination", 7, "-", "States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021.", bridge_ok),
         ("determination", 6, "-", "States, on the PTO liability page, an accrual of %.4f hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160." % g["TRT-0018"]["accrued"], thornbury_ok),
@@ -707,7 +728,6 @@ def write_previews():
 
 
 SYW = os.path.join(PKG, "03_show_your_work.xlsx")
-_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
 
 
 def _w(n):
