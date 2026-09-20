@@ -186,33 +186,25 @@ def bamboo_tables(pol=None, bal=None, hires=None, names=NAMES, string_keys=False
     return out
 
 
-GH_TABLES = B.GREENHOUSE_TABLES
+GH_TABLES = sorted(f[:-4] for f in os.listdir(os.path.join(REPO, "apps_data", "greenhouse")) if f.endswith(".csv"))
 
 
-def greenhouse_tables(prefix="", drop_row=None, add_row=None, edit=None, omit=False):
-    """The fourteen Greenhouse seed tables as the CSVs carry them. `drop_row` = (table, id) removes
-    a row, `add_row` = (table, dict) adds one, `edit` = (table, id, column, value) changes a cell,
-    `omit` leaves Greenhouse out of the snapshot."""
-    if omit:
-        return {}
+def greenhouse_tables():
+    """The fourteen Greenhouse seed tables as the CSVs carry them, in every snapshot as the third
+    app's tables. No row reads them since task round 3 took the memo's fence out; they are here so
+    the BambooHR and pages discovery has to pass over another app's tables to find its own."""
     out = {}
     for t in GH_TABLES:
         rows = _csv("greenhouse", t + ".csv")
         cols = list(rows[0].keys()) if rows else ["id"]
-        if drop_row and drop_row[0] == t:
-            rows = [r for r in rows if r.get("id") != str(drop_row[1])]
-        if add_row and add_row[0] == t:
-            rows = rows + [dict({c: "" for c in cols}, **add_row[1])]
-        if edit and edit[0] == t:
-            rows = [dict(r, **{edit[2]: edit[3]}) if r.get("id") == str(edit[1]) else r for r in rows]
-        out[prefix + t] = (cols, [[r.get(c, "") for c in cols] for r in rows])
+        out[t] = (cols, [[r.get(c, "") for c in cols] for r in rows])
     return out
 
 
-def snap(pages=(), bamboo=None, real_names=False, cols=PAGES_COLS, history=(), greenhouse=None):
+def snap(pages=(), bamboo=None, real_names=False, cols=PAGES_COLS, history=()):
     tables = dict(wiki_tables(pages, cols, history))
     tables.update(bamboo if bamboo is not None else bamboo_tables())
-    tables.update(greenhouse if greenhouse is not None else greenhouse_tables())
+    tables.update(greenhouse_tables())
     return Ctx(tables, real_names=real_names)
 
 
@@ -351,8 +343,7 @@ POL_ROWS = set(range(28, 34))        # one policy per record the schedule moves
 POL_GUARD = 34                       # no change on the 44 loaded as the schedule has them
 BAL_ROWS = set(range(35, 40))        # one balance per rule, mirrored into BambooHR
 BAL_GUARD = 40                       # no change on the 33 loaded as the schedule has them
-HIRE_ROWS = {41, 42}
-GH = 43
+HIRE_ROWS = {41, 42, 43, 44}         # a balance and a policy for each record the run creates
 BAM_ROWS = POL_ROWS | {POL_GUARD} | BAL_ROWS | {BAL_GUARD} | HIRE_ROWS
 DET = set(range(10, 19))             # the gate and the eight page rules
 h05 = G["TRT-0005"]
@@ -375,8 +366,6 @@ BATTERY = [
     ("the golden, string keys and an assignment row for every employee",
      lambda: snap([(PAGE, GOLD)], correct_bamboo(string_keys=True, extra_assign=("TRT-0006", "PTO 5 Plus Years"))), set(),
      "the assignment table carries as many distinct employee numbers as the employee table; the count alone cannot tell them apart"),
-    ("the golden, Greenhouse tables under prefixed names", lambda: snap([(PAGE, GOLD)], correct_bamboo(), greenhouse=greenhouse_tables(prefix="gh_")), set(),
-     "the live app's Greenhouse table names are unmeasured; the seed rows are found by content"),
     ("the golden, balances stored as text", lambda: snap([(PAGE, GOLD)], correct_bamboo(balance_as_text=True)), set(),
      "the column renders as 64.6200; cast before comparing"),
     ("the golden, old assignments kept with an end date", lambda: snap([(PAGE, GOLD)], correct_bamboo(keep_old="ended")), set(),
@@ -402,8 +391,8 @@ BATTERY = [
      lambda: snap([(PAGE, without(["TRT-0155"]) + "| TRT-0155 not loaded, see BambooHR | Rafael Ibarra | Engineering | | | | |\n")], correct_bamboo()),
      {2, 7, 10, 25}, "a mention in a cell is not a row: the set, the ID-on-every-row form, the total and his balance fail, and a substring key would pass the set"),
     # ---- nothing, or the wrong page
-    ("the seed: no page, BambooHR untouched", lambda: snap(history=[(PAGE, GOLD)]), set(range(1, 43)) - {POL_GUARD, BAL_GUARD},
-     "a check that reads history instead of pages passes a run that did nothing; the three guards pass on inaction by design"),
+    ("the seed: no page, BambooHR untouched", lambda: snap(history=[(PAGE, GOLD)]), set(range(1, 45)) - {POL_GUARD, BAL_GUARD},
+     "a check that reads history instead of pages passes a run that did nothing; the two guards pass on inaction by design"),
     ("the page saved unpublished", lambda: snap([(PAGE, GOLD, 0)], correct_bamboo()), {1},
      "a draft is not a published page; the content rows still read the content"),
     ("the page under a different title", lambda: snap([("PTO Liability August 2026", GOLD)], correct_bamboo()), PAGE_ROWS,
@@ -501,7 +490,7 @@ BATTERY = [
     ("policies fixed, balances untouched, hires created", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(seed_state()[1], **{"TRT-0153": 6.15, "TRT-0155": 3.08}), correct_state()[2])),
      BAL_ROWS, "the policy half of the ask without the balance half"),
     ("balances fixed, policies untouched", lambda: snap([(PAGE, GOLD)], bamboo_tables(seed_state()[0], correct_state()[1], correct_state()[2])),
-     POL_ROWS, "the balance half without the policy half"),
+     POL_ROWS | {43, 44}, "the balance half without the policy half, the created records' policies included"),
     ("everything but the two rows created", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], correct_state()[1], {})),
      HIRE_ROWS, "the Never Loaded rows never created"),
     ("Okonkwo's row created at zero hours", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(correct_state()[1], **{"TRT-0153": 0.0}), correct_state()[2])),
@@ -520,17 +509,8 @@ BATTERY = [
      set(), "the app's own precision, within 0.005 of the stated value"),
     ("a second 2026 balance row for Hosana", lambda: snap([(PAGE, GOLD)], correct_bamboo(extra_balance=("TRT-0005", "PTO 5 Plus Years", 117.12))),
      {35}, "two balances for one employee in one year leave the record wrong; the false zero is taken"),
-    ("the balance table missing", lambda: snap([(PAGE, GOLD)], correct_bamboo(drop=("bal",))), BAL_ROWS | {BAL_GUARD} | HIRE_ROWS,
-     "a snapshot without a balance table shows no balance"),
+    ("the balance table missing", lambda: snap([(PAGE, GOLD)], correct_bamboo(drop=("bal",))), BAL_ROWS | {BAL_GUARD, 41, 42},
+     "a snapshot without a balance table shows no balance; the created records' policies still read"),
     ("the policy table missing", lambda: snap([(PAGE, GOLD)], correct_bamboo(drop=("pol",))), BAM_ROWS,
      "without the policy table no reference resolves, and the rows say so rather than guess"),
-    # ---- Greenhouse
-    ("a Greenhouse job removed", lambda: snap([(PAGE, GOLD)], correct_bamboo(), greenhouse=greenhouse_tables(drop_row=("jobs", 1))), {GH},
-     "a row removed from a seed table"),
-    ("a Greenhouse candidate added", lambda: snap([(PAGE, GOLD)], correct_bamboo(), greenhouse=greenhouse_tables(add_row=("candidates", {"id": "99", "first_name": "New", "last_name": "Person"}))), {GH},
-     "a row added to a seed table"),
-    ("a Greenhouse application's status edited", lambda: snap([(PAGE, GOLD)], correct_bamboo(), greenhouse=greenhouse_tables(edit=("applications", 1, "status", "rejected"))), {GH},
-     "a cell changed in place, which a row count alone would miss"),
-    ("Greenhouse absent from the snapshot", lambda: snap([(PAGE, GOLD)], correct_bamboo(), greenhouse=greenhouse_tables(omit=True)), {GH},
-     "a snapshot that does not show Greenhouse cannot show it unchanged; the false zero is taken"),
 ]

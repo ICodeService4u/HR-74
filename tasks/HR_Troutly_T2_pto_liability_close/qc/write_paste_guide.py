@@ -23,7 +23,7 @@ import build_package_artifacts as B  # noqa: E402
 import scenarios as S  # noqa: E402
 
 GUIDE = os.path.join(PKG, "07_paste_guide.md")
-FIRST = [1, 34, 43]  # the three routes, pasted first: the pages table, the BambooHR tables, Greenhouse
+FIRST = [1, 34]  # the two routes, pasted first: the pages table and the BambooHR tables
 
 
 def _name(i):
@@ -72,19 +72,15 @@ def expected_content(spec):
     if k == "policy":
         return "current policy %s" % spec["expected"]
     if k == "policies":
-        return "%d policies as loaded, none moved" % len(spec["expected"])
+        return "the schedule's policy on all %d records, which is the loaded one" % len(spec["expected"])
     if k == "balances":
-        return "%d balances as loaded, none moved" % len(spec["expected"])
-    if k == "greenhouse_unchanged":
-        return "%d tables, %d rows, every seed row on one live row and no other" % (len(spec["seed"]), B.GREENHOUSE_ROWS)
+        return "the schedule's balance on all %d records, which is the loaded one, within 0.005" % len(spec["expected"])
     raise KeyError(k)
 
 
 def target_table(spec):
     if spec["target"] == "wiki":
         return "pages, the documented Wiki.js table"
-    if spec["target"] == "greenhouse":
-        return "every Greenhouse table, matched to the %d seed tables by content" % len(spec["seed"])
     if spec["kind"] in ("policy", "policies"):
         return "the employee policy assignment table, found by its references into the employee and policy tables"
     return "the time-off balance table, found by its references into the employee and policy tables"
@@ -100,8 +96,6 @@ def record_label(spec):
         return "CTR-2001 to CTR-2004"
     if spec["target"] == "wiki":
         return B.PAGE
-    if spec["target"] == "greenhouse":
-        return "Greenhouse as seeded"
     if "key" in spec:
         return "%s, %s" % (_name(spec["key"]), spec["key"])
     return "%d loaded records the schedule leaves as loaded" % len(spec["expected"])
@@ -114,8 +108,6 @@ def record_id(spec):
         return ", ".join(spec["keys"])
     if spec["target"] == "wiki":
         return B.PAGE
-    if spec["target"] == "greenhouse":
-        return ", ".join(sorted(spec["seed"]))
     return ", ".join(sorted(spec["expected"]))
 
 
@@ -128,7 +120,8 @@ def picker_refs(refs):
 
 
 def seed_verdicts():
-    """Every row file against the untouched task: the seed pages, BambooHR and Greenhouse tables."""
+    """Every row file against the untouched task: the seed pages and BambooHR tables, with the
+    Greenhouse seed tables beside them as the third app's, which no row reads."""
     ctx = S.snap(history=[(S.PAGE, S.GOLD)])
     vdir = os.path.join(HERE, "verifiers")
     out = {}
@@ -186,15 +179,13 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `%s`, %d rows, %d poi
    engine with the row's SPEC on top, %d to %d lines; if the box balks at the size, say so and the
    builder stamps only the half a row uses.
 4. **Run the per-verifier test-run on the untouched task** and compare with the block's expected
-   verdict and last `details` line. Forty rows fail on the untouched task by design, twenty-seven
-   on no page under the title and thirteen on a BambooHR record as loaded; the three guards, rows
-   %s, pass. A verdict that differs is a defect to read before the next row is pasted.
-5. **Paste rows %s first.** They are the three routes: the pages table, the BambooHR tables and
-   Greenhouse. Their `details` name every table and column the code resolved and the route it
-   took, which is the measurement open item 4 in `02_task_metadata.md` owes, so copy those lines
-   into the record. **If row 43 fails on the untouched task**, the grading snapshot cannot show
-   Greenhouse as seeded, and open item 8's fallback applies before anything else is pasted: the
-   memo's Greenhouse line and the row go together.
+   verdict and last `details` line. %d rows fail on the untouched task by design, %d on no page
+   under the title and %d on a BambooHR record as loaded or absent; the two guards over the records
+   the schedule leaves as loaded, rows %s, pass. A verdict that differs is a defect to read before
+   the next row is pasted.
+5. **Paste rows %s first.** They are the two routes: the pages table and the BambooHR tables.
+   Their `details` name every table and column the code resolved and the route it took, which is
+   the measurement open item 4 in `02_task_metadata.md` owes, so copy those lines into the record.
 6. If the form offers a dropdown for Target Table, pick the table the block names and record the
    names the dropdown lists; they are the live shape the fixture could not measure.
 
@@ -205,6 +196,8 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `%s`, %d rows, %d poi
 ## The rows
 
 """ % (md5, len(rs), B.PLAN_TOTAL, len(rs), min(_lines(r["file"]) for r in rs), max(_lines(r["file"]) for r in rs),
+       sum(1 for r in rs if r["verdict"] == "FAILED"), sum(1 for r in rs if r["verdict"] == "FAILED" and r["app"] == "wiki_js"),
+       sum(1 for r in rs if r["verdict"] == "FAILED" and r["app"] == "bamboohr"),
        ", ".join(str(r["i"]) for r in rs if r["verdict"] == "PASSED"), ", ".join(str(n) for n in FIRST), table(rs))
     blocks = []
     for r in rs:

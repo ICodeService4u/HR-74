@@ -233,7 +233,9 @@ def required_in(low, terms, label):
 
 def check_memo():
     """The request supplies the ask, the measurement date, the page title, the columns, what a
-    current employee is, what the summary states, the BambooHR ask, the form and the fence. It
+    current employee is, what the summary states, the BambooHR ask and the form, and no fence:
+    task round 3 of 09/20/2026 took the out-of-scope block out, HR 79 T1's round 9 remedy, because
+    a fence graded is a fence argued every round and a fence unguarded is a finding every round. It
     names the July detail it replaces and no rule: the cutover memo, the cap, the accrual period,
     the tiers, the service dates, the rehire rule, the part-time rule, the signed changes and the
     step are the world's to state and the response's to find."""
@@ -269,6 +271,9 @@ def check_memo():
         "revise", "recompute", "true up", "true-up", "resolve", "settle", "decide", "determine",
         "which one", "which is right", "control", "authoritative", "yield", "trust", "reliable",
         "up to date", "out of date", "behind", "drift", "reconcil", "tie out", "tie-out",
+        # a fence: work put out of scope asks for nothing and draws a finding every round
+        "no part of this request", "not part of this request", "out of scope", "out-of-scope",
+        "change nothing", "do not change", "do not touch", "leave alone", "greenhouse",
     ) + META_WORDS, "the memo")
     shape_in(low, (
         "whether", "if any", "if either", "if neither", "only", "except", "unless", "instead",
@@ -301,8 +306,6 @@ def check_memo():
         "the ones the schedule shows",
         "dates mm/dd/yyyy. hours to two decimals. hourly rates to four decimals. dollars to the "
         "cent. the total is the sum of the rows. an employee id on every row.",
-        "payroll changes, the september compensation cycle and benefits are no part of this request",
-        "change nothing in greenhouse",
     ), "the memo")
 
 def check_names():

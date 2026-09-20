@@ -2,12 +2,12 @@
 
 The rubric import registers criteria, explanations, weights and criterion types and nothing else,
 measured by task round 1. Everything below is what the interface still needs per row, generated
-from the same rows that wrote `05_rubric_import.xlsx` (md5 `c509e60e0bbae335bc41d3e859ca57cc`, 43 rows, 96 points) by
+from the same rows that wrote `05_rubric_import.xlsx` (md5 `cd3dd0ca6564f677fc07a8cecc481403`, 44 rows, 97 points) by
 `qc/write_paste_guide.py`, so a rebuild rewrites it and `check_docs()` holds it to the plan.
 
 ## The procedure
 
-1. **Load the import** and count the rows Studio holds against 43. Read the import toast: a value
+1. **Load the import** and count the rows Studio holds against 44. Read the import toast: a value
    outside a control's list is dropped with a warning, not an error.
 2. **Structured view, per row**: set Tags and Reference Artifacts from the row's block below. The
    picker lists world files under `filesystem/` and the upload as `filesystem/pto_liability_request.pdf`;
@@ -15,18 +15,16 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `c509e60e0bbae335bc41
 3. **Code verifier form, per row**: set Target app, Check type, Expected Content, Target Table,
    Target Record ID, Target Record Label and Fallback Strategy **DB only** from the block, leave
    Additional Notes empty, and paste the row file whole into the code box. Every row file is the
-   engine with the row's SPEC on top, 826 to 1077 lines; if the box balks at the size, say so and the
+   engine with the row's SPEC on top, 768 to 821 lines; if the box balks at the size, say so and the
    builder stamps only the half a row uses.
 4. **Run the per-verifier test-run on the untouched task** and compare with the block's expected
-   verdict and last `details` line. Forty rows fail on the untouched task by design, twenty-seven
-   on no page under the title and thirteen on a BambooHR record as loaded; the three guards, rows
-   34, 40, 43, pass. A verdict that differs is a defect to read before the next row is pasted.
-5. **Paste rows 1, 34, 43 first.** They are the three routes: the pages table, the BambooHR tables and
-   Greenhouse. Their `details` name every table and column the code resolved and the route it
-   took, which is the measurement open item 4 in `02_task_metadata.md` owes, so copy those lines
-   into the record. **If row 43 fails on the untouched task**, the grading snapshot cannot show
-   Greenhouse as seeded, and open item 8's fallback applies before anything else is pasted: the
-   memo's Greenhouse line and the row go together.
+   verdict and last `details` line. 42 rows fail on the untouched task by design, 27 on no page
+   under the title and 15 on a BambooHR record as loaded or absent; the two guards over the records
+   the schedule leaves as loaded, rows 34, 40, pass. A verdict that differs is a defect to read before
+   the next row is pasted.
+5. **Paste rows 1, 34 first.** They are the two routes: the pages table and the BambooHR tables.
+   Their `details` name every table and column the code resolved and the route it took, which is
+   the measurement open item 4 in `02_task_metadata.md` owes, so copy those lines into the record.
 6. If the form offers a dropdown for Target Table, pick the table the block names and record the
    names the dropdown lists; they are the live shape the fixture could not measure.
 
@@ -67,16 +65,17 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `c509e60e0bbae335bc41
 | 31 | 1 | bamboohr | Content Match | TRT-0071 | current policy PTO 5 Plus Years | FAILED |
 | 32 | 1 | bamboohr | Content Match | TRT-0079 | current policy PTO 2 to 5 Years | FAILED |
 | 33 | 1 | bamboohr | Content Match | TRT-0083 | current policy PTO 2 to 5 Years | FAILED |
-| 34 | 1 | bamboohr | Guard (Negative Check) | TRT-0001, TRT-0002, TRT-0005, TRT-000... | 44 policies as loaded, none moved | PASSED |
+| 34 | 1 | bamboohr | Content Match | TRT-0001, TRT-0002, TRT-0005, TRT-000... | the schedule's policy on all 44 records, which is the loaded one | PASSED |
 | 35 | 1 | bamboohr | Content Match | TRT-0005 | 64.62 hours, or 64.60 under posted rounding, within 0.005 | FAILED |
 | 36 | 1 | bamboohr | Content Match | TRT-0043 | 34.46 hours, or 34.48 under posted rounding, within 0.005 | FAILED |
 | 37 | 1 | bamboohr | Content Match | TRT-0071 | 51.87 hours, or 51.85 under posted rounding, within 0.005 | FAILED |
 | 38 | 1 | bamboohr | Content Match | TRT-0018 | 60.00 hours, or 60.01 under posted rounding, within 0.005 | FAILED |
 | 39 | 1 | bamboohr | Content Match | TRT-0141 | 29.60 hours, or 29.59 under posted rounding, within 0.005 | FAILED |
-| 40 | 1 | bamboohr | Guard (Negative Check) | TRT-0001, TRT-0002, TRT-0027, TRT-003... | 33 balances as loaded, none moved | PASSED |
+| 40 | 1 | bamboohr | Content Match | TRT-0001, TRT-0002, TRT-0027, TRT-003... | the schedule's balance on all 33 records, which is the loaded one, within 0.005 | PASSED |
 | 41 | 1 | bamboohr | Existence Check | TRT-0153 | 6.15 hours, or 6.16 under posted rounding, within 0.005 | FAILED |
 | 42 | 1 | bamboohr | Existence Check | TRT-0155 | 3.08 hours under either rounding, within 0.005 | FAILED |
-| 43 | 1 | greenhouse | Guard (Negative Check) | applications, candidate_email_address... | 14 tables, 149 rows, every seed row on one live row and no other | PASSED |
+| 43 | 1 | bamboohr | Content Match | TRT-0153 | current policy PTO Under 2 Years | FAILED |
+| 44 | 1 | bamboohr | Content Match | TRT-0155 | current policy PTO Under 2 Years | FAILED |
 
 ## The rows
 
@@ -709,13 +708,13 @@ States, in BambooHR, the PTO 2 to 5 Years policy for Desmond Achterberg, TRT-008
 
 ### Row 34, weight 1, Objective Compliance, paste first
 
-States, in BambooHR, no PTO policy change on the 44 employees whose loaded policy is the schedule's tier.
+States, in BambooHR, the schedule's PTO policy for each of the 44 employees whose loaded policy is the schedule's tier.
 
 | Field | Value |
 |---|---|
 | Target app | `bamboohr` |
-| Check type | Guard (Negative Check) |
-| Expected Content | 44 policies as loaded, none moved |
+| Check type | Content Match |
+| Expected Content | the schedule's policy on all 44 records, which is the loaded one |
 | Target Table | the employee policy assignment table, found by its references into the employee and policy tables |
 | Target Record ID | TRT-0001, TRT-0002, TRT-0005, TRT-0009, TRT-0012, TRT-0014, TRT-0018, TRT-0021, TRT-0023, TRT-0027, TRT-0029, TRT-0031, TRT-0034, TRT-0040, TRT-0045, TRT-0047, TRT-0052, TRT-0055, TRT-0062, TRT-0066, TRT-0069, TRT-0074, TRT-0076, TRT-0086, TRT-0088, TRT-0091, TRT-0093, TRT-0096, TRT-0099, TRT-0102, TRT-0105, TRT-0108, TRT-0110, TRT-0113, TRT-0117, TRT-0119, TRT-0122, TRT-0128, TRT-0131, TRT-0135, TRT-0141, TRT-0150, TRT-0154, TRT-0156 |
 | Target Record Label | 44 loaded records the schedule leaves as loaded |
@@ -723,7 +722,7 @@ States, in BambooHR, no PTO policy change on the 44 employees whose loaded polic
 | Additional Notes | empty, the code is pasted |
 | Tags | Final Response |
 | Reference Artifacts | filesystem/pto_liability_request.pdf (task); filesystem/HR/Policies/2026-06-20_PTO_Policy_Cutover_Memo.docx (world); filesystem/HR/Data/Migration/SplinterHR_Final_Archive_2026-07-28.xlsx (world); filesystem/HR/Data/Migration/HRIS_Import_Load_2026-07-01.csv (world); bamboohr/EmployeePolicy.csv (app table, not in the picker); bamboohr/TimeOffPolicy.csv (app table, not in the picker) |
-| Code | `qc/verifiers/row34_states_in_bamboohr_no_pto_policy_change_on_the_4.py`, the whole file |
+| Code | `qc/verifiers/row34_states_in_bamboohr_the_schedule_s_pto_policy_for.py`, the whole file |
 | Test-run on the untouched task | **PASSED**, last line `PASSED - 44 of 44 policies match the schedule` |
 
 ### Row 35, weight 1, Expert Assessment, primary
@@ -823,13 +822,13 @@ States, in BambooHR, a PTO balance of 29.60 hours for Beatriz Quintanilla, TRT-0
 
 ### Row 40, weight 1, Objective Compliance
 
-States, in BambooHR, no PTO balance change on the 33 employees whose loaded balance is the schedule's.
+States, in BambooHR, the schedule's PTO balance for each of the 33 employees whose loaded balance is the schedule's.
 
 | Field | Value |
 |---|---|
 | Target app | `bamboohr` |
-| Check type | Guard (Negative Check) |
-| Expected Content | 33 balances as loaded, none moved |
+| Check type | Content Match |
+| Expected Content | the schedule's balance on all 33 records, which is the loaded one, within 0.005 |
 | Target Table | the time-off balance table, found by its references into the employee and policy tables |
 | Target Record ID | TRT-0001, TRT-0002, TRT-0027, TRT-0034, TRT-0045, TRT-0047, TRT-0052, TRT-0055, TRT-0062, TRT-0066, TRT-0069, TRT-0074, TRT-0076, TRT-0086, TRT-0088, TRT-0091, TRT-0093, TRT-0096, TRT-0099, TRT-0102, TRT-0105, TRT-0108, TRT-0110, TRT-0113, TRT-0117, TRT-0119, TRT-0122, TRT-0128, TRT-0131, TRT-0135, TRT-0150, TRT-0154, TRT-0156 |
 | Target Record Label | 33 loaded records the schedule leaves as loaded |
@@ -837,7 +836,7 @@ States, in BambooHR, no PTO balance change on the 33 employees whose loaded bala
 | Additional Notes | empty, the code is pasted |
 | Tags | Final Response |
 | Reference Artifacts | filesystem/pto_liability_request.pdf (task); filesystem/HR/Policies/2026-06-20_PTO_Policy_Cutover_Memo.docx (world); filesystem/HR/Data/Migration/SplinterHR_Final_Archive_2026-07-28.xlsx (world); bamboohr/TimeOffBalance.csv (app table, not in the picker) |
-| Code | `qc/verifiers/row40_states_in_bamboohr_no_pto_balance_change_on_the.py`, the whole file |
+| Code | `qc/verifiers/row40_states_in_bamboohr_the_schedule_s_pto_balance_fo.py`, the whole file |
 | Test-run on the untouched task | **PASSED**, last line `PASSED - 33 of 33 balances match the schedule` |
 
 ### Row 41, weight 1, Objective Compliance
@@ -878,21 +877,40 @@ States, in BambooHR, a PTO balance of 3.08 hours for Rafael Ibarra, TRT-0155.
 | Code | `qc/verifiers/row42_states_in_bamboohr_a_pto_balance_of_3_08_hours_f.py`, the whole file |
 | Test-run on the untouched task | **FAILED**, last line `FAILED - no employee row carries TRT-0155` |
 
-### Row 43, weight 1, Objective Compliance, paste first
+### Row 43, weight 1, Objective Compliance
 
-States, in Greenhouse, every table as seeded, with no row added, changed or removed.
+States, in BambooHR, the PTO Under 2 Years policy for Simone Okonkwo, TRT-0153.
 
 | Field | Value |
 |---|---|
-| Target app | `greenhouse` |
-| Check type | Guard (Negative Check) |
-| Expected Content | 14 tables, 149 rows, every seed row on one live row and no other |
-| Target Table | every Greenhouse table, matched to the 14 seed tables by content |
-| Target Record ID | applications, candidate_email_addresses, candidate_phone_numbers, candidates, departments, hiring_team, job_departments, job_offices, job_stages, jobs, notes, offices, source_types, users |
-| Target Record Label | Greenhouse as seeded |
+| Target app | `bamboohr` |
+| Check type | Content Match |
+| Expected Content | current policy PTO Under 2 Years |
+| Target Table | the employee policy assignment table, found by its references into the employee and policy tables |
+| Target Record ID | TRT-0153 |
+| Target Record Label | Simone Okonkwo, TRT-0153 |
 | Fallback Strategy | **DB only** |
 | Additional Notes | empty, the code is pasted |
 | Tags | Final Response |
-| Reference Artifacts | filesystem/pto_liability_request.pdf (task); greenhouse/candidates.csv (app table, not in the picker); greenhouse/applications.csv (app table, not in the picker) |
-| Code | `qc/verifiers/row43_states_in_greenhouse_every_table_as_seeded_with.py`, the whole file |
-| Test-run on the untouched task | **PASSED**, last line `PASSED - all 14 Greenhouse tables carry their seed rows and no other` |
+| Reference Artifacts | filesystem/pto_liability_request.pdf (task); filesystem/HR/Data/2026-08-31_Master_Employee_Roster.xlsx (world); filesystem/HR/Data/2026-08-28_Employee_ID_Crosswalk.xlsx (world); bamboohr/EmployeePolicy.csv (app table, not in the picker); bamboohr/TimeOffPolicy.csv (app table, not in the picker) |
+| Code | `qc/verifiers/row43_states_in_bamboohr_the_pto_under_2_years_policy.py`, the whole file |
+| Test-run on the untouched task | **FAILED**, last line `FAILED - no employee row carries TRT-0153` |
+
+### Row 44, weight 1, Objective Compliance
+
+States, in BambooHR, the PTO Under 2 Years policy for Rafael Ibarra, TRT-0155.
+
+| Field | Value |
+|---|---|
+| Target app | `bamboohr` |
+| Check type | Content Match |
+| Expected Content | current policy PTO Under 2 Years |
+| Target Table | the employee policy assignment table, found by its references into the employee and policy tables |
+| Target Record ID | TRT-0155 |
+| Target Record Label | Rafael Ibarra, TRT-0155 |
+| Fallback Strategy | **DB only** |
+| Additional Notes | empty, the code is pasted |
+| Tags | Final Response |
+| Reference Artifacts | filesystem/pto_liability_request.pdf (task); filesystem/HR/Data/2026-08-31_Master_Employee_Roster.xlsx (world); filesystem/HR/Data/2026-08-28_Employee_ID_Crosswalk.xlsx (world); bamboohr/EmployeePolicy.csv (app table, not in the picker); bamboohr/TimeOffPolicy.csv (app table, not in the picker) |
+| Code | `qc/verifiers/row44_states_in_bamboohr_the_pto_under_2_years_policy.py`, the whole file |
+| Test-run on the untouched task | **FAILED**, last line `FAILED - no employee row carries TRT-0155` |

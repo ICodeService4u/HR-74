@@ -13,7 +13,7 @@ Gemini runs read a 23.9% mean.
 
 | # | Checkpoint - what the model must do |
 |:---:|:---|
-| 1 | Read the Finance Manager's 09/01/2026 request and take from it the page, the seven columns, the definition of a current employee, what the summary states, the BambooHR ask, the form and the fence. |
+| 1 | Read the Finance Manager's 09/01/2026 request and take from it the page, the seven columns, the definition of a current employee, what the summary states, the BambooHR ask and the form. |
 | 2 | Establish who is employed by Troutly on 08/31/2026: 52 on the roster and the org chart; BambooHR's 57 active rows hold four contractors and three ended records and lack two hires. |
 | 3 | Find the rules that govern PTO at 08/31/2026. The cutover memo of 06/20/2026, effective 07/01/2026, replaces the 2025 policy; the handbook incorporates it and says wiki pages do not set policy; the Paid Time Off page and the 2025 policy say monthly accrual and unlimited carryover and are superseded. |
 | 4 | Establish each employee's opening balance: the SplinterHR archive's 06/30/2026 balance, capped at 40.0 hours. The HRIS report, the load file and the July close carry the balances uncapped; eleven exceed the cap. |

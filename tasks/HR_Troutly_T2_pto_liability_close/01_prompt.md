@@ -93,4 +93,5 @@ of the answer, "whether", "only", "except", "instead", "differ", "conflict", "ov
 neighbours word-boundary-banned.
 
 **Required of the request**: the page title, the columns, the definition of a current employee,
-what the summary states, the BambooHR ask, the form and the fence.
+what the summary states, the BambooHR ask and the form. The out-of-scope block the memo carried
+through task round 2 is gone since task round 3, and the memo builder bars a fence from returning.
