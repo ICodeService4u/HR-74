@@ -18,7 +18,7 @@
 | **Rubric import** | Not built at the prompt half. The task data id is the sentinel `SNAPSHOT_ID_NOT_YET_READ` until it is read off the first export; the world id is T1's, `snap_c6f6a0879f3d47a19048ee80d7529157` |
 | **Rubric plan** | **21 planned rows, 87 points, 1 gate**, in `build/rubric_plan.csv` and below, the registered paths scored against it by `build/build_package_artifacts.py` on every build. Verifier code, the battery and the import are built only if the first run set fails, by the decision of 09/20/2026 |
 | **Human time estimate** | 14 hours |
-| **Spec 2A** | **Unmeasured, predicted.** The registered failing paths score 29 of 87, 33.3% and 42 of 87, 48.3%; the free base is 5 of 92, 5.4%; the registered Gemini mean is 45%, with the decision rule and the honest note in `06_failure_analysis.md`, dated before any run |
+| **Spec 2A** | **Unmeasured, predicted.** The registered failing paths score 29 of 87, 33.3% and 42 of 87, 48.3%; the free base is 5 of 87, 5.7%; the registered Gemini mean is 45%, with the decision rule and the honest note in `06_failure_analysis.md`, dated before any run |
 
 ## The prompt
 
