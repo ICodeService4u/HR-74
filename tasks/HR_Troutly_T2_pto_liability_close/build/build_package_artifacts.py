@@ -809,7 +809,7 @@ def write_show_your_work():
     ws.append([])
     ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed, and it matches the schedule's only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
     ws.append(["Note", "Rows 6 to 18 each test one rule on the people that rule alone moves. One wrong cell fails a rule once and never twice."])
-    ws.append(["Note", "Rows 2, 14, 15 and 16 grade the population on the set of IDs. Rows 19 to 21 grade BambooHR on its tables."])
+    ws.append(["Note", "Rows 14, 15 and 16 each test one place the world breaks the definition of a current employee, the contractors, the ended and the two unloaded hires. Row 2 tests the set as a whole. Rows 19 to 21 test BambooHR the same way, the %s policies, the %d balances and the two rows created, each once." % (_w(len(MIGRATED_WRONG_TIER)), len(GOLDEN))])
     ws = wb.create_sheet("Row assembly")
     ws.append(["Step", "Result"])
     for row in _syw_assembly():
