@@ -16,6 +16,7 @@ import hashlib
 import io
 import json
 import os
+import pprint
 import re
 import sys
 import zipfile
@@ -586,7 +587,7 @@ def _row_checks():
              "%s ended %s %s and the crosswalk marks %s Terminated%s. The cutover memo excludes employment ended by %s."
              % (last, _d(ARCHIVE_EMP[i]["term"]), ended_src[i], i, tail, ASOF),
              [REQUEST, xwalk, arch, cut, emp]))
-    return [
+    rows = [
         ("free", 1, "-", "States that a Wiki.js page titled %s is published." % PAGE, always,
          OC, "No",
          "One page under that title is what the request asks for in Wiki.js, so it exists with its published flag set.",
@@ -702,6 +703,44 @@ def _row_checks():
          % g["TRT-0155"]["balance"],
          [REQUEST, roster, xwalk, bal_t]),
     ]
+    specs = _specs(g)
+    assert len(rows) == len(specs), "%d rows, %d specs" % (len(rows), len(specs))
+    return [r + (s,) for r, s in zip(rows, specs)]
+
+
+def _specs(g):
+    """What each row's verifier reads, in the order of the rows above. Every value is the build's
+    own, and check_rubric() holds each spec to the criterion beside it."""
+    W = dict(target="wiki", page=PAGE)
+
+    def bal(i):
+        return dict(W, kind="balance", key=i, expected=[g[i]["balance"], g[i]["balance_posted"]])
+
+    def rate(i):
+        return dict(W, kind="rate", key=i, expected=[g[i]["hourly"]])
+
+    def tier(i, t):
+        return dict(W, kind="tier", key=i, expected=t)
+
+    ended = ENDED_IN_BAMBOO + ["TRT-0006"]
+    return [
+        dict(W, kind="exists"),
+        dict(W, kind="idset", expected_ids=sorted(g)),
+        dict(W, kind="format"),
+        dict(W, kind="summary"),
+        dict(W, kind="columns"),
+        dict(W, kind="layout"),
+        dict(W, kind="total", expected=[TOTAL, TOTAL_POSTED]),
+        bal("TRT-0005"), tier("TRT-0043", 120), tier("TRT-0071", 160), bal("TRT-0018"),
+        rate("TRT-0088"), rate("TRT-0117"), rate("TRT-0096"), bal("TRT-0141"),
+        dict(W, kind="no_contractor", min_rows=40),
+    ] + [dict(W, kind="absent", keys=[i], min_rows=40) for i in ended] + [
+        bal("TRT-0153"), bal("TRT-0155"), bal("TRT-0002"), bal("TRT-0001"),
+        dict(target="bamboohr", kind="policies", expected={i: TIER_POLICY[g[i]["tier"]] for i in LOADED_IDS}),
+        dict(target="bamboohr", kind="balances", expected={i: [g[i]["balance"], g[i]["balance_posted"]] for i in LOADED_IDS}),
+        dict(target="bamboohr", kind="balance_row", key="TRT-0153", expected=[g["TRT-0153"]["balance"], g["TRT-0153"]["balance_posted"]]),
+        dict(target="bamboohr", kind="balance_row", key="TRT-0155", expected=[g["TRT-0155"]["balance"], g["TRT-0155"]["balance_posted"]]),
+    ]
 
 
 PLAN = _row_checks()
@@ -725,8 +764,8 @@ def _rubric():
     the HR 79 T1 tuple, read off the plan's rows. Every row is an App DB row: the deliverable is
     one wiki page and BambooHR state and no file, so the judge has nothing to open and the
     database is the only route."""
-    return [(APPDB, typ, w, gate, primary, crit, expl, list(refs))
-            for fam, w, gate, crit, pred, typ, primary, expl, refs in PLAN]
+    return [(APPDB, typ, w, gate, primary, crit, expl, list(refs), spec)
+            for fam, w, gate, crit, pred, typ, primary, expl, refs, spec in PLAN]
 
 
 RUBRIC = _rubric()
@@ -806,6 +845,24 @@ def check_rubric():
         assert "prompt" not in crit.lower() and ".docx" not in crit and ".pdf" not in crit, crit
         assert all(ord(ch) < 128 for ch in crit), crit
         assert c[7], "a row cites nothing: " + crit
+        # the spec reads what the criterion states, and nothing else
+        s = c[8]
+        assert s["target"] in ("wiki", "bamboohr") and s.get("kind"), crit
+        assert (s["target"] == "bamboohr") == crit.startswith("States, in BambooHR"), crit
+        if "key" in s:
+            assert s["key"] in crit, "spec keyed %s on a criterion that does not name it: %s" % (s["key"], crit)
+        if s["kind"] in ("balance", "balance_row"):
+            assert ("%.2f" % s["expected"][0]) in crit, "spec value %.2f is not the criterion's: %s" % (s["expected"][0], crit)
+        if s["kind"] == "rate":
+            assert ("%.4f" % s["expected"][0]) in crit, crit
+        if s["kind"] == "tier":
+            assert ("%d-hour" % s["expected"]) in crit, crit
+        if s["kind"] == "absent":
+            assert s["keys"][0] in crit, crit
+        if s["kind"] == "total":
+            assert _money(s["expected"][0]) in crit, crit
+        if s["kind"] in ("policies", "balances"):
+            assert str(len(s["expected"])) in crit and all(k not in s["expected"] for k in UNLOADED_IDS), crit
     print("rubric: %d verifiers, %d points, %d gate, EA %.1f%%, OC %.1f%%, %d primary"
           % (len(RUBRIC), total, len(gates), 100.0 * ea / total, 100.0 * (total - ea) / total,
              sum(1 for c in RUBRIC if c[4] == "Yes")))
@@ -881,7 +938,7 @@ def rubric_import():
     ws.append(IMPORT_HEADER)
     for c in ws[1]:
         c.font = Font(bold=True)
-    for i, (kind, typ, wt, gate, primary, crit, expl, refs) in enumerate(RUBRIC, 1):
+    for i, (kind, typ, wt, gate, primary, crit, expl, refs, spec) in enumerate(RUBRIC, 1):
         arts = json.dumps([
             {"name": name, "index": None, "source": source,
              "snapshotId": TASK_SNAP if source == "task" else SNAP,
@@ -917,7 +974,7 @@ def check_import():
     cited_task, world_files, citations = set(), set(), 0
     selection = {"filesystem/" + f for f in WORLD_FILES}
     for n, (r, c, v) in enumerate(zip(body, csv_rows, RUBRIC), 1):
-        kind, typ, wt, _gate, primary, crit, expl, refs = v
+        kind, typ, wt, _gate, primary, crit, expl, refs, spec = v
         assert r[col["Index"]] == n == int(c["Index"]), "v%d is out of order" % n
         assert r[col["Criteria"]] == c["Criterion"] == crit, "v%d criteria differ" % n
         assert r[col["Criteria Explanation"]] == c["Criteria Explanation"] == expl, "v%d explanation differs" % n
@@ -977,10 +1034,93 @@ def rubric_table():
     """The rubric as 02_task_metadata.md publishes it; check_docs() holds 02 to every cell."""
     lines = ["| # | Family | Type | Wt | Gate | Primary | Criterion | Explanation |",
              "|---|---|---|---|---|---|---|---|"]
-    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
+    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs, spec) in enumerate(PLAN, 1):
         lines.append("| %d | %s | %s | %d | %s | %s | %s | %s |"
                      % (i, fam, "EA" if typ == EA else "OC", w, gate, primary, crit, expl))
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------- the golden page
+PAGE_HEADERS = ["Employee ID", "Name", "Department", "Annual PTO tier in hours",
+                "PTO balance in hours at 08/31/2026", "Hourly rate", "Dollar liability"]
+GOLDEN_FILE = "04_golden_output_PTO_Liability.md"
+
+
+def render_page(sched, title=None, headers=None):
+    """A page in the request's shape from a schedule: the summary above one table, seven columns,
+    hours to two decimals, rates to four, dollars to the cent, the total the sum of the rows."""
+    hours = round(sum(r["balance"] for r in sched), 2)
+    total = round(sum(r["liability"] for r in sched), 2)
+    hdr = headers or PAGE_HEADERS
+    lines = ["# %s" % (title or PAGE), "", "## Summary", "",
+             "- Employees on the schedule: %d" % len(sched),
+             "- Total hours: %s" % f"{hours:,.2f}",
+             "- Total dollar liability: $%s" % f"{total:,.2f}", "",
+             "| " + " | ".join(hdr) + " |", "|" + "---|" * len(hdr)]
+    for r in sched:
+        lines.append("| %s | %s | %s | %d | %.2f | $%.4f | $%s |" % (
+            r["id"], r["name"], r["dept"], r["tier"], r["balance"], r["hourly"], f"{r['liability']:,.2f}"))
+    return "\n".join(lines) + "\n"
+
+
+GOLDEN_PAGE = render_page(GOLDEN)
+
+
+def golden():
+    path = os.path.join(PKG, GOLDEN_FILE)
+    open(path, "w", encoding="utf8", newline="\n").write(GOLDEN_PAGE)
+    return path
+
+
+def check_golden():
+    text = GOLDEN_PAGE
+    assert text.startswith("# %s\n" % PAGE) and text.count("\n| TRT-") == len(GOLDEN), "the golden page is not the schedule"
+    assert _money(TOTAL) in text and f"{TOTAL_HOURS:,.2f}" in text and "%d" % len(GOLDEN) in text
+    rest = text
+    for r in GOLDEN:  # a person's name is a world fact and keeps the world's spelling
+        rest = rest.replace(r["name"], "")
+    assert all(ord(ch) < 128 for ch in rest), "the golden page is not ASCII outside the world's names"
+    for r in GOLDEN:
+        assert "| %s | %s |" % (r["id"], r["name"]) in text
+
+
+FORM_CHECK_TYPE = {"exists": "Existence Check", "idset": "Count Check", "format": "Content Match",
+                   "summary": "Content Match", "columns": "Content Match", "layout": "Content Match",
+                   "total": "Content Match", "balance": "Content Match", "tier": "Content Match",
+                   "rate": "Content Match", "no_contractor": "Guard (Negative Check)",
+                   "absent": "Guard (Negative Check)", "policies": "Content Match",
+                   "balances": "Content Match", "balance_row": "Existence Check"}
+
+
+def form_check_type(spec):
+    return FORM_CHECK_TYPE[spec["kind"]]
+
+
+def slug(crit):
+    s = re.sub(r"[^a-z0-9]+", "_", crit.lower()).strip("_")
+    return s[:48].rstrip("_")
+
+
+def verifiers():
+    """One standalone check(ctx) per rubric row: the row's SPEC stamped onto the engine."""
+    engine = open(os.path.join(HERE, "verifier_engine.py"), encoding="utf8").read()
+    vdir = os.path.join(PKG, "qc", "verifiers")
+    os.makedirs(vdir, exist_ok=True)
+    for old in os.listdir(vdir):
+        if re.match(r"row\d\d_.*\.py$", old):
+            os.remove(os.path.join(vdir, old))
+    names = []
+    for i, c in enumerate(RUBRIC, 1):
+        spec = dict(c[8])
+        spec["criterion"] = c[5]
+        name = "row%02d_%s.py" % (i, slug(c[5]))
+        head = ("# Row %d of the %s rubric - generated by build/build_package_artifacts.py, never "
+                "edited here.\n# Criterion: %s\n# Target app: %s, check kind %s\n"
+                "SPEC = %s\n\n" % (i, TASK_NAME, c[5], spec["target"], spec["kind"],
+                                   pprint.pformat(spec, width=96, sort_dicts=True)))
+        open(os.path.join(vdir, name), "w", encoding="utf8").write(head + engine)
+        names.append(name)
+    return names
 
 
 # ---------------------------------------------------------------- guards
@@ -1137,7 +1277,7 @@ def check_docs():
         assert fig in allowed, "02 carries a dollar figure the build did not write: %s" % fig
     for f in WORLD_FILES + APP_TABLES:
         assert "\n%s\n" % f in meta, "02's selection block lacks %s" % f
-    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
+    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs, spec) in enumerate(PLAN, 1):
         assert crit in meta, "02 lacks planned row %d: %s" % (i, crit[:60])
         assert expl in meta, "02 publishes a stale explanation for row %d: %s" % (i, expl[:60])
     assert md5(IMPORT) in meta, "02 publishes a stale md5 for the import, this build wrote %s" % md5(IMPORT)
@@ -1151,10 +1291,13 @@ def check_docs():
     fa = open(os.path.join(PKG, "06_failure_analysis.md"), encoding="utf8").read()
     for key, desc, pts, failed, tot, n in score_paths():
         assert "%s | " % key in fa and "%d of %d" % (pts, PLAN_TOTAL) in fa, "06 lacks %s at %d of %d" % (key, pts, PLAN_TOTAL)
+    assert md5(os.path.join(PKG, GOLDEN_FILE)) in meta, "02 publishes a stale md5 for the golden page, this build wrote %s" % md5(os.path.join(PKG, GOLDEN_FILE))
     readme = open(os.path.join(PKG, "README.md"), encoding="utf8").read()
     shipped = [f for f in sorted(os.listdir(PKG)) if f[0].isdigit()]
     shipped += ["build/" + f for f in sorted(os.listdir(HERE)) if not f.startswith("__")]
-    shipped += ["qc/" + f for f in sorted(os.listdir(os.path.join(PKG, "qc"))) if not f.startswith("__")]
+    shipped += ["qc/" + f for f in sorted(os.listdir(os.path.join(PKG, "qc")))
+                if not f.startswith("__") and f != "verifiers"]
+    shipped.append("qc/verifiers/")
     for f in shipped:
         assert f in readme, "README does not list %s" % f
     inputs = sorted(f for f in os.listdir(PKG) if f.startswith("00_"))
@@ -1184,9 +1327,13 @@ def write_previews():
     with open(q, "w", newline="", encoding="utf8") as fh:
         w = csv.writer(fh)
         w.writerow(["Index", "Family", "Weight", "Gate", "Criterion", "Verifier Type", "Criterion Type",
-                    "Is Primary Objective", "Tags", "Criteria Explanation", "Reference Artifacts"])
-        for i, (fam, wt, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
-            w.writerow([i, fam, wt, gate, crit, APPDB, typ, primary, import_tag(crit), expl, "; ".join(refs)])
+                    "Is Primary Objective", "Tags", "Criteria Explanation", "Reference Artifacts",
+                    "Target App", "Check Type", "Target Record ID", "Fallback Strategy", "Verifier File"])
+        for i, (fam, wt, gate, crit, pred, typ, primary, expl, refs, spec) in enumerate(PLAN, 1):
+            w.writerow([i, fam, wt, gate, crit, APPDB, typ, primary, import_tag(crit), expl, "; ".join(refs),
+                        "wiki_js" if spec["target"] == "wiki" else "bamboohr", form_check_type(spec),
+                        spec.get("key") or (", ".join(spec["keys"]) if "keys" in spec else PAGE if spec["target"] == "wiki" else "TRT-0001 to TRT-0156"),
+                        "DB only", "row%02d_%s.py" % (i, slug(crit))])
     return p, q
 
 
@@ -1263,7 +1410,7 @@ def write_show_your_work():
         ws.append(list(row))
     ws = wb.create_sheet("Verifiers")
     ws.append(["#", "Verifier", "Weight", "Gate"])
-    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
+    for i, (fam, w, gate, crit, pred, typ, primary, expl, refs, spec) in enumerate(PLAN, 1):
         ws.append([i, crit, w, gate])
     ws.append([])
     ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed, and it matches the schedule's only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
@@ -1332,6 +1479,10 @@ def main():
     s = write_show_your_work()
     imp = rubric_import()
     check_import()
+    check_golden()
+    gp = golden()
+    names = verifiers()
+    print("golden: %s, %d rows; verifiers: %d row files under qc/verifiers/" % (os.path.basename(gp), len(GOLDEN), len(names)))
     print("plan: %d rows, %d points, families %s" % (len(PLAN), PLAN_TOTAL, fam))
     for key, desc, pts, failed, tot, n in scores:
         print("  %s %3d of %d, %5.1f%%  rows %2d  total $%12s  fails %s" % (key, pts, PLAN_TOTAL, 100.0 * pts / PLAN_TOTAL, n, f"{tot:,.2f}", failed))
@@ -1339,6 +1490,7 @@ def main():
     print("md5 %s  %s" % (md5(q), os.path.basename(q)))
     print("md5 %s  %s" % (md5(s), os.path.basename(s)))
     print("md5 %s  %s" % (md5(imp), os.path.basename(imp)))
+    print("md5 %s  %s" % (md5(gp), os.path.basename(gp)))
     if "--docs" in sys.argv:
         check_show_your_work()
         check_docs()

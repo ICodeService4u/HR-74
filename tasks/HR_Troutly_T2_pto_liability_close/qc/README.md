@@ -36,11 +36,15 @@ writes. A platform grading of a T2 run is against those rows and is not read.
 
 ## The verifier harness
 
-Owed. The rubric import was built 09/20/2026 from the plan's rows, `05_rubric_import.xlsx`, with
-the explanations in the house register and both snapshot ids read off the five exports. Every
-row's code is generated next from the same rows and tested against a fixture with the answer
-known before it is imported, as T1's and v2's were, with the five archived pages and the
-BambooHR tables in the fixture beside the pages table.
+Built 09/20/2026. `verifier_harness.py` runs every row file under `verifiers/` against the 62
+snapshots in `scenarios.py`, each with the rows it must fail named in advance: **1764 of 1764
+verdicts correct**. The fixture is the seed pages table plus the six BambooHR seed tables with
+the app's integer ids as G1 observed them, and the scenarios carry the golden as the correct
+state, the archived G1 and G2 pages with the BambooHR state their writes left, the paths P2 to
+P5 as pages, and one planted defect per way a row can be wrong. `ctx.py` is the platform's `ctx`
+stood in with placeholder column names by default and its file and trajectory surfaces empty on
+purpose. `run_battery.py` runs one pasted check against the battery. Two engine defects were
+found and fixed here before anything was pasted, both recorded in `../09_rubric_import.md`.
 
 ## What a round is likely to raise, and the answer already on file
 

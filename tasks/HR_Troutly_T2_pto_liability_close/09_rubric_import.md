@@ -88,9 +88,32 @@ the import does not populate are answered in `qc/README.md`.
 
 ## The verifier code
 
-Owed. Every row's code is generated next into `qc/verifiers/` from the same rows that wrote this
-file, and the harness proves the set against a fixture that holds the five archived pages under
-`qc/findings/run_set_09-20-2026/` and the BambooHR tables before any of it is pasted, as
-`../HR_Troutly_T1v2_august_operating_review/qc/verifier_harness.py` did on 36 snapshots. No
-Additional Notes are written here: the route is T1 v2's, generated code pasted per row, because
-HR 79 measured Studio's own generation from notes grading wrongly on three rows of three.
+Built 09/20/2026. Every row's code is generated into `qc/verifiers/` from the same rows that
+wrote this file: the row's spec stamped onto `build/verifier_engine.py`, so a row file is never
+edited by hand and `check_rubric()` holds each spec to its criterion, the key it names and the
+value it states. `qc/verifier_harness.py` proves the set on 63 snapshots with the answer known,
+**1764 of 1764 verdicts correct**: the golden page and BambooHR brought to the schedule as the
+correct state, real and placeholder column names, the page as HTML, the title with an em dash,
+the BambooHR tables keyed on the app's integer ids, on the seed's strings and under other names,
+the two archived runs G1 and G2 and the paths P2 to P5 as pages, and one planted defect per way a
+row can be wrong, the stated values' neighbours among them. Two defects the battery found in the
+engine before anything was pasted: a table's own id column read as the employee reference, the
+R3 class, and the policy table mistaken for the assignment table when the loader keeps the seed's
+strings. No Additional Notes are written: the route is T1 v2's, generated code pasted per row,
+because HR 79 measured Studio's own generation from notes grading wrongly on three rows of three.
+
+**The form fields at paste time**, per row in `build/rubric_plan.csv`: Target App `wiki_js` on
+rows 1 to 24 and `bamboohr` on rows 25 to 28, Check Type by kind, Target Record ID the page title
+or the employee number, Fallback Strategy **DB only** on every row, the Verifier File to paste.
+Grading Target stays empty.
+
+**What the fixture rests on, and what it does not know.** The pages table follows the documented
+Wiki.js layout, 21 columns with the title at index 3, the published flag at 6 and the content at
+10, which T1 v2 built to and thirteen `get_page` reads agreed with. The BambooHR tables follow the
+six seed CSV columns with the app's integer ids as the five runs observed them, 1 to 58 in the
+seed's row order and 59 and 60 for the two rows a run creates; the fixture asserts that map
+against G1's own listing. The live app's table names and column order are unmeasured, which is
+why the engine finds the employee table by its employee numbers and email column, the policy
+table by its three names appearing once each, and the assignment and balance tables by their
+references into those two, and why the first grading run's `details` strings are owed to open
+item 4 in `02_task_metadata.md`.
