@@ -178,34 +178,33 @@ these runs is against those rows and says nothing; the record scores from the ar
 
 ## The task-field paragraph, 09/20/2026
 
-For the Additional Notes box on one Gemini trajectory, three sentences: what the run did and the
-figure it reported, its own evidence and the step where it set the rule aside and what it should
-have done, and why the output is unacceptable with the numbers. Steps are the platform's
-tool-call count, one assistant turn each. G1 is the paragraph to enter.
+Entered in the Additional Notes box on G1 on 09/20/2026, three sentences: what the run did and
+the figure it reported, its own evidence and where it set the rule aside, what it should have
+done, and why the output is unacceptable with the numbers. Steps here are the platform's
+numbering, which runs one ahead of the export's tool-call count used elsewhere in this record:
+the platform's step 25 is the export's call 24.
 
-**G1, traj_4f6423feac9e4f80a389b67ad71a5b0d.** Gemini copies the HRIS time off report into PTO
-Liability - 08/31/2026 and reports $111,455.78 of liability on 1,760.94 hours. Its own step 24
-prints the cutover memo's "Carryover into the new system is capped at 40.0 hours as of
-06/30/2026; the excess is forfeited", and at step 179 it sets the memo aside and takes every
-balance from the report, "balance = round(hris_bals[emp_id], 2)", confirming them at step 190
-because they match BambooHR, where it should have capped the eleven openings at 40.00 hours,
-tiered the nine migrated records on their archive dates, valued TRT-0088 and TRT-0117 at their
-signed rates, and carried $92,739.54 on 1,522.17 hours into the page and BambooHR. The output is
-unacceptable because it overstates the liability by $18,716.24 and credits eleven of the 52
-employees with hours the policy forfeited on 06/30/2026.
+**G1, traj_4f6423feac9e4f80a389b67ad71a5b0d, as entered.** Gemini copies the HRIS time off report
+into PTO Liability - 08/31/2026 and reports $111,455.78 of liability on 1,760.94 hours. Its own
+step 25 prints the cutover memo's "Carryover into the new system is capped at 40.0 hours as of
+06/30/2026; the excess is forfeited", but it sets the memo aside and takes every balance from the
+report and confirms them at step 191 because they match BambooHR. It should have capped the
+eleven openings at 40.00 hours, tiered the nine migrated records on their archive dates, valued
+TRT-0088 and TRT-0117 at their signed rates, and carried $92,739.54 on 1,522.17 hours into the
+page and BambooHR. The output is unacceptable because it overstates the liability by $18,716.24
+and credits eleven of the 52 employees with hours the policy forfeited on 06/30/2026.
 
-**G2, traj_43e4ed4770124156985eee8883199d9a.** Gemini copies the HRIS time off report into PTO
-Liability - 08/31/2026, drops Simone Okonkwo and Rafael Ibarra, and reports $111,100.39 on
-1,751.71 hours for 50 employees. Its own step 14 prints the memo's 40.0-hour cap and its step 137
-takes every balance from the report anyway, "bal = round(float(hris_map[emp_id]), 2)", and at
-step 160 it writes that the two hires "have zero recorded PTO accruals/balances on file" because
-the crosswalk reads Never Loaded, where it should have capped the eleven openings, tiered the
-migrated records on their archive dates, accrued the two hires from their start dates at 6.15
-and 3.08 hours, and carried $92,739.54 on 52 rows into the page and BambooHR. The output is
-unacceptable because it overstates the liability by $18,360.85 on the rows it prints, omits two
-current employees, and leaves BambooHR untouched.
+**G2, traj_43e4ed4770124156985eee8883199d9a, on file.** Gemini copies the HRIS time off report
+into PTO Liability - 08/31/2026, drops Simone Okonkwo and Rafael Ibarra, and reports $111,100.39
+on 1,751.71 hours for 50 employees. Its own step 15 prints the memo's 40.0-hour cap, but it takes
+every balance from the report anyway at step 138, and at step 161 writes that the two hires "have
+zero recorded PTO accruals/balances on file" because the crosswalk reads Never Loaded. It should
+have capped the eleven openings, tiered the migrated records on their archive dates, accrued the
+two hires from their start dates at 6.15 and 3.08 hours, and carried $92,739.54 on 52 rows into
+the page and BambooHR. The output is unacceptable because it overstates the liability by
+$18,360.85 on the rows it prints, omits two current employees, and leaves BambooHR untouched.
 
 G3, traj_e0bfaf50ef7d451fbacfa96c7639178e, and G4, traj_75b173ce1cb641fc9fcf09419ee67caf, take
-G1's shape: the cap printed at steps 18 and 11, every balance from the report at steps 166 and
-149. G5, traj_8805c80d23144ec2bd53b3381f89acef, takes G2's: the cap at step 23, the report at
-step 143, the two hires dropped.
+G1's shape: the cap printed at steps 19 and 12, every balance from the report at steps 167 and
+150. G5, traj_8805c80d23144ec2bd53b3381f89acef, takes G2's: the cap at step 24, the report at
+step 144, the two hires dropped.
