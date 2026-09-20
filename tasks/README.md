@@ -24,6 +24,20 @@ percentage rules apply, Gemini 3.8 Flash under a 40% mean across five runs with 
 in one of them. A world with two or more apps uses at least two in the task. T1 uses three:
 BambooHR and Greenhouse read, Wiki.js written.
 
+**The EPM's update of 09/19/2026, read off the Project Julius daily update the same day:**
+
+- The step line is **90 or more steps in at least one Gemini trajectory**, on the platform's own
+  count; 80 or more may be accepted when the failure analysis shows Gemini did not complete the
+  majority of the task. Build sequential workflows with multiple App DB reads and updates.
+- Gemini 3.8 Flash must mean under 40% across five runs. GPT Sol 5.6 needs three runs and has no
+  difficulty requirement.
+- Prompt AutoQC moved out of the Prompt section into the Trajectories section, at 2.3 above 2.4
+  AutoQC your trajectories. That is why v2's prompt round landed beside its runs on 09/20/2026.
+- At Golden Trajectories, run the pipeline three times and confirm at least one completed run
+  shows a score of 1.0.
+- File existence is checked through App DB Programmatic, not an LLM judge. Every row here already
+  is.
+
 **The HR 79 rules, unchanged:**
 
 1. **No world byte moves for a task.** `python3 world/checks/world_manifest.py` and
@@ -92,7 +106,7 @@ Measured here on 09/19/2026, off the nine trajectory exports of T1's first run s
 | The platform's tool catalogue for BambooHR, Greenhouse and Wiki.js | `tasks/APP_TOOL_SURFACE.md`: 254 tools on a toolbelt agent that pulls each one in with `toolbelt_add_tool`, 39 of them Wiki.js, `wiki_js_mcp_wikijs_mcp_create_page` the page writer. T1's `check_tools()` reads it green |
 | Whether a page created through the platform's Wiki.js tools lands in `pages` under the title the run gives it | Yes. Nine of nine runs created both pages with `create_page`, ids 11 and 12 after the ten seed pages, title exact, published by default, path the run's own. No grading run on the package's rubric happened, so the grading snapshot's column names are still unmeasured |
 | The world and task-data snapshot ids | `snap_c6f6a0879f3d47a19048ee80d7529157` and `snap_dc228e8bba9d423fbe9f3dd35862f658`, the same pair on all nine exports. The v2 upload's task data id is `snap_fbf9dc06005743a28e8d6fd2238c7f5f` on all four exports of 09/20/2026, the world id unchanged |
-| The step count | Gemini 3.8 Flash 74, 78, 95, 84 and 90 tool calls; GPT Sol 5.6 176, 137 and 98; Opus 4.8 49. Two of five Gemini runs reach 90. On v2, Gemini 90, 74, 84 and 90 tool calls and 90, 69, 84 and 84 assistant turns; none at 100 |
+| The step count | Gemini 3.8 Flash 74, 78, 95, 84 and 90 tool calls; GPT Sol 5.6 176, 137 and 98; Opus 4.8 49. Two of five Gemini runs reach 90. On v2, Gemini 90, 74, 84 and 90 tool calls and 90, 69, 84 and 84 assistant turns; G1 reads 91 on the platform's own count, over the EPM's 90 line |
 | Whether 1.5 accepts an empty list | Read only from the task reaching Trajectories with no file named; the export's task schema carries no field labelled for it |
 
 Write each answer into this file the way HR 79's root `CLAUDE.md` rule 6 was written, naming

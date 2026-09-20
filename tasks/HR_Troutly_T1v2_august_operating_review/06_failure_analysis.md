@@ -150,8 +150,7 @@ choice, and the memo carried to answer it, is a rule the tier applies once it ho
 on four of four, with no authority clause in the memo. Each run read the wiki page's eight roles
 and set them aside against the Board plan.
 
-**The step gate.** 74 to 90 tool calls and 69 to 90 assistant turns; no run reached 100 steps on
-the guide's count. T1 measured 74 to 95 tool calls on the same reads.
+**The step gate.** G1 reached 91 steps on the platform's own count, read off the trajectory view on 09/20/2026, over the EPM's 90 line of 09/19/2026. The four runs made 74 to 90 tool calls and 69 to 90 assistant turns, and the platform's count runs one over the assistant turns, so the other three sit at about 70, 85 and 85. T1 measured 74 to 95 tool calls on the same reads. The step gate is met; the difficulty bar is not.
 
 **What this measures, for the record.** T1 measured that naming the sources heals the population.
 v2 measures that not naming them does not unheal it: the deciding files sit in a 69-file tree the
