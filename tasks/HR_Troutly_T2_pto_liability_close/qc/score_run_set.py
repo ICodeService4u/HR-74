@@ -132,7 +132,7 @@ def verdicts(rows, prose, header, page_meta, pol, bal):
            and total_stated,
         5: any(_same(m, B.TOTAL, 0.01) or _same(m, B.TOTAL_POSTED, 0.01) for m in stated_money)
            or _same(row_sum, B.TOTAL, 0.01) or _same(row_sum, B.TOTAL_POSTED, 0.01),
-        6: all(bal_ok(i) for i in B.CAPPED_IDS),
+        6: all(bal_ok(i) for i in B.CAP_ONLY_IDS),
         7: all(i in rows and rows[i]["tier"] == g[i]["tier"] for i in B.MIGRATED_WRONG_TIER if i != "TRT-0071"),
         8: "TRT-0071" in rows and rows["TRT-0071"]["tier"] == 160,
         9: bal_ok("TRT-0018"),

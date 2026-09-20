@@ -16,9 +16,9 @@
 | **Golden output** | Not built at the prompt half. `build/schedule_preview.csv` is the schedule the golden page will be generated from, md5 recomputed on every build |
 | **Show Your Work** | Not built at the prompt half |
 | **Rubric import** | Not built at the prompt half. The task data id is the sentinel `SNAPSHOT_ID_NOT_YET_READ` until it is read off the first export; the world id is T1's, `snap_c6f6a0879f3d47a19048ee80d7529157` |
-| **Rubric plan** | **21 planned rows, 92 points, 1 gate**, in `build/rubric_plan.csv` and below, the registered paths scored against it by `build/build_package_artifacts.py` on every build. Verifier code, the battery and the import are built only if the first run set fails, by the decision of 09/20/2026 |
+| **Rubric plan** | **21 planned rows, 87 points, 1 gate**, in `build/rubric_plan.csv` and below, the registered paths scored against it by `build/build_package_artifacts.py` on every build. Verifier code, the battery and the import are built only if the first run set fails, by the decision of 09/20/2026 |
 | **Human time estimate** | 14 hours |
-| **Spec 2A** | **Unmeasured, predicted.** The registered failing paths score 34 of 92, 37.0% and 47 of 92, 51.1%; the free base is 5 of 92, 5.4%; the registered Gemini mean is 45%, with the decision rule and the honest note in `06_failure_analysis.md`, dated before any run |
+| **Spec 2A** | **Unmeasured, predicted.** The registered failing paths score 34 of 87, 39.1% and 47 of 87, 54.0%; the free base is 5 of 87, 5.7%; the registered Gemini mean is 45%, with the decision rule and the honest note in `06_failure_analysis.md`, dated before any run |
 
 ## The prompt
 
@@ -28,25 +28,37 @@ Asserted against the builder's `PROMPT`. `01_prompt.md` carries the shape reason
 
 ## The determination, and the arithmetic behind the weights
 
-Three families, and the share of the 92 points each carries:
+Three families, and the share of the 87 points each carries:
 
 | Family | Rows | Points | Share |
 |---|---|---|---|
-| **The determination.** The liability at 08/31/2026: the cap, the tiers from adjusted service dates with the rehire bridged and the anniversary timed, the signed rates and the step, the part-time schedule, the population, the posted periods and the usage, and the total they give | 5 to 18 | 75 | 81.5% |
-| **BambooHR brought to the schedule.** The six policies, the 52 balances, the two rows created | 19 to 21 | 12 | 13.0% |
-| **The page and its form.** Published, 52 rows keyed by ID, the form, the summary | 1 to 4 | 5 | 5.4% |
+| **The determination.** The liability at 08/31/2026: the cap, the tiers from adjusted service dates with the rehire bridged and the anniversary timed, the signed rates and the step, the part-time schedule, the population, the posted periods and the usage, and the total they give | 5 to 18 | 70 | 80.5% |
+| **BambooHR brought to the schedule.** The six policies, the 52 balances, the two rows created | 19 to 21 | 12 | 13.8% |
+| **The page and its form.** Published, 52 rows keyed by ID, the form, the summary | 1 to 4 | 5 | 5.7% |
+
+**How 364 cells are graded by 21 rows without stacking.** The page is 52 rows by seven columns
+and every cell is a function of the population and six rules. The gate reads the total, which
+is the sum of every cell, so any wrong cell anywhere fails one atomic claim. Each rule then has one row of its own, rows 6 to 18, read on the employees where that rule
+alone moves the cell, so no two rows fail for the same reason. The cap on the five capped employees with one tier across the window and no
+time off. The loaded tiers on the five migrated records whose tier cell is wrong. The bridge on
+TRT-0071's tier cell. The in-window change on TRT-0018, the only anniversary in the window,
+whose balance also needs the cap, a world fact the record notes. The signed rates and the step
+on three rate cells. The part-time rule on TRT-0141, the period count on TRT-0002, the usage
+on TRT-0001. The population is read as a set on rows 2, 14, 15 and 16, and BambooHR as tables
+on rows 19 to 21. The registered ladder below is the proof. Each path drops one rule and fails
+one more row.
 
 **The registered paths**, each the golden with rules dropped, recomputed by the builder:
 
 | Path | What the run does | Rows | Total it prints | Score |
 |---|---|---|---|---|
-| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 8 of 92, 8.7% |
-| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 24 of 92, 26.1% |
-| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 24 of 92, 26.1% |
-| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 29 of 92, 31.5% |
-| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 42 of 92, 45.7% |
-| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 65 of 92, 70.7% |
-| P6 | the heal | 52 | $92,739.54 | 92 of 92, 100.0% |
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 8 of 87, 9.2% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 24 of 87, 27.6% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 29 of 87, 33.3% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 34 of 87, 39.1% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 47 of 87, 54.0% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 65 of 87, 74.7% |
+| P6 | the heal | 52 | $92,739.54 | 87 of 87, 100.0% |
 
 **Why the gate is the total.** Finance books one number. A schedule that misses any one rule
 prints a wrong total, and the ask is the total; a run that applies the explicit rules and misses
@@ -55,7 +67,7 @@ rounding convention the cutover memo permits, sum-then-round ($92,739.54) and po
 ($92,772.88), because the memo says per-period accrual is carried to four decimals and posted
 balances to two and does not say which the measurement reads.
 
-**Why the free base is 5.4%.** T1 v2 measured the fields a run prints on any path at
+**Why the free base is 5.7%.** T1 v2 measured the fields a run prints on any path at
 8% and the population healed; here the population is a sub-step and carries 12 points inside the
 determination family, not the free base.
 
@@ -285,8 +297,8 @@ summary clause; the gate is the summary's total.
 | 2 | free | 2 | - | States, on the PTO liability page, the 52 current employees at 08/31/2026 as the only employee rows. |
 | 3 | free | 1 | - | States, on the PTO liability page, hours to two decimals, hourly rates to four decimals, dollars to the cent and a total equal to the sum of the rows. |
 | 4 | free | 1 | - | States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability. |
-| 5 | determination | 15 | Critical value | States, on the PTO liability page, a total dollar liability of $92,739.54. |
-| 6 | determination | 5 | - | States, on the PTO liability page, an opening balance of 40.00 hours for each of the 11 employees whose 06/30/2026 balance exceeded 40.0 hours. |
+| 5 | determination | 10 | Critical value | States, on the PTO liability page, a total dollar liability of $92,739.54. |
+| 6 | determination | 5 | - | States, on the PTO liability page, balances of 64.62, 64.62, 58.46, 58.46 and 58.46 hours for TRT-0005, TRT-0009, TRT-0014, TRT-0023 and TRT-0040, the five above 40.0 hours at 06/30/2026 whose balance the cap alone moves. |
 | 7 | determination | 5 | - | States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083. |
 | 8 | determination | 7 | - | States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021. |
 | 9 | determination | 6 | - | States, on the PTO liability page, an accrual of 20.0000 hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160. |
@@ -354,7 +366,7 @@ Approved Hiring View - August 2026 and Staffed Role View - August 2026. What eac
 1. **The task data id**: read off G1 on 09/20/2026, `snap_45e68b376f2547dca61408b65d8ba774`, carried
    by the builder. Closed.
 2. **The first run set.** The five Gemini 3.8 Flash landed 09/20/2026: G1, G3 and G4 P1 row for
-   row at 26.1%, G2 and G5 P1 less the two unloaded hires at 17.4%, mean 22.6%. Three GPT Sol 5.6
+   row at 27.6%, G2 and G5 P1 less the two unloaded hires at 18.4%, mean 23.9%. Three GPT Sol 5.6
    are owed for the record. `qc/archive_run_set.py` and
    `qc/score_run_set.py` archive and score them from the output alone.
 3. **The BambooHR time-off tools write the rows the plan reads**: measured on G1 and G3.
@@ -363,7 +375,7 @@ Approved Hiring View - August 2026 and Staffed Role View - August 2026. What eac
    toolbelt on G1 and through the shell on G3. Closed.
 4. **The pages and BambooHR tables' shape in a grading snapshot**, still unmeasured. The exports
    carry no snapshot; the record rebuilds the BambooHR state from the app's own returned results.
-5. **The rubric half.** The five Gemini runs read 22.6%: built next from `build/rubric_plan.csv`.
+5. **The rubric half.** The five Gemini runs read 23.9%: built next from `build/rubric_plan.csv`.
 6. **The platform task's verifier set is T1's.** The twenty rows on the exports target the two T1
    pages. Before any platform grading is read, they have to be replaced by the plan's rows or removed.
    The prompt AutoQC round of 09/20/2026 raised the same mismatch and was disputed on the platform:

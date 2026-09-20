@@ -1,6 +1,6 @@
 # T2 - PTO Liability Schedule and BambooHR PTO Records
 
-**Status: built 09/20/2026 at the prompt half; the five Gemini runs landed the same day at a 22.6% mean,
+**Status: built 09/20/2026 at the prompt half; the five Gemini runs landed the same day at a 23.9% mean,
 three on the registered P1 path and two under it, and the registered rule fires: the rubric half
 is built next.** The second HR 74 ask, built on the
 measured record of T1 and T1 v2: thirteen Gemini trajectories healed a population reconciliation
@@ -12,11 +12,11 @@ if they fail.
 
 | Event | Date | Result |
 |---|---|---|
-| Built | 09/20/2026 | the memo, the prompt, 31 selections, 22 world files, the golden schedule recomputed from the world, a 21-row plan at 92 points, seven registered paths, predictions dated |
+| Built | 09/20/2026 | the memo, the prompt, 31 selections, 22 world files, the golden schedule recomputed from the world, a 21-row plan at 87 points, seven registered paths, predictions dated |
 | Negative controls | 09/20/2026 | see the table below, from `build/negative_controls.py` |
-| Run set | 09/20/2026, five of eight | Gemini 3.8 Flash: G1, G3 and G4 P1 row for row, $111,455.78, 24 of 92, 26.1%; G2 and G5 P1 less the two unloaded hires, $111,100.39, 16 of 92, 17.4%; mean 22.6%, scored from the output alone; three GPT Sol 5.6 owed for the record |
+| Run set | 09/20/2026, five of eight | Gemini 3.8 Flash: G1, G3 and G4 P1 row for row, $111,455.78, 24 of 87, 27.6%; G2 and G5 P1 less the two unloaded hires, $111,100.39, 16 of 87, 18.4%; mean 23.9%, scored from the output alone; three GPT Sol 5.6 owed for the record |
 | Prompt round 1 | 09/20/2026 | Two major findings: Self-Contained Tasks on TRT-0153 and TRT-0155, and Outcome-Determining Choices on the T1 verifier set and the population. Both disputed on the platform the same day; transcribed to `qc/findings/prompt_round1_09-20-2026.md`, answered in `qc/README.md` |
-| Rubric half | owed | the five Gemini runs read 22.6%, under 40%: built next from `build/rubric_plan.csv`, the verifier code tested against a fixture with the five archived pages |
+| Rubric half | owed | the five Gemini runs read 23.9%, under 40%: built next from `build/rubric_plan.csv`, the verifier code tested against a fixture with the five archived pages |
 
 ## The ask, in one paragraph
 
@@ -32,9 +32,9 @@ part-time schedule changed. 1,522.17 hours and $92,739.54; the July close booked
 
 ## Measured so far
 
-G1, G3 and G4 print the HRIS report's numbers over the memo's population: P1 row for row, 24 of 92.
+G1, G3 and G4 print the HRIS report's numbers over the memo's population: P1 row for row, 24 of 87.
 G2 and G5 print the same numbers less the two unloaded hires, which they read as carrying no
-liability because they carried no record: 16 of 92. All five opened the cutover memo, four opened
+liability because they carried no record: 16 of 87. All five opened the cutover memo, four opened
 both signed pay documents, and none applied a rule where a record already carried a number. Five
 of five under 40%: the registered rule fires and the rubric half is built next. The scorer reads the page as the app returned it and the
 BambooHR state from the app's own results, and nothing the run said. The exports carry T1's twenty
