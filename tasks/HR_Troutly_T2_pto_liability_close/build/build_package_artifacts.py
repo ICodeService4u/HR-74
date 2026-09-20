@@ -690,7 +690,7 @@ def write_previews():
         w = csv.writer(fh)
         w.writerow(["Employee ID", "Name", "Department", "Adjusted service date", "Tier", "Opening 06/30/2026",
                     "Opening capped", "Accrual p1", "Accrual p2", "Accrual p3", "Accrual p4", "Used",
-                    "Balance 08/31/2026", "Balance (posted rounding)", "Annual rate", "Hourly rate", "Liability"])
+                    "Balance 08/31/2026", "Balance, posted rounding", "Annual rate", "Hourly rate", "Liability"])
         for r in GOLDEN:
             w.writerow([r["id"], r["name"], r["dept"], _d(r["adj"]), r["tier"], "%.2f" % r["opening_raw"],
                         "%.2f" % r["opening"]] + ["%.4f" % a for a in r["accruals"]] +
@@ -796,7 +796,7 @@ def write_show_your_work():
     ws = wb.create_sheet("Schedule")
     ws.append(["Employee ID", "Name", "Department", "Adjusted service date", "Tier", "Opening 06/30/2026",
                "Opening capped", "Accrual p1", "Accrual p2", "Accrual p3", "Accrual p4", "Used",
-               "Balance 08/31/2026", "Balance (posted rounding)", "Annual rate", "Hourly rate", "Liability"])
+               "Balance 08/31/2026", "Balance, posted rounding", "Annual rate", "Hourly rate", "Liability"])
     for r in GOLDEN:
         ws.append([r["id"], r["name"], r["dept"], _d(r["adj"]), r["tier"], "%.2f" % r["opening_raw"], "%.2f" % r["opening"]]
                   + ["%.4f" % a for a in r["accruals"]]
