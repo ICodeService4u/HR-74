@@ -106,56 +106,67 @@ Three exports landed on 09/20/2026 and are archived under `qc/findings/run_set_0
 `qc/archive_run_set.py`: each page as the app returned it to the run's own get_page call, every
 BambooHR write with the app's result, and `runs.json` read off the exports. `python3
 qc/score_run_set.py` prints the table from those bytes and nothing else: not the final answer, not
-the narration, not the route the run took. Both carry the task data id
-`snap_45e68b376f2547dca61408b65d8ba774`, the world snapshot, task version 17 and the builder's
-PROMPT verbatim.
+the narration, not the route the run took. All three carry the task data id
+`snap_45e68b376f2547dca61408b65d8ba774`, the world snapshot, task version 17 on G1 and G3 and 18
+on G2, and the builder's PROMPT verbatim.
 
 | Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
 |---|---|---|---|---|---|---|---|---|
 | G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 24 of 92, 26.1% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
+| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 16 of 92, 17.4% | 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 19, 20, 21 |
 | G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 24 of 92, 26.1% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
 
-**Both runs are P1 row for row.** 52 rows, the population fixed exactly as the memo defines it,
-the two unloaded hires in and the contractors and the ended out, and every balance, tier and rate
-as the HRIS report and BambooHR carry them: uncapped, at the loaded tiers, at the loaded rates.
-The total is the registered P1 figure to the cent, on both. Against the six questions above:
+**G1 and G3 are P1 row for row, and G2 is P1 less the two unloaded hires.** G1 and G3 print 52
+rows, the population fixed exactly as the memo defines it, the two unloaded hires in and the
+contractors and the ended out, and every balance, tier and rate as the HRIS report and BambooHR
+carry them: uncapped, at the loaded tiers, at the loaded rates. The total is the registered P1
+figure to the cent, on both. G2 prints 50 rows at $111,100.39, the P1 figure less the two hires'
+$272.02 and $83.37, and on the 50 it prints every cell equals P1. It read the crosswalk's Never
+Loaded and wrote in its final answer that the two have no recorded payroll checks or PTO accruals
+on file, so it put no row on the page and made no BambooHR write for them; its only two BambooHR
+calls were a policy re-assignment on TRT-0001 that changed nothing and a zero-hour adjustment the
+app rejected. That is the reading the prompt AutoQC round of the same day took, a missing record
+read as a missing liability, and it costs rows 2, 16 and 21 on top of P1's. Against the six
+questions above:
 
-1. Both opened the cutover memo early, G1 at its 24th call and G3 at its 18th, the wiki page just
-   before it, the HRIS report just after it, and the July close package before any of them. Both
-   opened the handbook later, at calls 126 and 48. Both cite the memo and the handbook in their
-   final answers for the tiers, the biweekly period and the 2,080 divisor, and neither applied the
-   cap, the service dates, the signed rates, the step or the part-time schedule.
-2. Both took the report's uncapped balance as the opening balance on every migrated record; the
+1. All three opened the cutover memo early, G1 at its 24th call, G2 at its 14th and G3 at its
+   18th, the wiki page just before it, and the HRIS report and the July close package before or
+   beside it. All three opened the handbook later, at calls 126, 88 and 48. All three cite the memo
+   and the handbook in their final answers for the tiers, the biweekly period and the 2,080
+   divisor, and none applied the cap, the service dates, the signed rates, the step or the
+   part-time schedule.
+2. All three took the report's uncapped balance as the opening balance on every migrated record; the
    eleven above 40.0 hours print uncapped.
-3. Both printed the loaded tiers: the five migrated records at 80, and TRT-0071 at 80 unbridged.
-4. Both opened the promotion approval and the comp amendment, G1 at calls 113 and 114 and G3 at
-   123, and printed the loaded rates, $50.0000 and $66.3462: the failure mode registered above,
+3. All three printed the loaded tiers: the five migrated records at 80, and TRT-0071 at 80 unbridged.
+4. All three opened the promotion approval and the comp amendment, G1 at calls 113 and 114, G2
+   at 124 and G3 at 123, and printed the loaded rates, $50.0000 and $66.3462: the failure mode registered above,
    the record read as the rate on file.
-5. Both published under the exact title with the published flag true, one create and no update.
-   G1 wrote BambooHR through the toolbelt and G3 through the shell, calling the same MCP server
-   directly; the app returned the same results either way. Each created the two missing rows
-   (ids 59 and 60), assigned PTO Under 2 Years to both and set 6.15 and 3.08 hours. G1 also made
-   two test writes on CTR-2001 and TRT-0006 and reverted them. Nothing else was written: the six
-   policies and the fifty other balances stand as loaded, so rows 19 and 20 fail and row 21
-   passes. That closes open item 3: the three tools write the rows the plan reads.
-6. 209 and 213 tool calls, one assistant turn per call, 139 and 148 shell calls, 1,854 and 2,155
-   seconds: over the 90-step gate and over the 100 predicted.
+5. All three published under the exact title with the published flag true, one create and no
+   update. G1 wrote BambooHR through the toolbelt and G3 through the shell, calling the same MCP
+   server directly; the app returned the same results either way. Each of the two created the
+   missing rows (ids 59 and 60), assigned PTO Under 2 Years to both and set 6.15 and 3.08 hours.
+   G1 also made two test writes on CTR-2001 and TRT-0006 and reverted them. G2 wrote nothing that
+   held. Nothing else was written on any run: the six policies and the fifty other balances stand
+   as loaded, so rows 19 and 20 fail on all three and row 21 passes on G1 and G3. That closes
+   open item 3: the three tools write the rows the plan reads.
+6. 209, 165 and 213 tool calls, one assistant turn per call, 139, 119 and 148 shell calls,
+   1,854, 1,830 and 2,155 seconds: over the 90-step gate and over the 100 predicted, on all three.
 
-**Two runs do not decide.** The rule is five Gemini runs; these two sit at 26.1%, under the
-registered mean of 45% and on the path the predictions called unlikely. The remaining three
-Gemini and the three GPT Sol 5.6 are owed. If the five read under 40%, the rubric half is built
-from `build/rubric_plan.csv` and the verifier code is tested against a fixture with these two
-pages in it.
+**Three runs do not decide.** The rule is five Gemini runs; these three sit at a 23.2% mean,
+under the registered 45% and on or under the path the predictions called unlikely. Two Gemini
+and the three GPT Sol 5.6 are owed. If the five read under 40%, the rubric half is built from
+`build/rubric_plan.csv` and the verifier code is tested against a fixture with these three pages
+in it.
 
 **What was actually wrong in the prediction.** The prediction said the tier applies an explicit
-rule once it holds it, and named the cap and the four periods as explicit. Both runs held the
-memo and applied the periods to the two new hires only, where BambooHR gave them no number to
-copy. Where a record printed a finished number, the memo lost to the record on every rule,
+rule once it holds it, and named the cap and the four periods as explicit. All three held the
+memo; G1 and G3 applied the periods to the two new hires only, where BambooHR gave them no number
+to copy, and G2 applied no period at all, printing no row where there was no record. Where a record printed a finished number, the memo lost to the record on every rule,
 explicit or not. That is a sharper statement of the failure than the one registered: the tier does
 not fail to assemble a rule, it fails to apply one against a record that already carries an
 answer.
 
-**The exports carry T1's verifiers.** The twenty verifiers on both exports target Approved Hiring
+**The exports carry T1's verifiers.** The twenty verifiers on all three exports target Approved Hiring
 View - August 2026 and Staffed Role View - August 2026, the synth's set for T1: the platform task
 `PTO Liability Request` is T1's task re-pointed to this prompt and input. A platform grading of
 these runs is against those rows and says nothing; the record scores from the archived bytes.
