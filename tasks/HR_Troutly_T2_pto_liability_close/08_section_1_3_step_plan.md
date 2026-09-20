@@ -3,7 +3,7 @@
 The field is a numbered **Checkpoints** table, one column headed "Checkpoint - what the model must
 do". Fourteen rows. The step count was predicted over 100 on the platform's count and measured on
 09/20/2026 at 209, 165, 213, 192 and 197 tool calls on G1 to G5, one assistant turn each. The five
-Gemini runs read a 22.6% mean.
+Gemini runs read a 23.9% mean.
 
 ---
 

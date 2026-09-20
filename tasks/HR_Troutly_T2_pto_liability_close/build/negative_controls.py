@@ -84,8 +84,8 @@ ok.append(control("world: a phrase the cutover memo must carry", BLD, '"capped a
 ok.append(control("world: the population", BLD, 'if f["population"]:\n        people = [e for e in ROSTER_ROWS if e["status"] == "Active" and e["type"] == "Employee"]',
                   'if f["population"]:\n        people = [e for e in ROSTER_ROWS if e["status"] == "Active" and e["id"] in BAMBOO]', BLD))
 # ---- the plan guards
-ok.append(control("plan: weight band", BLD, '("determination", 15, "Critical value"', '("determination", 20, "Critical value"', BLD))
-ok.append(control("plan: the gate demoted off the total", BLD, '("determination", 15, "Critical value"', '("determination", 10, "Critical value"', BLD))
+ok.append(control("plan: weight band", BLD, '("determination", 10, "Critical value"', '("determination", 15, "Critical value"', BLD))
+ok.append(control("plan: the gate demoted off the total", BLD, '("determination", 10, "Critical value"', '("determination", 9, "Critical value"', BLD))
 ok.append(control("plan: a row not opening on States", BLD, '"States that a Wiki.js page titled %s is published." % PAGE', '"A Wiki.js page titled %s is published." % PAGE', BLD))
 ok.append(control("plan: the free base over a tenth", BLD, '("free", 2, "-", "States, on the PTO liability page, the %d current employees', '("free", 9, "-", "States, on the PTO liability page, the %d current employees', BLD))
 ok.append(control("plan: the golden not scoring every point", BLD, 'return bal_ok("TRT-0018", s)',

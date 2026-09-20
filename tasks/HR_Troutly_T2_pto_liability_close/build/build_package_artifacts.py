@@ -491,7 +491,7 @@ def _row_checks():
         ("free", 2, "-", "States, on the PTO liability page, the %d current employees at %s as the only employee rows." % (len(GOLDEN), ASOF), rows_ok),
         ("free", 1, "-", "States, on the PTO liability page, hours to two decimals, hourly rates to four decimals, dollars to the cent and a total equal to the sum of the rows.", always),
         ("free", 1, "-", "States, on the PTO liability page, a summary with the employee count, the total hours and the total dollar liability.", always),
-        ("determination", 15, "Critical value", "States, on the PTO liability page, a total dollar liability of $%s." % f"{TOTAL:,.2f}", total_ok),
+        ("determination", 10, "Critical value", "States, on the PTO liability page, a total dollar liability of $%s." % f"{TOTAL:,.2f}", total_ok),
         ("determination", 5, "-", "States, on the PTO liability page, an opening balance of 40.00 hours for each of the %d employees whose 06/30/2026 balance exceeded 40.0 hours." % len(CAPPED_IDS), capped_ok),
         ("determination", 5, "-", "States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083.", five_tiers_ok),
         ("determination", 7, "-", "States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021.", bridge_ok),
@@ -618,9 +618,9 @@ def check_world():
 
 def check_plan():
     weights = [r[1] for r in PLAN]
-    assert all(1 <= w <= 15 for w in weights), "a weight sits outside its band"
+    assert all(1 <= w <= 10 for w in weights), "a weight sits outside the platform's 1 to 10"
     gates = [r for r in PLAN if r[2] != "-"]
-    assert len(gates) == 1 and gates[0][1] == 15, "the gate is the total and carries 15"
+    assert len(gates) == 1 and gates[0][1] == 10, "the gate is the total and carries 10, the top of the scale"
     for r in PLAN:
         assert r[3].startswith("States"), "a row must open with States: " + r[3][:60]
         assert all(ord(ch) < 128 for ch in r[3]), "a criterion is not ASCII"
@@ -708,7 +708,6 @@ def write_previews():
 
 SYW = os.path.join(PKG, "03_show_your_work.xlsx")
 _WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]
-FAMILY_LABEL = {"free": "The page and its form", "determination": "The determination", "bamboohr": "BambooHR brought to the schedule"}
 
 
 def _w(n):
@@ -784,9 +783,9 @@ def write_show_your_work():
     for row in _syw_sources():
         ws.append(list(row))
     ws = wb.create_sheet("Verifiers")
-    ws.append(["#", "Verifier", "Family", "Weight", "Gate"])
+    ws.append(["#", "Verifier", "Weight", "Gate"])
     for i, (fam, w, gate, crit, pred) in enumerate(PLAN, 1):
-        ws.append([i, crit, FAMILY_LABEL[fam], w, gate])
+        ws.append([i, crit, w, gate])
     ws.append([])
     ws.append(["Note", "The determination carries %d of %d points and the gate is the total. Every row is read from the Wiki.js pages table or the BambooHR tables." % (sum(r[1] for r in PLAN if r[0] == "determination"), PLAN_TOTAL)])
     ws = wb.create_sheet("Row assembly")
@@ -806,7 +805,7 @@ def write_show_your_work():
     names = {e["name"] for e in ROSTER_ROWS}  # a person's name is a world fact and keeps the world's spelling
     from openpyxl.styles import Alignment, Font
     from openpyxl.utils import get_column_letter
-    widths = {"Sources": [30, 60, 110], "Verifiers": [6, 110, 30, 8, 14], "Row assembly": [30, 120],
+    widths = {"Sources": [30, 60, 110], "Verifiers": [6, 110, 8, 14], "Row assembly": [30, 120],
               "Schedule": [12, 22, 22, 20, 6, 16, 14, 11, 11, 11, 11, 8, 16, 22, 14, 12, 12]}
     for sheet in wb:
         for i, w in enumerate(widths[sheet.title], 1):

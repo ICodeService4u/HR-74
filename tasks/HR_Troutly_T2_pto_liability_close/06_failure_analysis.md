@@ -8,9 +8,8 @@ these predictions rather than over them, the way T1's and v2's records do.
 
 ## The plan the predictions are scored against
 
-21 planned rows, 92 points, one gate. The determination carries 75 points,
-81.5%; BambooHR brought to the schedule 12, 13.0%; the page and its
-form 5, 5.4%. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
+21 planned rows, 87 points, one gate. The determination carries 70 points, 80.5%. BambooHR
+brought to the schedule carries 12, 13.8%. The page and its form carry 5, 5.7%. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
 
 ## The registered paths
 
@@ -19,13 +18,13 @@ and scored by the plan's own predicates, so the arithmetic here recomputes on ev
 
 | Path | What the run does | Rows | Total it prints | Score |
 |---|---|---|---|---|
-| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 8 of 92, 8.7% |
-| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 24 of 92, 26.1% |
-| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 24 of 92, 26.1% |
-| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 29 of 92, 31.5% |
-| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 42 of 92, 45.7% |
-| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 65 of 92, 70.7% |
-| P6 | the heal | 52 | $92,739.54 | 92 of 92, 100.0% |
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 8 of 87, 9.2% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 24 of 87, 27.6% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 24 of 87, 27.6% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 29 of 87, 33.3% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 42 of 87, 48.3% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 65 of 87, 74.7% |
+| P6 | the heal | 52 | $92,739.54 | 87 of 87, 100.0% |
 
 **Corrected 09/20/2026, found by the scorer's self-check while G1 was being scored.** Rows 6, 8 and 9
 were planned with predicates reading the opening balance, the bridged accrual and Thornbury's
@@ -33,8 +32,10 @@ accrual, none of which the page carries. The reviewer decision rules read the ba
 tier cell, and the predicates now read what the rules read, so every row grades the output alone.
 P2 fell from 29 to 24, P3 from 34 to 29 and P4 from 47 to 42; G1 and G3 score the same under both
 readings. The registered mean of 45% below was computed on the earlier numbers and stands as
-written; the same mix, two runs on P3, two on P4 and one past P5, reads 41% under the corrected
-table, on the same side of the 40% line.
+written; the same mix, two runs on P3, two on P4 and one past P5, reads 47.6% under the corrected
+table, on the same side of the 40% line. Also corrected 09/20/2026: the gate was planned at 15
+on a platform scale of 1 to 10. It carries 10, the top of the scale, the plan totals 87, and
+every score in this record is restated on 87. No path and no run changes side of the 40% line.
 
 **The modal failing path is P3 or P4.** A run that reads the cutover memo applies the cap and the
 four periods, because both are explicit; a run that reads the archive takes the service dates
@@ -112,11 +113,11 @@ on G2, G4 and G5, and the builder's PROMPT verbatim.
 
 | Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
 |---|---|---|---|---|---|---|---|---|
-| G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 24 of 92, 26.1% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
-| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 16 of 92, 17.4% | 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 19, 20, 21 |
-| G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 24 of 92, 26.1% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
-| G4 | gemini-3.8-flash | 192 | 192 | 52 | $111,455.78 | P1 | 24 of 92, 26.1% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
-| G5 | gemini-3.8-flash | 197 | 197 | 50 | $111,100.39 | none | 16 of 92, 17.4% | 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 19, 20, 21 |
+| G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 24 of 87, 27.6% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
+| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 16 of 87, 18.4% | 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 19, 20, 21 |
+| G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 24 of 87, 27.6% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
+| G4 | gemini-3.8-flash | 192 | 192 | 52 | $111,455.78 | P1 | 24 of 87, 27.6% | 5, 6, 7, 8, 9, 10, 11, 12, 13, 19, 20 |
+| G5 | gemini-3.8-flash | 197 | 197 | 50 | $111,100.39 | none | 16 of 87, 18.4% | 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 19, 20, 21 |
 
 **G1, G3 and G4 are P1 row for row, and G2 and G5 are P1 less the two unloaded hires.** G1, G3 and
 G4 print 52 rows, the population fixed exactly as the memo defines it, the two unloaded hires in and the
@@ -156,7 +157,7 @@ questions above:
    shell calls, 1,854, 1,830, 2,155, 2,172 and 2,133 seconds: over the 90-step gate and over the
    100 predicted, on all five.
 
-**The five Gemini runs decide: 22.6%, under 40%.** Three runs on P1 at 26.1% and two under it at
+**The five Gemini runs decide: 23.9%, under 40%.** Three runs on P1 at 27.6% and two under it at
 17.4%, against a registered mean of 45% and a modal path of P3 or P4. By the rule registered
 above the rubric half is built from `build/rubric_plan.csv`, the verifier code is tested against
 a fixture with these five pages in it, and the package ships. The three GPT Sol 5.6 runs are still
