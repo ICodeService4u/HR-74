@@ -809,7 +809,7 @@ def write_show_your_work():
     ws.append([])
     ws.append(["Note", "The determination carries %d of %d points and the gate is the total. Every row is read from the Wiki.js pages table or the BambooHR tables." % (sum(r[1] for r in PLAN if r[0] == "determination"), PLAN_TOTAL)])
     ws.append(["Note", "Each row grades the correct application of one rule across the group of employees it governs, by reading a total over the group. A total moves if any single entry under it is wrong, so one wrong cell fails the rule once and never twice."])
-    ws.append(["Note", "The gate reads the total of all %d liabilities, the one number all %d cells feed. Under the one-cent rule it equals the schedule's only if every entry is right. The witness rows read the cells of the employees their rule alone moves." % (len(GOLDEN), len(GOLDEN) * 7)])
+    ws.append(["Note", "The gate reads the total of all %d liabilities, the one number all %d cells feed. The reviewer rules allow it one cent of tolerance, and it matches the schedule's within that only if every entry is right. The witness rows read the cells of the employees their rule alone moves." % (len(GOLDEN), len(GOLDEN) * 7)])
     ws.append(["Note", "Rows 6 to 13 each grade one rule on the cells where only that rule moves the value. Rows 2, 14, 15 and 16 grade the population on the set of IDs. Rows 19 to 21 grade BambooHR on its tables."])
     ws.append(["Note", "Drop one rule and one more row fails. The registered paths in 02_task_metadata.md are the proof."])
     ws = wb.create_sheet("Row assembly")
