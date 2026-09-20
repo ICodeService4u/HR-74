@@ -6,7 +6,7 @@ world lacks ships as a 1.4 task input rather than as a world edit. That is the r
 every other task in the world valid, and it is the lever HR 32 proved on its T24 and T25 and HR 79
 proved on its T1.
 
-**Two packages exist: T1, retired on its first run set, and T1 v2, built from that measurement.** Both are built to the HR 79 T1 shape, which twenty-two
+**Three packages exist: T1 and T1 v2, each retired on its first run set, and T2, built at the prompt half on their record.** Both are built to the HR 79 T1 shape, which twenty-two
 packages, four hundred pull requests and seven task AutoQC rounds bought, and everything in
 `../HR-79/tasks/README.md` that is not about HR 79's own apps applies here. The four rules from it
 that no world-side rule covers are in the root `CLAUDE.md`.
@@ -14,7 +14,8 @@ that no world-side rule covers are in the root `CLAUDE.md`.
 | Package | Request | Status |
 |---|---|---|
 | `HR_Troutly_T1_august_operating_review` | The recruiting lead's 08/31/2026 request for two Wiki.js pages, an approved-hiring view and a staffed-role view, for the 09/10/2026 operating review | Built and **retired 09/19/2026**. 35 verifiers, 113 points, 1 gate, every row App DB on the Wiki.js pages table, battery 1365 of 1365, one 1.4 input on the Filesystem target, two golden pages. Registered modal failing path 32.7% and Gemini mean 38%; **measured Gemini mean 96.5%** on five runs, nine of nine runs reconciling the population, so the rule registered before the runs retired it. The record, the run set and the lesson are kept |
-| `HR_Troutly_T1v2_august_operating_review` | The same request with the memo stripped of every source, figure and reconciliation it had named, and a current employee and each status value defined instead | Built 09/19/2026 from T1's traces. **24 verifiers, 83 points, 1 gate**, the population 67% of the points, the free base 8%; battery **864 of 864** with the three failing paths as pages, P1 32.5% and P1b 37.3%. Registered Gemini mean 58% with the honest note that T1's runs found the roster and the crosswalk by listing the tree. Run set and task data id owed |
+| `HR_Troutly_T1v2_august_operating_review` | The same request with the memo stripped of every source, figure and reconciliation it had named, and a current employee and each status value defined instead | Built 09/19/2026 from T1's traces and **retired 09/20/2026**. **24 verifiers, 83 points, 1 gate**, the population 67% of the points, the free base 8%; battery **864 of 864** with the three failing paths as pages, P1 32.5% and P1b 37.3%. Registered Gemini mean 58%; **measured 98.5%** on four runs, four of four at 52 with no pointer in the memo, so the rule registered before the runs retired it. Task data id `snap_fbf9dc06005743a28e8d6fd2238c7f5f`. The fifth Gemini run and the GPT Sol runs are owed for the record only |
+| `HR_Troutly_T2_pto_liability_close` | The Finance Manager's 09/01/2026 request for the PTO liability at 08/31/2026 for the August close: one Wiki.js page with a row per current employee and BambooHR brought to it | Built 09/20/2026 **at the prompt half** on the T1 and v2 record. The determination is a rule application over 52 people where every record prints a finished wrong number: the 40.0-hour cap, biweekly accrual by adjusted service date with a rehire bridged and an anniversary timed, two signed rates and a step the load dropped, a part-time schedule, four posted periods; 1,522.17 hours and $92,739.54 against the July close's $90,862.13. A 21-row plan at 92 points, seven registered paths, P3 37.0% and P4 51.1%, registered Gemini mean 45%, dated. The run set, the task data id and the rubric half are owed; the rubric half is built only under 40% |
 
 ## The rules every package here is built to
 
@@ -23,6 +24,20 @@ prompt rules apply. Prompts are natural. No app login information goes in a prom
 percentage rules apply, Gemini 3.8 Flash under a 40% mean across five runs with 90 or more steps
 in one of them. A world with two or more apps uses at least two in the task. T1 uses three:
 BambooHR and Greenhouse read, Wiki.js written.
+
+**The EPM's update of 09/19/2026, read off the Project Julius daily update the same day:**
+
+- The step line is **90 or more steps in at least one Gemini trajectory**, on the platform's own
+  count; 80 or more may be accepted when the failure analysis shows Gemini did not complete the
+  majority of the task. Build sequential workflows with multiple App DB reads and updates.
+- Gemini 3.8 Flash must mean under 40% across five runs. GPT Sol 5.6 needs three runs and has no
+  difficulty requirement.
+- Prompt AutoQC moved out of the Prompt section into the Trajectories section, at 2.3 above 2.4
+  AutoQC your trajectories. That is why v2's prompt round landed beside its runs on 09/20/2026.
+- At Golden Trajectories, run the pipeline three times and confirm at least one completed run
+  shows a score of 1.0.
+- File existence is checked through App DB Programmatic, not an LLM judge. Every row here already
+  is.
 
 **The HR 79 rules, unchanged:**
 
@@ -91,8 +106,8 @@ Measured here on 09/19/2026, off the nine trajectory exports of T1's first run s
 |---|---|
 | The platform's tool catalogue for BambooHR, Greenhouse and Wiki.js | `tasks/APP_TOOL_SURFACE.md`: 254 tools on a toolbelt agent that pulls each one in with `toolbelt_add_tool`, 39 of them Wiki.js, `wiki_js_mcp_wikijs_mcp_create_page` the page writer. T1's `check_tools()` reads it green |
 | Whether a page created through the platform's Wiki.js tools lands in `pages` under the title the run gives it | Yes. Nine of nine runs created both pages with `create_page`, ids 11 and 12 after the ten seed pages, title exact, published by default, path the run's own. No grading run on the package's rubric happened, so the grading snapshot's column names are still unmeasured |
-| The world and task-data snapshot ids | `snap_c6f6a0879f3d47a19048ee80d7529157` and `snap_dc228e8bba9d423fbe9f3dd35862f658`, the same pair on all nine exports |
-| The step count | Gemini 3.8 Flash 74, 78, 95, 84 and 90 tool calls; GPT Sol 5.6 176, 137 and 98; Opus 4.8 49. Two of five Gemini runs reach 90 |
+| The world and task-data snapshot ids | `snap_c6f6a0879f3d47a19048ee80d7529157` and `snap_dc228e8bba9d423fbe9f3dd35862f658`, the same pair on all nine exports. The v2 upload's task data id is `snap_fbf9dc06005743a28e8d6fd2238c7f5f` on all four exports of 09/20/2026, the world id unchanged |
+| The step count | Gemini 3.8 Flash 74, 78, 95, 84 and 90 tool calls; GPT Sol 5.6 176, 137 and 98; Opus 4.8 49. Two of five Gemini runs reach 90. On v2, Gemini 90, 74, 84 and 90 tool calls and 90, 69, 84 and 84 assistant turns; G1 reads 91 on the platform's own count, over the EPM's 90 line |
 | Whether 1.5 accepts an empty list | Read only from the task reaching Trajectories with no file named; the export's task schema carries no field labelled for it |
 
 Write each answer into this file the way HR 79's root `CLAUDE.md` rule 6 was written, naming
@@ -116,6 +131,23 @@ two pages the run creates are **Make New App Data**, which is what the synth's t
 arrived carrying pre-selected. What landed wrong: T1's `02_task_metadata.md` had recorded Edit
 Existing App Data before the picker was seen, and was corrected the same day. Neither deliverable
 title is in the seed `Page.csv`, so Edit Existing would have named an update the run never makes.
+
+**Measured 09/20/2026, the v2 run set.** What landed wrong: the lever again. The v2 memo named no
+source, no figure and no reconciliation, and four of four Gemini runs still produced the 52, mean
+98.5% against a registered 58%. The traces say why. Every run walked the tree folder by folder in
+the shell, 50 to 61 shell calls a run, and reached the roster and the crosswalk by its 31st tool
+call and the org chart and the archive by its 45th, pointed at none of them. And every run quoted
+the memo's one definition, "A current employee is anyone employed by Troutly on 08/31/2026", and
+reasoned from it that a terminated person and a contractor are not employed; the definition the
+prompt AutoQC round required as a pinned choice is itself the rule. The Board reading held on four
+of four with no authority clause. The lesson for the next package: in a 69-file world this tier
+reads whole, a reconciliation whose deciding records sit in the tree is not a determination it
+gets wrong, and a memo cannot both define the term and leave the determination open. What
+worked: the same platform record took the replaced memo under the same name and the selection at
+24; the pages landed on the `get_page` route again, ids 11 and 12, titles exact; and the export
+carries everything the archive needs, so `qc/archive_run_set.py` now reads a run set with nothing
+typed. The prompt AutoQC round of the same day read 53 and 52 as two defensible outputs; the set
+carried no 53.
 
 ## Running the checks
 

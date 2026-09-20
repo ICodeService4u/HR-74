@@ -8,10 +8,11 @@ primary flags and verifier types in the two are the same strings.
 The shape is HR 32 T24's, carried by HR 79 T1 and T1 here: thirteen columns, one row per
 verifier, the sheet named `Rubric`. **Twenty-four rows, 83 points.**
 
-**Do not load this file yet.** The world snapshot id is the one T1's nine exports carried,
-`snap_c6f6a0879f3d47a19048ee80d7529157`, and the world has not changed. The task data id belongs
-to the v2 memo's own upload and carries the sentinel `SNAPSHOT_ID_NOT_YET_READ` until it is read
-off the first v2 export. `check_import()` prints the warning on every build until it is replaced.
+**Loadable, never loaded.** The world snapshot id is the one T1's nine exports carried,
+`snap_c6f6a0879f3d47a19048ee80d7529157`, and the world has not changed. The task data id is
+`snap_fbf9dc06005743a28e8d6fd2238c7f5f`, read off the four v2 exports of 09/20/2026, and `check_import()`
+stopped printing its warning on that build. The package retired on the run set before the import
+was due, so the task record still carries the synth's twenty verifiers.
 
 | Column | What this package writes |
 |---|---|

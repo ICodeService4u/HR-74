@@ -1,7 +1,9 @@
 # T1 v2 - Approved Hiring and Staffed Role Views
 
-**Status: built 09/19/2026, at the prompt half, no v2 run yet.** The second version of the first
-HR 74 package, built from T1's measured run set of the same day. T1 read nine of nine runs healing
+**Status: retired 09/20/2026 on its first run set.** Four of four Gemini 3.8 Flash runs healed the
+population with every pointer gone, mean 98.5% against a registered 58% and a retirement line of
+60%, and the fifth run cannot bring the mean under the line. `06_failure_analysis.md` carries the
+record under the predictions. The second version of the first HR 74 package, built from T1's measured run set of the same day. T1 read nine of nine runs healing
 the population and a Gemini mean of 96.5%, and its traces showed every run following the sources
 the memo named. v2 strips the memo of every pointer, figure and reconciliation, defines the two
 terms the prompt AutoQC round called pinned, and rescopes the rubric so the population carries
@@ -13,8 +15,9 @@ repository as the measurement.
 | Built | 09/19/2026 | 24 verifiers, 83 points, 1 gate, EA 75.9%; one 1.4 input on the Filesystem target; two golden pages |
 | Verifier battery | 09/19/2026 | **864 of 864 verdicts correct** across 36 scenarios and 24 rows, the three registered failing paths among them |
 | Negative controls | 09/19/2026 | see the table below, from `build/negative_controls.py` |
-| Run set | owed | five Gemini 3.8 Flash and three GPT Sol 5.6, archived and scored by `qc/score_run_set.py` against the registered paths |
-| Prompt round 1 | owed | archived verbatim to `qc/findings/` when it lands |
+| Run set | 09/20/2026 | four Gemini 3.8 Flash runs archived by `qc/archive_run_set.py` and scored by `qc/score_run_set.py`: mean **98.5%**, low 94.0%, the one failed row a false zero; the fifth Gemini run and the GPT Sol runs owed for the record only |
+| Retired | 09/20/2026 | on the decision rule registered before the runs: over 60%, the population healed without the pointers |
+| Prompt round 1 | 09/20/2026 | one major finding, the count source, archived verbatim to `qc/findings/` and disputed in `qc/README.md`; the run set decides it |
 
 ## The ask, in one paragraph
 
@@ -66,6 +69,7 @@ score 27 of 83, 32.5% and 31 of 83, 37.3%; the free base is 7 of 83.
 | `qc/README.md`, `qc/findings/` | The AutoQC register and the verbatim archive |
 | `qc/ctx.py`, `qc/run_battery.py` | The verifier skill's stand-in `ctx` and battery runner |
 | `qc/scenarios.py`, `qc/verifier_harness.py` | The 36-snapshot battery and the runner over all rows |
+| `qc/archive_run_set.py` | Reads a trajectory export into `qc/findings/<set>/`: the two pages as the create call carried them and `runs.json`, nothing typed |
 | `qc/score_run_set.py` | Scores an archived run set under `qc/findings/` against the verifier files |
 | `qc/verifiers/` | The 24 generated row files |
 
@@ -133,7 +137,7 @@ python3 build/negative_controls.py         # every guard made to fail once
 | verifier: a substring match on the status cell | RED |
 | verifier: the key matched as a substring | RED |
 | verifier: a key with a note beside it rejected | RED |
-|  | RED |
+| verifier: the population gate counting rows instead of matching the set | RED |
 | verifier: absence passing on a thin table | RED |
 | verifier: page history read as pages | RED |
 | verifier: the published flag assumed | RED |

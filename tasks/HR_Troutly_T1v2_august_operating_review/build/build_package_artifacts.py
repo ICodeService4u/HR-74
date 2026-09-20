@@ -548,7 +548,7 @@ RUBRIC = _rubric()
 # exports of 09/19/2026 and the world has not changed. The task data id belongs to the v2 memo's
 # own upload and is the sentinel until read; check_import() refuses to call the file loadable.
 SNAP = "snap_c6f6a0879f3d47a19048ee80d7529157"  # world_snapshot_id, nine T1 exports of 09/19/2026
-TASK_SNAP = "SNAPSHOT_ID_NOT_YET_READ"  # task_data_id of the v2 upload, read off its first export
+TASK_SNAP = "snap_fbf9dc06005743a28e8d6fd2238c7f5f"  # task_data_id of the v2 upload, four exports of 09/20/2026
 UPLOAD_PREFIX = "00_task_input_"
 TASK_UPLOADS = tuple(n[len(UPLOAD_PREFIX):] for n in TASK_INPUTS)
 IMPORT_DB_DROPDOWN = {"Objective Compliance", "Expert Assessment", "Process"}
