@@ -1,0 +1,198 @@
+{
+ "id_to_employee_number": {
+  "1": "TRT-0001",
+  "2": "TRT-0018",
+  "3": "TRT-0037",
+  "4": "TRT-0049",
+  "5": "TRT-0002",
+  "6": "TRT-0012",
+  "7": "CTR-2001",
+  "8": "CTR-2002",
+  "9": "CTR-2003",
+  "10": "CTR-2004",
+  "11": "TRT-0005",
+  "12": "TRT-0006",
+  "13": "TRT-0009",
+  "14": "TRT-0014",
+  "15": "TRT-0021",
+  "16": "TRT-0066",
+  "17": "TRT-0023",
+  "18": "TRT-0027",
+  "19": "TRT-0029",
+  "20": "TRT-0031",
+  "21": "TRT-0154",
+  "22": "TRT-0034",
+  "23": "TRT-0040",
+  "24": "TRT-0043",
+  "25": "TRT-0045",
+  "26": "TRT-0047",
+  "27": "TRT-0051",
+  "28": "TRT-0052",
+  "29": "TRT-0055",
+  "30": "TRT-0058",
+  "31": "TRT-0062",
+  "32": "TRT-0064",
+  "33": "TRT-0069",
+  "34": "TRT-0071",
+  "35": "TRT-0074",
+  "36": "TRT-0076",
+  "37": "TRT-0079",
+  "38": "TRT-0083",
+  "39": "TRT-0086",
+  "40": "TRT-0088",
+  "41": "TRT-0091",
+  "42": "TRT-0093",
+  "43": "TRT-0096",
+  "44": "TRT-0099",
+  "45": "TRT-0102",
+  "46": "TRT-0105",
+  "47": "TRT-0108",
+  "48": "TRT-0110",
+  "49": "TRT-0113",
+  "50": "TRT-0117",
+  "51": "TRT-0119",
+  "52": "TRT-0122",
+  "53": "TRT-0128",
+  "54": "TRT-0131",
+  "55": "TRT-0135",
+  "56": "TRT-0141",
+  "57": "TRT-0150",
+  "58": "TRT-0156",
+  "59": "TRT-0153",
+  "60": "TRT-0155"
+ },
+ "writes": [
+  {
+   "seq": 180,
+   "route": "shell",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "firstName": "Simone",
+    "lastName": "Okonkwo",
+    "employeeNumber": "TRT-0153",
+    "department": "Customer Success",
+    "jobTitle": "Customer Success Manager",
+    "hireDate": "2026-07-22",
+    "status": "Active",
+    "salary": "92000.00",
+    "payType": "salary",
+    "paySchedule": "Biweekly",
+    "location": "TX",
+    "workEmail": "simone@troutlyanalytics.com",
+    "supervisorId": 15
+   },
+   "result": {
+    "id": "59",
+    "created": "2026-09-20T02:50:39.735666Z"
+   }
+  },
+  {
+   "seq": 182,
+   "route": "shell",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "59",
+    "policies": [
+     {
+      "timeOffPolicyId": 1,
+      "accrualStartDate": "2026-07-22"
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-07-22"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 183,
+   "route": "shell",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "employeeId": "59",
+    "timeOffTypeId": 1,
+    "amount": 6.15,
+    "note": "August 2026 PTO close accrual balance adjustment",
+    "date": "2026-08-31"
+   },
+   "result": {
+    "adjustmentId": "1",
+    "newBalance": 6.15,
+    "previousBalance": 0.0,
+    "created": "2026-09-20T02:51:12Z"
+   }
+  },
+  {
+   "seq": 184,
+   "route": "shell",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "firstName": "Rafael",
+    "lastName": "Ibarra",
+    "employeeNumber": "TRT-0155",
+    "department": "Sales",
+    "jobTitle": "Sales Development Representative",
+    "hireDate": "2026-08-03",
+    "status": "Active",
+    "salary": "56300.00",
+    "payType": "salary",
+    "paySchedule": "Biweekly",
+    "location": "TX",
+    "workEmail": "rafael@troutlyanalytics.com",
+    "supervisorId": 2
+   },
+   "result": {
+    "id": "60",
+    "created": "2026-09-20T02:51:24.540801Z"
+   }
+  },
+  {
+   "seq": 185,
+   "route": "shell",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "60",
+    "policies": [
+     {
+      "timeOffPolicyId": 1,
+      "accrualStartDate": "2026-08-03"
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-08-03"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 185,
+   "route": "shell",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "employeeId": "60",
+    "timeOffTypeId": 1,
+    "amount": 3.08,
+    "note": "August 2026 PTO close accrual balance adjustment",
+    "date": "2026-08-31"
+   },
+   "result": {
+    "adjustmentId": "2",
+    "newBalance": 3.08,
+    "previousBalance": 0.0,
+    "created": "2026-09-20T02:51:36Z"
+   }
+  }
+ ]
+}

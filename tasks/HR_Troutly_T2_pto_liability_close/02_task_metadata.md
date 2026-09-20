@@ -42,9 +42,9 @@ Three families, and the share of the 92 points each carries:
 |---|---|---|---|---|
 | P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 8 of 92, 8.7% |
 | P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 24 of 92, 26.1% |
-| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 29 of 92, 31.5% |
-| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 34 of 92, 37.0% |
-| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 47 of 92, 51.1% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 24 of 92, 26.1% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 29 of 92, 31.5% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 42 of 92, 45.7% |
 | P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 65 of 92, 70.7% |
 | P6 | the heal | 52 | $92,739.54 | 92 of 92, 100.0% |
 
@@ -333,25 +333,35 @@ world and the package retires.
 
 ## Platform state
 
-Nothing is entered for T2. What has to be entered, and what each field takes:
+Measured off the G1 and G3 exports of 09/20/2026: the task runs on the platform as `PTO Liability Request`, task version
+17 at the runs, the builder's PROMPT verbatim, the 1.4 upload under task data id
+`snap_45e68b376f2547dca61408b65d8ba774`, and it carries T1's twenty synth verifiers, which target
+Approved Hiring View - August 2026 and Staffed Role View - August 2026. What each field has to hold:
 
 | Field | Value |
 |---|---|
-| 1.1 Task name | `PTO Liability Schedule and BambooHR PTO Records` |
+| 1.1 Task name | `PTO Liability Schedule and BambooHR PTO Records`; the platform holds `PTO Liability Request` |
 | 1.3 Step plan | The Checkpoints table in `08_section_1_3_step_plan.md`, held until the difficulty bar is measured, as v2's was |
 | 1.4 Additional task files | `pto_liability_request.pdf`, 2,798 bytes, md5 `d9f3b3830c7b2f0bf5c3c1ef8395b11b`, target **Filesystem**. Confirm the upload by digest |
 | 1.5 Expected Output Files | Nothing |
 | Expected output type | Make New App Data and Edit Existing App Data |
 | Files and data tables | 31 selected: the twenty-two world files and nine app tables above |
-| Rubric | None. The task carries the synth's verifiers through the run set; the import is built only if the set fails |
-| Task-data snapshot | Owed, read off the first export. The world snapshot is `snap_c6f6a0879f3d47a19048ee80d7529157` |
+| Rubric | None of the plan's rows. The task carries T1's twenty synth verifiers, which target two pages this task never writes, so a platform grading of a T2 run is against those rows and says nothing. The import is built only if the set fails |
+| Task-data snapshot | `snap_45e68b376f2547dca61408b65d8ba774`, read off G1 on 09/20/2026 and carried by the builder. The world snapshot is `snap_c6f6a0879f3d47a19048ee80d7529157` |
 
 ## Open items
 
-1. **The task data id** of the T2 upload, read off the first export.
-2. **The first run set.** Five Gemini 3.8 Flash, three GPT Sol 5.6, archived by an archiver
-   adapted from v2's and scored against the registered paths.
-3. **Whether the BambooHR time-off tools write the rows the plan reads**: `time_off_update_balance`,
-   `time_off_assign_policy` and `employees_create` are in the catalogue and unmeasured.
-4. **The pages and BambooHR tables' shape in a grading snapshot**, still unmeasured.
+1. **The task data id**: read off G1 on 09/20/2026, `snap_45e68b376f2547dca61408b65d8ba774`, carried
+   by the builder. Closed.
+2. **The first run set.** Two of five Gemini 3.8 Flash landed 09/20/2026, G1 and G3, both P1 row
+   for row at 26.1%; three Gemini and three GPT Sol 5.6 are owed. `qc/archive_run_set.py` and
+   `qc/score_run_set.py` archive and score them from the output alone.
+3. **The BambooHR time-off tools write the rows the plan reads**: measured on G1 and G3.
+   `employees_create` returned ids 59 and 60 for TRT-0153 and TRT-0155, `time_off_assign_policy`
+   returned the assignment and `time_off_update_balance` returned the new balance, through the
+   toolbelt on G1 and through the shell on G3. Closed.
+4. **The pages and BambooHR tables' shape in a grading snapshot**, still unmeasured. The exports
+   carry no snapshot; the record rebuilds the BambooHR state from the app's own returned results.
 5. **The rubric half**, built only under 40%.
+6. **The platform task's verifier set is T1's.** The twenty rows on the exports target the two T1
+   pages. Before any platform grading is read, they have to be replaced by the plan's rows or removed.

@@ -39,7 +39,7 @@ TASK_INPUTS = ["00_task_input_pto_liability_request.pdf"]
 TASK_UPLOADS = ["pto_liability_request.pdf"]
 ASOF = "08/31/2026"
 SNAP = "snap_c6f6a0879f3d47a19048ee80d7529157"  # world_snapshot_id, unchanged across 13 exports
-TASK_SNAP = "SNAPSHOT_ID_NOT_YET_READ"  # task_data_id of the T2 upload, read off its first export
+TASK_SNAP = "snap_45e68b376f2547dca61408b65d8ba774"  # task_data_id of the T2 upload, read off G1 on 09/20/2026
 
 # ---------------------------------------------------------------- world readers
 def _csv(app, table):
@@ -430,9 +430,13 @@ def _row_checks():
     def rows_ok(s):
         return set(by(s)) == set(g)
 
-    def capped_ok(s):
+    def bal_ok(i, s):
         b = by(s)
-        return all(i in b and _same(b[i]["opening"], CAP) for i in CAPPED_IDS)
+        return i in b and (_same(b[i]["balance"], g[i]["balance"], 0.005) or _same(b[i]["balance"], g[i]["balance_posted"], 0.005))
+
+    def capped_ok(s):
+        # the page carries no opening column: reviewer rule 5 reads the balance cell
+        return all(bal_ok(i, s) for i in CAPPED_IDS)
 
     def five_tiers_ok(s):
         b = by(s)
@@ -440,19 +444,19 @@ def _row_checks():
         return all(i in b and b[i]["tier"] == g[i]["tier"] for i in ids)
 
     def bridge_ok(s):
+        # reviewer rule 6 reads the tier cell; 160 is reached only with service bridged
         b = by(s)
-        return "TRT-0071" in b and b["TRT-0071"]["tier"] == 160 and _same(b["TRT-0071"]["accrued"], g["TRT-0071"]["accrued"], 0.0001)
+        return "TRT-0071" in b and b["TRT-0071"]["tier"] == 160
 
     def thornbury_ok(s):
-        b = by(s)
-        return "TRT-0018" in b and _same(b["TRT-0018"]["accrued"], g["TRT-0018"]["accrued"], 0.0001)
+        # the page carries no accrual column: reviewer rule 5 reads the balance cell
+        return bal_ok("TRT-0018", s)
 
     def rate_ok(i):
         return lambda s: i in by(s) and _same(by(s)[i]["hourly"], g[i]["hourly"], 0.00005)
 
     def quint_ok(s):
-        b = by(s)
-        return "TRT-0141" in b and _same(b["TRT-0141"]["balance"], g["TRT-0141"]["balance"], 0.005)
+        return bal_ok("TRT-0141", s)
 
     def no_contractor(s):
         return not any(i.startswith("CTR-") for i in by(s))
@@ -465,12 +469,10 @@ def _row_checks():
         return all(i in b and b[i]["tier"] == 80 and b[i]["accrued"] > 0 for i in UNLOADED_IDS)
 
     def periods_ok(s):
-        b = by(s)
-        return "TRT-0002" in b and _same(b["TRT-0002"]["balance"], g["TRT-0002"]["balance"], 0.005)
+        return bal_ok("TRT-0002", s)
 
     def usage_ok(s):
-        b = by(s)
-        return "TRT-0001" in b and _same(b["TRT-0001"]["balance"], g["TRT-0001"]["balance"], 0.005)
+        return bal_ok("TRT-0001", s)
 
     def policies_ok(s):
         b = by(s)
