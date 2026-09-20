@@ -1,13 +1,14 @@
 # The task AutoQC register - T1 v2, Approved Hiring and Staffed Role Views
 
-**No round has run on v2.** The register opens on 09/19/2026 with the build. Archive each round
-verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or `findings/task_roundN_MM-DD-YYYY.md` before
-triaging it, and keep the verdicts here. T1's prompt round of 09/19/2026 is answered in v2's
-design and recorded in `../01_prompt.md`.
+**One prompt round has run on v2, and no task round.** The prompt round of 09/20/2026 is archived
+verbatim at `findings/prompt_round1_09-20-2026.md` and answered below. It landed before any v2
+trajectory. Archive each later round verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or
+`findings/task_roundN_MM-DD-YYYY.md` before triaging it, and keep the verdicts here. T1's prompt
+round of 09/19/2026 is answered in v2's design and recorded in `../01_prompt.md`.
 
 | Round | Date | Findings | Verdict |
 |---|---|---|---|
-| none yet | | | |
+| Prompt round 1 | 09/20/2026 | One major. Outcome-Determining Choices: the memo never says the roster overrides BambooHR, BambooHR carries 53 non-contractor active rows against the roster's 52, and the round reads the two as defensible outputs. It asks for a source hierarchy naming the roster as authoritative | **Disputed, and the run set decides.** The hierarchy asked for is the clause T1 carried and measured: nine of nine runs healed the population when the memo named the sources. The memo's definition is a fact, not a choice. Three of the 53 read Terminated on the crosswalk, with termination dates of 03/20/2026, 05/08/2026 and 06/15/2026 on the SplinterHR archive, and are on neither the August org chart nor the roster. Two of the 52 read Never Loaded, each with a Greenhouse hire and an org chart box. Handbook 3.2 makes the HRIS the system of record and in the same clause says a record can disagree with a signed document and be corrected. A stale Active flag is not employment. The verifiers the round read are the synth's twenty; the package's rubric grades the set of 52, not a count. Under 40% on five Gemini runs the finding is the measured failure; over 60% the package retires on its own rule and the finding is moot |
 
 ## The verifier harness
 
@@ -37,6 +38,6 @@ the guard; the thin-table scenario is the one that exercises it, and the control
 - **Verifier Type, that every row is App DB.** Same answer.
 - **The count source and the status of REQ-2026-038**, T1's prompt round. The memo defines a
   current employee and each status value; it names no source, and the world's records settle
-  the rest.
+  the rest. The v2 round of 09/20/2026 raised the count source again and is answered above.
 - **That the memo names no source.** That is the design: T1 measured nine of nine runs following
   the sources the memo named. `../01_prompt.md` carries the record.

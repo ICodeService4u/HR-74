@@ -14,7 +14,7 @@ repository as the measurement.
 | Verifier battery | 09/19/2026 | **864 of 864 verdicts correct** across 36 scenarios and 24 rows, the three registered failing paths among them |
 | Negative controls | 09/19/2026 | see the table below, from `build/negative_controls.py` |
 | Run set | owed | five Gemini 3.8 Flash and three GPT Sol 5.6, archived and scored by `qc/score_run_set.py` against the registered paths |
-| Prompt round 1 | owed | archived verbatim to `qc/findings/` when it lands |
+| Prompt round 1 | 09/20/2026 | one major finding, the count source, archived verbatim to `qc/findings/` and disputed in `qc/README.md`; the run set decides it |
 
 ## The ask, in one paragraph
 
@@ -133,7 +133,7 @@ python3 build/negative_controls.py         # every guard made to fail once
 | verifier: a substring match on the status cell | RED |
 | verifier: the key matched as a substring | RED |
 | verifier: a key with a note beside it rejected | RED |
-|  | RED |
+| verifier: the population gate counting rows instead of matching the set | RED |
 | verifier: absence passing on a thin table | RED |
 | verifier: page history read as pages | RED |
 | verifier: the published flag assumed | RED |
