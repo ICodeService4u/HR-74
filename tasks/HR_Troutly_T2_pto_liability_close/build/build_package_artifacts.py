@@ -804,11 +804,21 @@ def write_show_your_work():
     total_cell = _money(TOTAL)
     ws.append(["TOTAL", "", "", "", "", "", "", "", "", "", "", "", f"{TOTAL_HOURS:,.2f}", "", "", "", total_cell])
     names = {e["name"] for e in ROSTER_ROWS}  # a person's name is a world fact and keeps the world's spelling
+    from openpyxl.styles import Alignment, Font
+    from openpyxl.utils import get_column_letter
+    widths = {"Sources": [30, 60, 110], "Verifiers": [6, 110, 30, 8, 14], "Row assembly": [30, 120],
+              "Schedule": [12, 22, 22, 20, 6, 16, 14, 11, 11, 11, 11, 8, 16, 22, 14, 12, 12]}
     for sheet in wb:
+        for i, w in enumerate(widths[sheet.title], 1):
+            sheet.column_dimensions[get_column_letter(i)].width = w
+        sheet.freeze_panes = "A2"
         for row in sheet.iter_rows():
             for c in row:
                 if isinstance(c.value, str) and c.value not in names:
                     assert all(ord(ch) < 128 for ch in c.value), "show-your-work is not ASCII: %r" % c.value[:60]
+                c.alignment = Alignment(wrap_text=sheet.title != "Schedule", vertical="top")
+                if c.row == 1:
+                    c.font = Font(bold=True)
     wb.save(SYW)
     return SYW
 
