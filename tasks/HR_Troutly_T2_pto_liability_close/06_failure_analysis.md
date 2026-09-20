@@ -181,6 +181,18 @@ View - August 2026 and Staffed Role View - August 2026, the synth's set for T1: 
 `PTO Liability Request` is T1's task re-pointed to this prompt and input. A platform grading of
 these runs is against those rows and says nothing; the record scores from the archived bytes.
 
+## The rubric half, 09/20/2026
+
+The five runs read under 40%, so the rubric half was built the same day from the plan's 21 rows.
+The weights are the ones registered above, unchanged, so every score in this record stands as
+written. Each row now carries a criterion type, a primary flag, an explanation in the house
+register and the picker's reference artifacts, and `05_rubric_import.xlsx` is generated from
+them in the HR 79 T1 shape with both snapshot ids read off these five exports. Twelve rows are
+primary, the twelve the registered paths short of the heal fail, and Expert Assessment carries
+77.0% of the points. Still owed: the verifier code generated from the same rows, the battery
+against a fixture that holds these five pages and the BambooHR tables, the golden page and the
+three GPT Sol 5.6 runs.
+
 ## The task-field paragraph, 09/20/2026
 
 Entered in the Additional Notes box on G1 on 09/20/2026, three sentences: what the run did and

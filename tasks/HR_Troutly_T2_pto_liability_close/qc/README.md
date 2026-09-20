@@ -29,8 +29,10 @@ writes. A platform grading of a T2 run is against those rows and is not read.
 
 ## The verifier harness
 
-Not built at the prompt half. When the rubric half is built, every planned row's code is tested
-against a fixture with the answer known before it is imported, as T1's and v2's were, with the
+Owed. The rubric import was built 09/20/2026 from the plan's rows, `05_rubric_import.xlsx`, with
+the explanations in the house register and both snapshot ids read off the five exports. Every
+row's code is generated next from the same rows and tested against a fixture with the answer
+known before it is imported, as T1's and v2's were, with the five archived pages and the
 BambooHR tables in the fixture beside the pages table.
 
 ## What a round is likely to raise, and the answer already on file
