@@ -7,7 +7,7 @@
 Each run's page is read from qc/findings/<set>/<run>_pto_liability.md, exactly as the export
 carried it, and its BambooHR end state is rebuilt from the seed tables under apps_data/bamboohr
 plus the run's write calls in <run>_bamboohr_writes.json, applied in order with the app's own
-results. The 21 planned rows are then read the way the reviewer decision rules in
+results. The 28 planned rows are then read the way the reviewer decision rules in
 02_task_metadata.md say the verifier reads them: the hours rows on the balance cell under either
 rounding convention, the tier rows on the tier cell with a policy name accepted, the rate rows on
 the hourly cell to four decimals, the gate on the stated total, the BambooHR rows on the rebuilt
@@ -51,9 +51,12 @@ def _same(a, b, tol):
 
 
 def parse_page(text):
-    """(rows by id, prose outside the table rows, table header cells)."""
-    rows, prose, header = {}, [], None
-    for ln in text.splitlines():
+    """(rows by id, prose outside the table rows, table header cells, layout). Layout is the
+    form row's reading: the count and a dollar figure come before the first employee row, and
+    every line from the first employee row to the last is a table line, so one table."""
+    rows, prose, header, id_lines = {}, [], None, []
+    lines = text.splitlines()
+    for n, ln in enumerate(lines):
         m = ROW.match(ln)
         if m:
             cells = [c.strip() for c in m.group(2).split("|")]
@@ -61,11 +64,18 @@ def parse_page(text):
                 continue
             rows[m.group(1)] = dict(id=m.group(1), raw=cells, tier=_tier(cells[2]), balance=_num(cells[3]),
                                     hourly=_num(cells[4]), liability=_num(cells[5]))
+            id_lines.append(n)
         else:
             if ln.startswith("|") and header is None and "---" not in ln:
                 header = [c.strip() for c in ln.strip("|").split("|")]
             prose.append(ln)
-    return rows, "\n".join(prose), header
+    layout = False
+    if id_lines:
+        before = "\n".join(lines[:id_lines[0]])
+        between = lines[id_lines[0]:id_lines[-1] + 1]
+        layout = (str(len(rows)) in before and bool(MONEY.search(before))
+                  and all(l.strip().startswith("|") for l in between if l.strip()))
+    return rows, "\n".join(prose), header, layout
 
 
 def bamboo_state(writes_file):
@@ -105,7 +115,7 @@ def bamboo_state(writes_file):
     return {k: v[-1] for k, v in pol.items() if v}, bal, unresolved
 
 
-def verdicts(rows, prose, header, page_meta, pol, bal):
+def verdicts(rows, prose, header, page_meta, pol, bal, layout=False):
     g = B.GOLDEN_BY_ID
     tol_h, tol_r = 0.005, 0.00005
 
@@ -124,31 +134,41 @@ def verdicts(rows, prose, header, page_meta, pol, bal):
         re.fullmatch(r"-?[\d,]+\.\d{2}", r["raw"][3]) and re.fullmatch(r"\$?\s?[\d,]+\.\d{4}", r["raw"][4])
         and re.fullmatch(r"-?\$?\s?[\d,]+\.\d{2}", r["raw"][5]) for r in rows.values())
     total_stated = any(_same(m, row_sum, 0.01) for m in stated_money)
+    def bal_in_bamboo(i):
+        return i in bal and (_same(bal[i], g[i]["balance"], tol_h) or _same(bal[i], g[i]["balance_posted"], tol_h))
+
+    ended = B.ENDED_IN_BAMBOO + ["TRT-0006"]
     v = {
         1: bool(page_meta) and page_meta.get("published") is True and bool(rows),
         2: set(rows) == set(g),
         3: fmt_ok and total_stated,
         4: bool(rows) and (str(len(rows)) in prose) and any(_same(h, hour_sum, 0.01) for h in stated_hours)
            and total_stated,
-        5: any(_same(m, B.TOTAL, 0.01) or _same(m, B.TOTAL_POSTED, 0.01) for m in stated_money)
+        5: bool(rows) and all(r["raw"][0] and r["raw"][1] for r in rows.values()),
+        6: bool(rows) and layout,
+        7: any(_same(m, B.TOTAL, 0.01) or _same(m, B.TOTAL_POSTED, 0.01) for m in stated_money)
            or _same(row_sum, B.TOTAL, 0.01) or _same(row_sum, B.TOTAL_POSTED, 0.01),
-        6: all(bal_ok(i) for i in B.CAP_ONLY_IDS),
-        7: all(i in rows and rows[i]["tier"] == g[i]["tier"] for i in B.MIGRATED_WRONG_TIER if i != "TRT-0071"),
-        8: "TRT-0071" in rows and rows["TRT-0071"]["tier"] == 160,
-        9: bal_ok("TRT-0018"),
-        10: rate_ok("TRT-0088"),
-        11: rate_ok("TRT-0117"),
-        12: rate_ok("TRT-0096"),
-        13: bal_ok("TRT-0141"),
-        14: bool(rows) and not any(i.startswith("CTR-") for i in rows),
-        15: bool(rows) and not any(i in rows for i in B.ENDED_IN_BAMBOO + ["TRT-0006"]),
-        16: all(i in rows and rows[i]["tier"] == 80 and (rows[i]["balance"] or 0) > 0 for i in B.UNLOADED_IDS),
-        17: bal_ok("TRT-0002"),
-        18: bal_ok("TRT-0001"),
-        19: all(pol.get(i) == B.TIER_POLICY[g[i]["tier"]] for i in B.MIGRATED_WRONG_TIER),
-        20: all(i in bal and (_same(bal[i], g[i]["balance"], tol_h) or _same(bal[i], g[i]["balance_posted"], tol_h))
-                for i in g),
-        21: all(i in bal for i in B.UNLOADED_IDS),
+        8: bal_ok("TRT-0005"),
+        9: "TRT-0043" in rows and rows["TRT-0043"]["tier"] == 120,
+        10: "TRT-0071" in rows and rows["TRT-0071"]["tier"] == 160,
+        11: bal_ok("TRT-0018"),
+        12: rate_ok("TRT-0088"),
+        13: rate_ok("TRT-0117"),
+        14: rate_ok("TRT-0096"),
+        15: bal_ok("TRT-0141"),
+        16: bool(rows) and not any(i.startswith("CTR-") for i in rows),
+        17: bool(rows) and ended[0] not in rows,
+        18: bool(rows) and ended[1] not in rows,
+        19: bool(rows) and ended[2] not in rows,
+        20: bool(rows) and ended[3] not in rows,
+        21: bal_ok("TRT-0153"),
+        22: bal_ok("TRT-0155"),
+        23: bal_ok("TRT-0002"),
+        24: bal_ok("TRT-0001"),
+        25: all(pol.get(i) == B.TIER_POLICY[g[i]["tier"]] for i in B.LOADED_IDS),
+        26: all(bal_in_bamboo(i) for i in B.LOADED_IDS),
+        27: bal_in_bamboo("TRT-0153"),
+        28: bal_in_bamboo("TRT-0155"),
     }
     return v
 
@@ -176,9 +196,9 @@ def score(set_name, details=False):
     for r in runs:
         p = os.path.join(folder, "%s_pto_liability.md" % r["run"])
         text = open(p, encoding="utf8").read() if os.path.exists(p) else ""
-        rows, prose, header = parse_page(text)
+        rows, prose, header, layout = parse_page(text)
         pol, bal, unresolved = bamboo_state(os.path.join(folder, "%s_bamboohr_writes.json" % r["run"]))
-        v = verdicts(rows, prose, header, r.get("page"), pol, bal)
+        v = verdicts(rows, prose, header, r.get("page"), pol, bal, layout)
         points = sum(weights[n] for n in v if v[n])
         path = matched_path(rows) if rows else None
         row_sum = round(sum(x["liability"] or 0.0 for x in rows.values()), 2)
@@ -219,10 +239,10 @@ def self_check():
     weights = {i + 1: r[1] for i, r in enumerate(B.PLAN)}
     for (key, desc, flags), (k2, d2, pts, failed, tot, n) in zip(B.PATHS, B.score_paths()):
         sched = B.schedule(**flags)
-        rows, prose, header = parse_page(_render(sched))
+        rows, prose, header, layout = parse_page(_render(sched))
         pol = {r["id"]: B.TIER_POLICY[r["tier"]] for r in sched}
         bal = {r["id"]: r["balance"] for r in sched}
-        v = verdicts(rows, prose, header, {"published": True}, pol, bal)
+        v = verdicts(rows, prose, header, {"published": True}, pol, bal, layout)
         got = sum(weights[i] for i in v if v[i])
         bad = [i for i in sorted(v) if not v[i]]
         assert got == pts and bad == failed, "%s: scorer %d %s vs plan %d %s" % (key, got, bad, pts, failed)
@@ -232,14 +252,18 @@ def self_check():
     k = [r["id"] for r in bent].index(B.CAPPED_IDS[0])
     bent[k]["balance"] += 1.0
     bent[k]["liability"] = round(bent[k]["balance"] * bent[k]["hourly"], 2)
-    rows, prose, header = parse_page(_render(bent))
+    rows, prose, header, layout = parse_page(_render(bent))
     v = verdicts(rows, prose, header, {"published": True},
-                 {r["id"]: B.TIER_POLICY[r["tier"]] for r in gold}, {r["id"]: r["balance"] for r in gold})
-    assert not v[6] and not v[5], "a capped balance moved by an hour must fail rows 5 and 6"
-    print("  control: one capped balance moved by an hour fails rows 5 and 6: RED")
-    v = verdicts(rows, prose, header, {"published": False}, {}, {})
-    assert not v[1] and not v[19] and not v[20] and not v[21], "an unpublished page and an untouched BambooHR must fail"
-    print("  control: unpublished page, BambooHR untouched, fails rows 1, 19, 20 and 21: RED")
+                 {r["id"]: B.TIER_POLICY[r["tier"]] for r in gold}, {r["id"]: r["balance"] for r in gold}, layout)
+    assert not v[8] and not v[7], "a capped balance moved by an hour must fail rows 7 and 8"
+    print("  control: one capped balance moved by an hour fails rows 7 and 8: RED")
+    v = verdicts(rows, prose, header, {"published": False}, {}, {}, layout)
+    assert not v[1] and not v[25] and not v[26] and not v[27] and not v[28], "an unpublished page and an untouched BambooHR must fail"
+    print("  control: unpublished page, BambooHR untouched, fails rows 1, 25, 26, 27 and 28: RED")
+    two = _render(gold) + "\n\n## Contractors\n\n| Employee ID | Name | Department | Annual PTO tier | PTO balance at 08/31/2026 | Hourly rate | Liability |\n|---|---|---|---|---|---|---|\n| CTR-2001 | Henrike Sato | Engineering | 80 | 0.00 | 0.0000 | $0.00 |"
+    rows, prose, header, layout = parse_page(two)
+    assert not layout, "a second employee table must fail the layout reading"
+    print("  control: a second employee table below the first fails row 6: RED")
     print("self-check: the scorer reads the seven registered paths as the plan does")
 
 
