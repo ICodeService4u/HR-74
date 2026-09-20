@@ -366,3 +366,5 @@ Approved Hiring View - August 2026 and Staffed Role View - August 2026. What eac
 5. **The rubric half**, built only under 40%.
 6. **The platform task's verifier set is T1's.** The twenty rows on the exports target the two T1
    pages. Before any platform grading is read, they have to be replaced by the plan's rows or removed.
+   The prompt AutoQC round of 09/20/2026 raised the same mismatch and was disputed on the platform:
+   the verifiers are not editable until the next task stage.

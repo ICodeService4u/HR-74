@@ -1,10 +1,9 @@
 # 08 - The section 1.3 step plan in the checkpoint form the guide asks for (T2, 09/20/2026)
 
 The field is a numbered **Checkpoints** table, one column headed "Checkpoint - what the model must
-do". Fourteen rows. The step count is predicted over 100 on the platform's count: the v2 reads
-plus a rule set, 52 rows of arithmetic and 52 BambooHR writes. Verify it from the first completed
-Gemini trajectory and replace the prediction. Held until the difficulty bar is measured, as v2's
-was.
+do". Fourteen rows. The step count was predicted over 100 on the platform's count and measured on
+09/20/2026 at 209, 165 and 213 tool calls on G1, G2 and G3, one assistant turn each. Entered at
+the midpoint of the run set, three of five Gemini runs at a 23.2% mean.
 
 ---
 

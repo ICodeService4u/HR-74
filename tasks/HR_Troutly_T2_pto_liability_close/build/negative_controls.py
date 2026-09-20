@@ -93,6 +93,8 @@ ok.append(control("plan: the golden not scoring every point", BLD, 'return bal_o
 ok.append(control("plan: a hours row read off a column the page does not carry", BLD, 'return bal_ok("TRT-0141", s)',
                   'return "TRT-0141" in by(s) and _same(by(s)["TRT-0141"]["accrued"], 8.8462, 0.0001) and False', BLD))
 ok.append(control("plan: P0 scoring over a fifth", BLD, "return _same(t, TOTAL, 0.005) or _same(t, TOTAL_POSTED, 0.005)", "return True", BLD))
+# ---- the show-your-work guard
+ok.append(control("syw: a total the build did not write", BLD, 'total_cell = "%.2f" % TOTAL', 'total_cell = "%.2f" % (TOTAL + 1)', BLD, ["--docs"]))
 # ---- the docs guards
 ok.append(control("docs: the prompt blockquote", PROMPT_MD, "about the August 2026 close", "about the August close", BLD, ["--docs"]))
 ok.append(control("docs: a stale figure in the record", META_MD, "$92,739.54", "$92,739.45", BLD, ["--docs"]))
