@@ -738,59 +738,6 @@ def _run_bamboo(kind, bam, notes, metrics):
     return False, "unknown check kind %r" % kind
 
 
-def _gh_norm(v):
-    """A cell as the seed and the live app would both spell it: lower, trimmed, booleans as 1 and
-    0, numbers without a trailing .0, a datetime cut to its date."""
-    s = _text(v).strip().lower()
-    if s in ("", "none", "null"):
-        return None
-    if s in ("true", "t", "yes"):
-        return "1"
-    if s in ("false", "f", "no"):
-        return "0"
-    if re.fullmatch(r"\d{4}-\d{2}-\d{2}.*", s):
-        return s[:10]
-    try:
-        f = float(s)
-        return str(int(f)) if f == int(f) else repr(f)
-    except ValueError:
-        return s
-
-
-def _run_greenhouse(ctx, notes, metrics):
-    """Every seed table is found in the snapshot by content and carries exactly its seed rows: the
-    same row count, and every seed row's values present on one live row."""
-    S = SPEC
-    names = [n for n in ctx.list_tables() if "page" not in n.lower()]
-    live = {}
-    for n in names:
-        cols, rows = _load(ctx, n)
-        live[n] = [set(x for x in (_gh_norm(v) for v in r) if x is not None) for r in rows]
-    bad, seen = [], 0
-    for table, seed_rows in sorted(S["seed"].items()):
-        seed = [set(r) for r in seed_rows]
-        best = None
-        for n, lrows in live.items():
-            matched = sum(1 for sr in seed if any(sr <= lr for lr in lrows))
-            if matched * 2 >= len(seed) and (best is None or matched > best[1] or (matched == best[1] and table in n.lower())):
-                best = (n, matched, len(lrows))
-        if not best:
-            bad.append((table, "no live table carries half of its %d seed rows" % len(seed)))
-            notes.append("seed table %s: not found in the snapshot" % table)
-            continue
-        n, matched, count = best
-        seen += 1
-        notes.append("seed table %s -> %s: %d live rows against %d seed rows, %d seed rows matched"
-                     % (table, n, count, len(seed), matched))
-        if count != len(seed) or matched != len(seed):
-            bad.append((table, "%d live rows for %d seed rows, %d matched" % (count, len(seed), matched)))
-    metrics["tables"] = seen
-    metrics["changed"] = len(bad)
-    if bad:
-        return False, "%d of %d Greenhouse tables changed or unseen: %r" % (len(bad), len(S["seed"]), bad[:4])
-    return True, "all %d Greenhouse tables carry their seed rows and no other" % seen
-
-
 def check(ctx):
     notes, metrics = [], {}
 
@@ -798,11 +745,6 @@ def check(ctx):
         return {"passed": False, "details": "\n".join(notes + ["", "FAILED - " + reason]), "metrics": metrics}
 
     try:
-        if SPEC["target"] == "greenhouse":
-            ok, why = _run_greenhouse(ctx, notes, metrics)
-            if ok:
-                return {"passed": True, "metrics": metrics, "details": "\n".join(notes + ["", "PASSED - " + why])}
-            return fail(why)
         if SPEC["target"] == "bamboohr":
             bam = _Bamboo(ctx, notes)
             ok, why = _run_bamboo(SPEC["kind"], bam, notes, metrics)

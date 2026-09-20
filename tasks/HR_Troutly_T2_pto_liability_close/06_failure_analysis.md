@@ -9,7 +9,7 @@ these predictions rather than over them, the way T1's and v2's records do.
 ## The plan the predictions are scored against
 
 21 planned rows, 87 points, one gate, as registered before the runs. The determination carried 70 points, 80.5%. BambooHR
-brought to the schedule carried 12, 13.8%. The page and its form carried 5, 5.7%. Task round 1 of 09/20/2026 restructured the set to 28 rows and 89 points with no registered weight moved, and task round 2 the same day to 43 rows and 96 points; the re-scored tables sit under the measured record below. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
+brought to the schedule carried 12, 13.8%. The page and its form carried 5, 5.7%. Task round 1 of 09/20/2026 restructured the set to 28 rows and 89 points with no registered weight moved, task round 2 the same day to 43 rows and 96 points and task round 3 to 44 rows and 97 points; the re-scored tables sit under the measured record below. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
 
 ## The registered paths
 
@@ -263,6 +263,41 @@ fail on every run as the two set rows did, so the BambooHR family costs the tier
 than before. The failing rows are the same rules under new numbers: three runs on P1 at 32 or 31
 of 96 and two under it at 24 or 23. P1 reads 33.3% on this set, under the bar with room, and the
 decision rule is unchanged: a Gemini set under 40% on this rubric ships the package.
+
+## Re-scored on the set task round 3 left, 09/20/2026
+
+The third rubric round asked for no-change guards on payroll, the September compensation cycle
+and benefits, the memo's other out-of-scope line, and the block left the memo instead on the
+owner's decision, HR 79 T1's round 9 remedy, the Greenhouse guard with it. The round's other two
+asks were taken: a policy row at 1 for each record the run creates, rows 43 and 44, and the two
+BambooHR guards reworded from a no-change to the schedule's state on the records it leaves as
+loaded. No page weight moved, the BambooHR family carries 17 against 15, and `qc/README.md`
+carries the verdicts. The memo the five runs saw differs from the re-render in the removed block
+alone, so the same archived bytes re-score on the 44 rows and 97 points:
+
+| Path | What the run does | Rows | Total it prints | Score |
+|---|---|---|---|---|
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 16 of 97, 16.5% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 33 of 97, 34.0% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 39 of 97, 40.2% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 50 of 97, 51.5% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 63 of 97, 64.9% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 79 of 97, 81.4% |
+| P6 | the heal | 52 | $92,739.54 | 97 of 97, 100.0% |
+
+| Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
+|---|---|---|---|---|---|---|---|---|
+| G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 32 of 97, 33.0% | 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39 |
+| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 23 of 97, 23.7% | 2, 10, 11, 12, 13, 14, 15, 16, 17, 18, 24, 25, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 41, 42, 43, 44 |
+| G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 32 of 97, 33.0% | 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39 |
+| G4 | gemini-3.8-flash | 192 | 192 | 52 | $111,455.78 | P1 | 33 of 97, 34.0% | 10, 11, 12, 13, 14, 15, 16, 17, 18, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39 |
+| G5 | gemini-3.8-flash | 197 | 197 | 50 | $111,100.39 | none | 22 of 97, 22.7% | 2, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 24, 25, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 41, 42, 43, 44 |
+
+**Mean 29.3%, against 29.4% on the round-2 set.** The Greenhouse point every run earned is gone
+and the two created records' policy rows pass on the three runs that created them, G1, G3 and
+G4, which assigned the 80-hour policy through the app's own tool, and fail on G2 and G5, which
+created nothing. Three runs on P1 at 33 or 32 of 97 and two under it at 23 or 22. P1 reads 34.0% on
+this set, under the bar with room, and the decision rule is unchanged.
 
 ## The task-field paragraph, 09/20/2026
 

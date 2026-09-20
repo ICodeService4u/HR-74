@@ -17,8 +17,8 @@ default user and a Wiki.js editor, the agent's seat) **from** Krystale Jumawan, 
 Anjelina Brocollini, Head of People.
 
 **What the memo carries, and what it withholds.** The ask, the measurement date, the page title,
-the columns, the definition of a current employee, what the summary states, the BambooHR ask,
-the form and the fence. It names the July detail as the thing it replaces, because that is the
+the columns, the definition of a current employee, what the summary states, the BambooHR ask
+and the form. It names the July detail as the thing it replaces, because that is the
 requester's premise and the requester built it. It names no rule: not the cutover memo, not the
 cap, not the accrual period, not the tier basis, not the rate basis, not the rehire rule, not the
 part-time rule, not the step. T1 v2 measured that a memo definition is a rule the tier applies;
@@ -84,11 +84,6 @@ policy and the PTO balance in BambooHR are the ones the schedule shows.
 
 Dates MM/DD/YYYY. Hours to two decimals. Hourly rates to four decimals. Dollars to the cent. The
 total is the sum of the rows. An employee ID on every row.
-
-### Out of scope
-
-Payroll changes, the September compensation cycle and benefits are no part of this request.
-Change nothing in Greenhouse.
 
 Krystale
 
