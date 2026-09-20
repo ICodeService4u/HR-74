@@ -1,9 +1,10 @@
 # T2 - PTO Liability Schedule and BambooHR PTO Records
 
 **Status: built 09/20/2026 at the prompt half; the five Gemini runs landed the same day at a 23.9% mean,
-three on the registered P1 path and two under it, the registered rule fired, and the rubric
-import shipped the same day from the plan's rows in the HR 79 T1 shape. The verifier code, the
-battery and the golden page are owed.** The second HR 74 ask, built on the
+three on the registered P1 path and two under it, the registered rule fired, the rubric import
+shipped the same day in the HR 79 T1 shape, and the first rubric round read it the same day: the
+set is rebuilt to 28 rows and 89 points with no registered weight moved, and the runs re-score
+at 25.6%. The verifier code, the battery and the golden page are owed.** The second HR 74 ask, built on the
 measured record of T1 and T1 v2: thirteen Gemini trajectories healed a population reconciliation
 with and without pointers, so the next ask had to be a determination the tier gets wrong, not a
 lookup. This one is the PTO liability at 08/31/2026, a rule application over 52 people where
@@ -17,7 +18,8 @@ if they fail.
 | Negative controls | 09/20/2026 | see the table below, from `build/negative_controls.py` |
 | Run set | 09/20/2026, five of eight | Gemini 3.8 Flash: G1, G3 and G4 P1 row for row, $111,455.78, 24 of 87, 27.6%; G2 and G5 P1 less the two unloaded hires, $111,100.39, 16 of 87, 18.4%; mean 23.9%, scored from the output alone; three GPT Sol 5.6 owed for the record |
 | Prompt round 1 | 09/20/2026 | Two major findings: Self-Contained Tasks on TRT-0153 and TRT-0155, and Outcome-Determining Choices on the T1 verifier set and the population. Both disputed on the platform the same day; transcribed to `qc/findings/prompt_round1_09-20-2026.md`, answered in `qc/README.md` |
-| Rubric import | 09/20/2026 | `05_rubric_import.xlsx` in the HR 79 T1 shape: one sheet named Rubric, thirteen columns, 21 rows, 87 points, 12 primary, every row App DB Programatic, the explanations in the house register, 71 citations over 17 world files and the upload, both snapshot ids read off the exports. `09_rubric_import.md` carries the mappings |
+| Rubric import | 09/20/2026 | `05_rubric_import.xlsx` in the HR 79 T1 shape: one sheet named Rubric, thirteen columns, 21 rows, 87 points, 12 primary, every row App DB Programatic, the explanations in the house register, both snapshot ids read off the exports. Loaded on the task the same day. `09_rubric_import.md` carries the mappings |
+| Task round 1 | 09/20/2026 | Four major, two minor, on the 21-row import; `qc/findings/task_round1_09-20-2026.md`. Accepted: the calculation-path clauses out of five criteria, one row per employee where five rows bundled people, two rows for the request's last explicit asks; the set is 28 rows, 89 points, 13 primary, no registered weight moved, md5 in `02_task_metadata.md`. Disputed: a row on the Greenhouse fence, and Grading Target on App DB rows. Measured: the import does not populate Tags, Reference Artifacts or Grading Target, so both are set by hand from `build/rubric_plan.csv`. The runs re-score at 25.6% |
 | Verifier code and battery | owed | generated next from the same rows and tested against a fixture that holds the five archived pages and the BambooHR tables before any of it is pasted |
 
 ## The ask, in one paragraph
@@ -38,7 +40,7 @@ G1, G3 and G4 print the HRIS report's numbers over the memo's population: P1 row
 G2 and G5 print the same numbers less the two unloaded hires, which they read as carrying no
 liability because they carried no record: 16 of 87. All five opened the cutover memo, four opened
 both signed pay documents, and none applied a rule where a record already carried a number. Five
-of five under 40%: the registered rule fired, the rubric import is built and the verifier code and battery are next. The scorer reads the page as the app returned it and the
+of five under 40%: the registered rule fired, the rubric import is built, task round 1 has reshaped it to 28 rows, and the verifier code and battery are next. The scorer reads the page as the app returned it and the
 BambooHR state from the app's own results, and nothing the run said. The exports carry T1's twenty
 synth verifiers, so no platform score on these runs means anything; `06_failure_analysis.md`
 carries the record and `qc/README.md` the register.
@@ -56,7 +58,7 @@ carries the record and `qc/README.md` the register.
 | `08_section_1_3_step_plan.md` | The checkpoint table, held until the bar is measured |
 | `build/build_task_input.py`, `build/task_input_source.md` | The memo source and its renderer with the leak guards |
 | `build/build_package_artifacts.py` | The one builder: the schedule from the world's bytes, the paths, the plan, the guards |
-| `build/schedule_preview.csv`, `build/rubric_plan.csv` | The golden schedule, and the plan with the import's columns beside its own, regenerated on every build |
+| `build/schedule_preview.csv`, `build/rubric_plan.csv` | The golden schedule, and the plan with the import's columns beside its own, the tag and the reference artifacts per row for the hand entry the interface needs, regenerated on every build |
 | `build/negative_controls.py` | Every guard made to fail once |
 | `qc/README.md`, `qc/findings/` | The AutoQC register and the verbatim archive |
 | `qc/archive_run_set.py`, `qc/score_run_set.py` | The archiver and the scorer, each with a `--self-check`: the page and the BambooHR writes read off either route as the app returned them, scored by the reviewer decision rules against the registered paths |
@@ -131,6 +133,10 @@ python3 qc/score_run_set.py --details
 | register: no source named | RED |
 | register: over 240 characters | RED |
 | register: two rows carrying one explanation verbatim | RED |
+| import: the layout row losing its Style / formatting tag | RED |
+| world: the loaded population | RED |
+| plan: a set row reading the two created rows too | RED |
+| plan: a created-row row passing with the row absent | RED |
 | register: two explanations opening alike | RED |
 | import: the guide's spelling of the App DB type | RED |
 | import: a criterion type outside the code-verifier dropdown | RED |
@@ -158,4 +164,4 @@ python3 qc/score_run_set.py --details
 | docs: a stale citation count in the mappings document | RED |
 | selection: a wildcard in the block | RED |
 
-**71 of 71 controls went red**, 09/20/2026, the rubric, register and import guards among them, and the closing rebuild left the tree clean at the published md5s.
+**75 of 75 controls went red**, 09/20/2026, after task round 1, the rubric, register, import and set-row guards among them, and the closing rebuild left the tree clean at the published md5s. The first run of the round-1 set left one control green, a planted set-row overlap no guard read, and the guard was written rather than the control dropped.

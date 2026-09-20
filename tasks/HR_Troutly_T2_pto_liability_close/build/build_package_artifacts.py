@@ -395,6 +395,7 @@ CAPPED_IDS = sorted(r["id"] for r in GOLDEN if r["opening_raw"] > CAP)
 MIGRATED_WRONG_TIER = sorted(r["id"] for r in GOLDEN if r["id"] in BAMBOO_POLICY
                              and POLICY_TIER[BAMBOO_POLICY[r["id"]]] != r["tier"])
 UNLOADED_IDS = sorted(r["id"] for r in GOLDEN if r["id"] not in BAMBOO)
+LOADED_IDS = sorted(r["id"] for r in GOLDEN if r["id"] in BAMBOO)
 
 
 def _cap_only_ids():
@@ -449,12 +450,15 @@ APPDB = "App DB Programatic"
 # The guide's importance table by criterion type. A compliance row reads a stated value or a
 # stated set and is at most Core, 1 to 5. A reasoning row applies a rule the record contradicts
 # and is Supporting to Critical, 3 to 10; 9 and 10 are the gate's alone.
-BANDS = {OC: set(range(1, 6)), EA: set(range(3, 11))}
+# rows on one cell that moves the total by under a third of a percent, the two hires, price at 2.
+BANDS = {OC: set(range(1, 6)), EA: set(range(2, 11))}
 IMPORT_DB_DROPDOWN = {"Objective Compliance", "Expert Assessment", "Process"}
 FORM_TAG = "Style / formatting"
 IMPORT_TAGS = {"Final Response", FORM_TAG}
 FORM_CRIT = ("States, on the PTO liability page, hours to two decimals, hourly rates to four "
              "decimals, dollars to the cent and a total equal to the sum of the rows.")
+LAYOUT_CRIT = "States, on the PTO liability page, the summary above one table of employee rows."
+FORM_ROWS = (FORM_CRIT, LAYOUT_CRIT)
 REQUEST = TASK_UPLOADS[0]
 
 
@@ -538,13 +542,27 @@ def _row_checks():
 
     always = lambda s: True
     a71 = ARCHIVE_EMP["TRT-0071"]
-    t18 = g["TRT-0018"]
-    q41 = g["TRT-0141"]
-    j02 = g["TRT-0002"]
-    l01 = g["TRT-0001"]
+    t18, q41, j02, l01, h05, k43 = (g["TRT-0018"], g["TRT-0141"], g["TRT-0002"], g["TRT-0001"],
+                                    g["TRT-0005"], g["TRT-0043"])
     l01_req = next(r for r in _csv("bamboohr", "TimeOffRequest.csv")
                    if r["employee_id"] == "TRT-0001" and r["status"] == "approved")
-    ended = [i for i in ENDED_IN_BAMBOO]
+
+    def absent(i):
+        return lambda s: bool(s) and i not in by(s)
+
+    def tier_is(i, t):
+        return lambda s: i in by(s) and by(s)[i]["tier"] == t
+
+    def loaded_policies_ok(s):
+        b = by(s)
+        return all(i in b and b[i]["tier"] == g[i]["tier"] for i in LOADED_IDS)
+
+    def loaded_balances_ok(s):
+        return all(bal_ok(i, s) for i in LOADED_IDS)
+
+    def name(i):
+        return BAMBOO[i]["first_name"] + " " + BAMBOO[i]["last_name"]
+
     # the reference strings: a world file as "/" + path, the 1.4 upload by its upload name, an
     # app seed table as <app>/<table>.csv. artifact() maps the first two into the picker's
     # namespace and drops the third, which the picker's browser does not list.
@@ -556,6 +574,18 @@ def _row_checks():
                                         "bamboohr/TimeOffBalance.csv", "bamboohr/TimeOffRequest.csv",
                                         "bamboohr/TimeOffPolicy.csv")
     cands, wiki = "greenhouse/candidates.csv", "wiki_js/Page.csv"
+    ended_rows = []
+    ended_src = {"TRT-0037": "on the archive", "TRT-0049": "on the archive", "TRT-0064": "on the archive",
+                 "TRT-0006": "in BambooHR and on the archive"}
+    for i in ENDED_IN_BAMBOO + ["TRT-0006"]:
+        last = name(i).split()[-1]
+        tail = ", while BambooHR still reads Active" if i in ENDED_IN_BAMBOO else ""
+        ended_rows.append(
+            ("determination", 1, "-", "States, on the PTO liability page, no row for %s, %s." % (name(i), i), absent(i),
+             OC, "No",
+             "%s ended %s %s and the crosswalk marks %s Terminated%s. The cutover memo excludes employment ended by %s."
+             % (last, _d(ARCHIVE_EMP[i]["term"]), ended_src[i], i, tail, ASOF),
+             [REQUEST, xwalk, arch, cut, emp]))
     return [
         ("free", 1, "-", "States that a Wiki.js page titled %s is published." % PAGE, always,
          OC, "No",
@@ -573,32 +603,38 @@ def _row_checks():
          OC, "No",
          "The summary the request asks for states the employee count, the total hours and the total dollar liability.",
          [REQUEST]),
+        ("free", 1, "-", "States, on the PTO liability page, a name and a department on every employee row.", always,
+         OC, "No",
+         "The request lists employee ID, name, department, annual PTO tier, PTO balance, hourly rate and dollar liability as the table's columns, and the roster carries every name and department.",
+         [REQUEST, roster]),
+        ("free", 1, "-", LAYOUT_CRIT, always,
+         OC, "No",
+         "A short summary above one table is the shape the request sets, so the count and the totals come before the first employee row and no second employee table follows.",
+         [REQUEST]),
         ("determination", 10, "Critical value", "States, on the PTO liability page, a total dollar liability of $%s." % f"{TOTAL:,.2f}", total_ok,
          EA, "Yes",
          "The cutover memo caps carryover at %.1f hours, accrues four posted periods at the tier over %d and values each balance at the rate on file over %s. The %d rows sum to %s, or %s rounding each posting."
          % (CAP, PERIODS_PER_YEAR, f"{HOURS_PER_YEAR:,}", len(GOLDEN), _money(TOTAL), _money(TOTAL_POSTED)),
          [cut, hb, arch, roster, proc, promo, amend, letters, sched]),
-        ("determination", 5, "-", "States, on the PTO liability page, balances of %s hours for %s, the %s above 40.0 hours at 06/30/2026 whose balance the cap alone moves." % (
-            ", ".join("%.2f" % g[i]["balance"] for i in CAP_ONLY_IDS[:-1]) + " and %.2f" % g[CAP_ONLY_IDS[-1]]["balance"],
-            ", ".join(CAP_ONLY_IDS[:-1]) + " and " + CAP_ONLY_IDS[-1], _WORDS[len(CAP_ONLY_IDS)]), capped_ok,
+        ("determination", 5, "-", "States, on the PTO liability page, a balance of %.2f hours for Mikelle Hosana, TRT-0005." % h05["balance"], lambda s: bal_ok("TRT-0005", s),
          EA, "Yes",
-         "The archive holds these %s %s balances above %.1f hours and the cutover memo caps carryover there. The HRIS report and the load file carry them uncapped, as the field mapping specified."
-         % (_WORDS[len(CAP_ONLY_IDS)], _d(CAP_DATE), CAP),
+         "The archive holds Hosana's %s balance at %.2f hours and the cutover memo caps carryover at %.1f hours on that date. The HRIS report and the load file carry %.2f uncapped, and four periods at the 160-hour tier add %.2f."
+         % (_d(CAP_DATE), h05["opening_raw"], CAP, h05["opening_raw"], round(sum(h05["accruals"]), 2)),
          [cut, arch, report, load, mapping]),
-        ("determination", 5, "-", "States, on the PTO liability page, the 120-hour tier for TRT-0043, TRT-0051, TRT-0058, TRT-0079 and TRT-0083.", five_tiers_ok,
+        ("determination", 5, "-", "States, on the PTO liability page, the 120-hour tier for Oren Kastellanos, TRT-0043.", tier_is("TRT-0043", 120),
          EA, "Yes",
-         "The archive and the offer letters date these five hires two to five years before %s. The load file set HireDate to %s on them and BambooHR assigned the 80-hour policy from that date."
-         % (ASOF, _d(CUTOVER_DATE)),
+         "The archive and the offer letters date Kastellanos's hire %s, %s completed years before %s. The load file set HireDate to %s and BambooHR assigned the 80-hour policy from that date."
+         % (_d(k43["adj"]), _WORDS[years_between(k43["adj"], ASOF_DATE)], ASOF, _d(CUTOVER_DATE)),
          [cut, arch, letters, load, pol]),
-        ("determination", 7, "-", "States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071, with service bridged to 03/08/2021.", bridge_ok,
+        ("determination", 7, "-", "States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0071.", bridge_ok,
          EA, "Yes",
          "The archive records Burkenham hired %s, ended %s and rehired %s, a %d-day break. The handbook's 7.6 bridges service across a break under %d days, so his tier is 160 hours."
          % (_d(a71["hire"]), _d(a71["break_from"]), _d(a71["rehire"]), (a71["rehire"] - a71["break_from"]).days, BRIDGE_UNDER_DAYS),
          [hb, arch, rehire, wiki_onb]),
-        ("determination", 6, "-", "States, on the PTO liability page, an accrual of %.4f hours for Marisela Thornbury, TRT-0018, three periods at the 120-hour tier and one at 160." % g["TRT-0018"]["accrued"], thornbury_ok,
+        ("determination", 6, "-", "States, on the PTO liability page, a balance of %.2f hours for Marisela Thornbury, TRT-0018." % t18["balance"], thornbury_ok,
          EA, "Yes",
-         "The archive dates Thornbury's service from %s, so she reaches five years on %s inside the fourth posted period. The cutover memo moves the tier in that period, so three periods accrue %.4f hours and one %.4f."
-         % (_d(t18["adj"]), _d(t18["adj"].replace(year=ASOF_DATE.year)), t18["accruals"][0], t18["accruals"][3]),
+         "The archive dates Thornbury's service from %s and her capped opening is %.2f hours. She reaches five years on %s inside the fourth posted period, so the cutover memo accrues three periods of %.4f hours and one of %.4f."
+         % (_d(t18["adj"]), t18["opening"], _d(t18["adj"].replace(year=ASOF_DATE.year)), t18["accruals"][0], t18["accruals"][3]),
          [cut, arch, proc, pol]),
         ("determination", 7, "-", "States, on the PTO liability page, an hourly rate of $%.4f for Yolanda Featherstone, TRT-0088." % g["TRT-0088"]["hourly"], rate_ok("TRT-0088"),
          EA, "Yes",
@@ -624,39 +660,46 @@ def _row_checks():
          OC, "No",
          "BambooHR carries CTR-2001 to CTR-2004 as active employees and the roster carries no contractor. The handbook bars contractors from paid time off.",
          [REQUEST, roster, hb, emp]),
-        ("determination", 4, "-", "States, on the PTO liability page, no row for TRT-0037, TRT-0049, TRT-0064 or TRT-0006.", no_ended,
-         OC, "No",
-         "The crosswalk marks %s Terminated, the archive ends each before %s and BambooHR ends TRT-0006 on %s. The cutover memo excludes employment ended by %s."
-         % (", ".join(ended[:-1]) + " and " + ended[-1], _d(CUTOVER_DATE), _d(BAMBOO["TRT-0006"]["termination_date"]), ASOF),
-         [REQUEST, xwalk, arch, cut, emp]),
-        ("determination", 4, "-", "States, on the PTO liability page, Simone Okonkwo, TRT-0153, and Rafael Ibarra, TRT-0155, at the 80-hour tier with accruals since their start dates.", unloaded_ok,
+        *ended_rows,
+        ("determination", 2, "-", "States, on the PTO liability page, a balance of %.2f hours for Simone Okonkwo, TRT-0153." % g["TRT-0153"]["balance"], lambda s: bal_ok("TRT-0153", s),
          EA, "Yes",
-         "Okonkwo started %s and Ibarra %s on the roster and the crosswalk marks both Never Loaded. The cutover memo accrues each posted period at the 80-hour tier, so Okonkwo holds %.2f hours and Ibarra %.2f."
-         % (_d(g["TRT-0153"]["start"]), _d(g["TRT-0155"]["start"]), g["TRT-0153"]["balance"], g["TRT-0155"]["balance"]),
-         [roster, xwalk, offer153, letters, cut, cands]),
-        ("determination", 3, "-", "States, on the PTO liability page, a balance of %.2f hours for Sora Jackson, TRT-0002, four posted periods at the 160-hour tier." % g["TRT-0002"]["balance"], periods_ok,
+         "Okonkwo started %s on the roster and the crosswalk marks TRT-0153 Never Loaded. The cutover memo accrues each posted period at the 80-hour tier, %.4f hours in each of the two periods since the start."
+         % (_d(g["TRT-0153"]["start"]), g["TRT-0153"]["accruals"][-1]),
+         [roster, xwalk, offer153, cut, cands]),
+        ("determination", 2, "-", "States, on the PTO liability page, a balance of %.2f hours for Rafael Ibarra, TRT-0155." % g["TRT-0155"]["balance"], lambda s: bal_ok("TRT-0155", s),
+         EA, "Yes",
+         "Ibarra started %s on the roster and the crosswalk marks TRT-0155 Never Loaded. The cutover memo accrues each posted period at the 80-hour tier, %.4f hours in the one period since the start."
+         % (_d(g["TRT-0155"]["start"]), g["TRT-0155"]["accruals"][-1]),
+         [roster, xwalk, letters, cut, cands]),
+        ("determination", 3, "-", "States, on the PTO liability page, a balance of %.2f hours for Sora Jackson, TRT-0002." % g["TRT-0002"]["balance"], periods_ok,
          OC, "No",
          "The procedures memo posts %s pay dates by %s and the fifth pays %s. Jackson opens at %.2f hours in the archive and adds %.4f in each of %s periods at the 160-hour tier, %.2f hours."
          % (_WORDS[len(POSTED)], ASOF, _d(PERIODS[len(POSTED)][2]), j02["opening"], j02["accruals"][0], _WORDS[len(POSTED)], j02["balance"]),
          [proc, cut, arch]),
-        ("determination", 2, "-", "States, on the PTO liability page, a balance of %.2f hours for Michael Labeson, TRT-0001, with 40.00 hours of approved time off deducted." % g["TRT-0001"]["balance"], usage_ok,
+        ("determination", 2, "-", "States, on the PTO liability page, a balance of %.2f hours for Michael Labeson, TRT-0001." % g["TRT-0001"]["balance"], usage_ok,
          OC, "No",
          "BambooHR holds Labeson's approved request of %.2f hours from %s to %s. The archive opens him at %.2f hours and four periods at the 160-hour tier add %.2f, so he holds %.2f."
          % (l01["used"], _d(l01_req["start_date"]), _d(l01_req["end_date"]), l01["opening"], round(sum(l01["accruals"]), 2), l01["balance"]),
          [arch, cut, req_t]),
-        ("bamboohr", 5, "-", "States, in BambooHR, the PTO policy the schedule's tier gives for each of the %d employees whose loaded policy differed." % len(MIGRATED_WRONG_TIER), policies_ok,
+        ("bamboohr", 5, "-", "States, in BambooHR, a PTO policy matching the schedule's tier for each of the %d employees on the schedule other than TRT-0153 and TRT-0155." % len(LOADED_IDS), loaded_policies_ok,
          EA, "Yes",
-         "The request asks that each PTO policy in BambooHR be the schedule's. Six migrated records carry the 80-hour policy from the loaded %s date, and the archive's dates put five at 120 hours and TRT-0071 at 160."
+         "Each PTO policy in BambooHR is asked by the request to be the schedule's. Six loaded records carry the 80-hour policy from the loaded %s date, and the archive's dates put five at 120 hours and TRT-0071 at 160."
          % _d(CUTOVER_DATE),
          [REQUEST, cut, arch, pol, poltype]),
-        ("bamboohr", 5, "-", "States, in BambooHR, a PTO balance equal to the schedule's %s balance for every employee on the schedule." % ASOF, balances_ok,
+        ("bamboohr", 5, "-", "States, in BambooHR, a PTO balance equal to the schedule's %s balance for each of the %d employees on the schedule other than TRT-0153 and TRT-0155." % (ASOF, len(LOADED_IDS)), loaded_balances_ok,
          EA, "Yes",
-         "BambooHR carries the loaded balances, uncapped and at the loaded tiers. The request asks that each PTO balance in BambooHR be the schedule's, so all %d balances read the schedule's %s figures."
-         % (len(GOLDEN), ASOF),
+         "BambooHR carries the loaded balances, uncapped and at the loaded tiers. The request asks that each PTO balance in BambooHR be the schedule's, so all %d loaded balances read the schedule's %s figures."
+         % (len(LOADED_IDS), ASOF),
          [REQUEST, cut, arch, bal_t]),
-        ("bamboohr", 2, "-", "States, in BambooHR, a PTO balance row for TRT-0153 and TRT-0155.", unloaded_rows_ok,
+        ("bamboohr", 1, "-", "States, in BambooHR, a PTO balance of %.2f hours for Simone Okonkwo, TRT-0153." % g["TRT-0153"]["balance"], lambda s: bal_ok("TRT-0153", s),
          OC, "No",
-         "Neither Okonkwo nor Ibarra has a BambooHR row and the crosswalk marks both Never Loaded. The request asks for the PTO balance in BambooHR for every employee on the schedule, so each has a balance row.",
+         "No BambooHR row exists for Okonkwo and the crosswalk marks TRT-0153 Never Loaded. The request asks for the PTO balance in BambooHR for every employee on the schedule, so a row carrying %.2f hours is created."
+         % g["TRT-0153"]["balance"],
+         [REQUEST, roster, xwalk, bal_t]),
+        ("bamboohr", 1, "-", "States, in BambooHR, a PTO balance of %.2f hours for Rafael Ibarra, TRT-0155." % g["TRT-0155"]["balance"], lambda s: bal_ok("TRT-0155", s),
+         OC, "No",
+         "Ibarra has no BambooHR row and the crosswalk marks TRT-0155 Never Loaded. The request asks for the PTO balance in BambooHR for every employee on the schedule, so a row carrying %.2f hours is created."
+         % g["TRT-0155"]["balance"],
          [REQUEST, roster, xwalk, bal_t]),
     ]
 
@@ -692,7 +735,7 @@ assert TASK_UPLOADS == [n[len(UPLOAD_PREFIX):] for n in TASK_INPUTS]
 
 
 def import_tag(crit):
-    return FORM_TAG if crit == FORM_CRIT else "Final Response"
+    return FORM_TAG if crit in FORM_ROWS else "Final Response"
 
 
 def artifact(ref):
@@ -883,7 +926,7 @@ def check_import():
         assert r[col["Verifier Type"]] == c["Verifier Type"] == kind, n
         assert "Programmatic" not in str(r[col["Verifier Type"]]), (
             "v%d carries the guide's spelling of the App DB type; the picker spells it Programatic" % n)
-        want_tag = FORM_TAG if "to two decimals" in crit else "Final Response"
+        want_tag = FORM_TAG if ("to two decimals" in crit or "summary above one table" in crit) else "Final Response"
         assert r[col["Tags"]] == want_tag, "v%d tags %r, wanted %r" % (n, r[col["Tags"]], want_tag)
         assert r[col["Tags"]] in IMPORT_TAGS, n
         assert r[col["Criterion Type"]] in IMPORT_DB_DROPDOWN, (
@@ -996,6 +1039,12 @@ def check_world():
     assert not any(i in REPORT_ROWS for i in UNLOADED_IDS)
     # the tiers
     assert MIGRATED_WRONG_TIER == ["TRT-0043", "TRT-0051", "TRT-0058", "TRT-0071", "TRT-0079", "TRT-0083"], MIGRATED_WRONG_TIER
+    assert len(LOADED_IDS) == 50 and set(LOADED_IDS) | set(UNLOADED_IDS) == set(GOLDEN_BY_ID)
+    assert GOLDEN_BY_ID["TRT-0005"]["opening_raw"] == 92.5 and GOLDEN_BY_ID["TRT-0005"]["balance"] == 64.62
+    assert "TRT-0005" in CAP_ONLY_IDS and GOLDEN_BY_ID["TRT-0005"]["tier"] == 160
+    assert GOLDEN_BY_ID["TRT-0043"]["adj"].strftime("%m/%d/%Y") == "10/15/2021" and GOLDEN_BY_ID["TRT-0043"]["tier"] == 120
+    assert [_d(ARCHIVE_EMP[i]["term"]) for i in ENDED_IN_BAMBOO + ["TRT-0006"]] == ["03/20/2026", "05/08/2026", "06/15/2026", "07/25/2026"]
+    assert _d(BAMBOO["TRT-0006"]["termination_date"]) == "07/25/2026"
     a71 = ARCHIVE_EMP["TRT-0071"]
     assert (a71["rehire"] - a71["break_from"]).days == 241 and GOLDEN_BY_ID["TRT-0071"]["adj"] == a71["hire"]
     assert GOLDEN_BY_ID["TRT-0071"]["adj"].strftime("%m/%d/%Y") == "03/08/2021"
@@ -1045,6 +1094,15 @@ def check_plan():
     scores = score_paths()
     assert scores[-1][2] == PLAN_TOTAL, "the golden must score every point"
     assert scores[0][2] * 5 < PLAN_TOTAL, "P0 must score under a fifth"
+    # The two BambooHR set rows read the 50 loaded records and nothing the two created rows read,
+    # so on a schedule that is the golden less the two hires the set rows pass and every row naming
+    # TRT-0153 or TRT-0155 fails. Task round 1 asked for exactly this carve-out.
+    loaded_only = [r for r in GOLDEN if r["id"] in LOADED_IDS]
+    for fam_, w, gate, crit, pred, *_ in PLAN:
+        if "other than TRT-0153 and TRT-0155" in crit:
+            assert pred(loaded_only), "a set row reads a created row too: " + crit[:70]
+        elif "TRT-0153" in crit or "TRT-0155" in crit:
+            assert not pred(loaded_only), "a created-row row passes with the row absent: " + crit[:70]
     return fam, scores
 
 
@@ -1126,9 +1184,9 @@ def write_previews():
     with open(q, "w", newline="", encoding="utf8") as fh:
         w = csv.writer(fh)
         w.writerow(["Index", "Family", "Weight", "Gate", "Criterion", "Verifier Type", "Criterion Type",
-                    "Is Primary Objective", "Criteria Explanation", "Reference Artifacts"])
+                    "Is Primary Objective", "Tags", "Criteria Explanation", "Reference Artifacts"])
         for i, (fam, wt, gate, crit, pred, typ, primary, expl, refs) in enumerate(PLAN, 1):
-            w.writerow([i, fam, wt, gate, crit, APPDB, typ, primary, expl, "; ".join(refs)])
+            w.writerow([i, fam, wt, gate, crit, APPDB, typ, primary, import_tag(crit), expl, "; ".join(refs)])
     return p, q
 
 
@@ -1209,8 +1267,8 @@ def write_show_your_work():
         ws.append([i, crit, w, gate])
     ws.append([])
     ws.append(["Note", "The gate grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number all %d cells feed, and it matches the schedule's only if every entry is right." % (len(GOLDEN), len(GOLDEN) * 7)])
-    ws.append(["Note", "Rows 6 to 18 each test one rule on the people that rule alone moves. One wrong cell fails a rule once and never twice."])
-    ws.append(["Note", "Rows 14, 15 and 16 each test one place the world breaks the definition of a current employee, the contractors, the ended and the two unloaded hires. Row 2 tests the set as a whole. Rows 19 to 21 test BambooHR the same way, the %s policies, the %d balances and the two rows created, each once." % (_w(len(MIGRATED_WRONG_TIER)), len(GOLDEN))])
+    ws.append(["Note", "Rows 8 to 15, 23 and 24 each test one rule on one employee that rule alone moves. One wrong cell fails a rule once and never twice."])
+    ws.append(["Note", "Rows 16 to 22 each test one place the world breaks the definition of a current employee, the contractors, the four ended and the two unloaded hires. Row 2 tests the set as a whole. Rows 25 to 28 test BambooHR, the %d loaded policies and balances as two sets and the two rows created, each once." % len(LOADED_IDS)])
     ws = wb.create_sheet("Row assembly")
     ws.append(["Step", "Result"])
     for row in _syw_assembly():

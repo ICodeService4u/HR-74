@@ -8,8 +8,8 @@ these predictions rather than over them, the way T1's and v2's records do.
 
 ## The plan the predictions are scored against
 
-21 planned rows, 87 points, one gate. The determination carries 70 points, 80.5%. BambooHR
-brought to the schedule carries 12, 13.8%. The page and its form carry 5, 5.7%. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
+21 planned rows, 87 points, one gate, as registered before the runs. The determination carried 70 points, 80.5%. BambooHR
+brought to the schedule carried 12, 13.8%. The page and its form carried 5, 5.7%. Task round 1 of 09/20/2026 restructured the set to 28 rows and 89 points with no registered weight moved, and the re-scored tables sit under the measured record below. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
 
 ## The registered paths
 
@@ -185,13 +185,46 @@ these runs is against those rows and says nothing; the record scores from the ar
 
 The five runs read under 40%, so the rubric half was built the same day from the plan's 21 rows.
 The weights are the ones registered above, unchanged, so every score in this record stands as
-written. Each row now carries a criterion type, a primary flag, an explanation in the house
+written; the set task round 1 left the same day is re-scored two sections below. Each row now carries a criterion type, a primary flag, an explanation in the house
 register and the picker's reference artifacts, and `05_rubric_import.xlsx` is generated from
-them in the HR 79 T1 shape with both snapshot ids read off these five exports. Twelve rows are
-primary, the twelve the registered paths short of the heal fail, and Expert Assessment carries
-77.0% of the points. Still owed: the verifier code generated from the same rows, the battery
+them in the HR 79 T1 shape with both snapshot ids read off these five exports. On the 21-row build twelve rows were
+primary, the twelve the registered paths short of the heal fail, and Expert Assessment carried
+77.0% of the points; on the round-1 set the figures are 13 and 75.3%. Still owed: the verifier code generated from the same rows, the battery
 against a fixture that holds these five pages and the BambooHR tables, the golden page and the
 three GPT Sol 5.6 runs.
+
+## Re-scored on the set task round 1 left, 09/20/2026
+
+The first rubric round read the 21-row import and the set was rebuilt the same day: one rule per
+employee on the page, the four ended records and the two hires one row each, two set rows over
+the 50 loaded records and two created rows in BambooHR, and two rows at 1 for the request's last
+explicit asks, a name and a department on every row and the summary above one table. No
+registered weight moved, and `qc/README.md` carries the verdicts. The paths and the five runs
+re-score on the 28 rows and 89 points as the builder and `qc/score_run_set.py` print them, from
+the same archived bytes:
+
+| Path | What the run does | Rows | Total it prints | Score |
+|---|---|---|---|---|
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 11 of 89, 12.4% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 26 of 89, 29.2% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 31 of 89, 34.8% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 36 of 89, 40.4% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 49 of 89, 55.1% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 67 of 89, 75.3% |
+| P6 | the heal | 52 | $92,739.54 | 89 of 89, 100.0% |
+
+| Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
+|---|---|---|---|---|---|---|---|---|
+| G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 26 of 89, 29.2% | 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 26 |
+| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 18 of 89, 20.2% | 2, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21, 22, 25, 26, 27, 28 |
+| G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 26 of 89, 29.2% | 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 26 |
+| G4 | gemini-3.8-flash | 192 | 192 | 52 | $111,455.78 | P1 | 26 of 89, 29.2% | 7, 8, 9, 10, 11, 12, 13, 14, 15, 25, 26 |
+| G5 | gemini-3.8-flash | 197 | 197 | 50 | $111,100.39 | none | 18 of 89, 20.2% | 2, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21, 22, 25, 26, 27, 28 |
+
+**Mean 25.6%, against 23.9% on the 21-row plan.** The two added rows are ones every run passes,
+so each run gains two points on two more; the failing rows are the same rules under new numbers.
+P3 reads 40.4% on this set against 39.1% before, the two free points, and the five runs sit where
+they sat, three on P1 and two under it.
 
 ## The task-field paragraph, 09/20/2026
 

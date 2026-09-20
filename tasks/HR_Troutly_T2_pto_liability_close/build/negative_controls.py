@@ -125,8 +125,16 @@ ok.append(control("register: over 240 characters", BLD,
     "so it exists with its published flag set.",
     "so it exists with its published flag set, and it is the only page the analyst publishes for the August close, which is what the memo asks for and nothing else in the tree of files asks for.", BLD, expect="chars"))
 ok.append(control("register: two rows carrying one explanation verbatim", BLD,
-    '"Neither Okonkwo nor Ibarra has a BambooHR row and the crosswalk marks both Never Loaded. The request asks for the PTO balance in BambooHR for every employee on the schedule, so each has a balance row."',
+    '"The request lists employee ID, name, department, annual PTO tier, PTO balance, hourly rate and dollar liability as the table\'s columns, and the roster carries every name and department."',
     '"BambooHR carries CTR-2001 to CTR-2004 as active employees and the roster carries no contractor. The handbook bars contractors from paid time off."', BLD, expect="repeat verbatim"))
+ok.append(control("import: the layout row losing its Style / formatting tag", BLD,
+    'FORM_ROWS = (FORM_CRIT, LAYOUT_CRIT)', 'FORM_ROWS = (FORM_CRIT,)', BLD, expect="tags"))
+ok.append(control("world: the loaded population", BLD, 'assert len(LOADED_IDS) == 50', 'assert len(LOADED_IDS) == 52', BLD))
+ok.append(control("plan: a set row reading the two created rows too", BLD,
+    '        return all(bal_ok(i, s) for i in LOADED_IDS)', '        return all(bal_ok(i, s) for i in GOLDEN_BY_ID)', BLD, expect="reads a created row too"))
+ok.append(control("plan: a created-row row passing with the row absent", BLD,
+    '"States, in BambooHR, a PTO balance of %.2f hours for Rafael Ibarra, TRT-0155." % g["TRT-0155"]["balance"], lambda s: bal_ok("TRT-0155", s),',
+    '"States, in BambooHR, a PTO balance of %.2f hours for Rafael Ibarra, TRT-0155." % g["TRT-0155"]["balance"], always,', BLD, expect="passes with the row absent"))
 ok.append(control("register: two explanations opening alike", BLD,
     '"The summary the request asks for states the employee count,', '"The request sets out a summary that states the employee count,', BLD, expect="open alike"))
 # ---- the import: the picker's spellings, the tags, the columns, the citations, the ids
@@ -135,7 +143,7 @@ ok.append(control("import: the guide's spelling of the App DB type", BLD,
 ok.append(control("import: a criterion type outside the code-verifier dropdown", BLD,
     'EA, OC = "Expert Assessment", "Objective Compliance"', 'EA, OC = "Expert Assessment", "Extraction"', BLD, expect="dropdown"))
 ok.append(control("import: the form row losing its Style / formatting tag", BLD,
-    '    return FORM_TAG if crit == FORM_CRIT else "Final Response"', '    return "Final Response"', BLD, expect="tags"))
+    '    return FORM_TAG if crit in FORM_ROWS else "Final Response"', '    return "Final Response"', BLD, expect="tags"))
 ok.append(control("import: a grading target on an App DB row", BLD,
     '"Critical" if primary == "Yes" else "Major", wt, primary, arts, None, "", "None"])',
     '"Critical" if primary == "Yes" else "Major", wt, primary, arts, "All Output", "", "None"])', BLD, expect="grading target"))
@@ -162,16 +170,16 @@ ok.append(control("syw: a semicolon joining two clauses", BLD, 'Ended employees 
 # ---- the docs guards
 ok.append(control("docs: the prompt blockquote", PROMPT_MD, "about the August 2026 close", "about the August close", BLD, ["--docs"]))
 ok.append(control("docs: a stale figure in the record", META_MD, "$92,739.54", "$92,739.45", BLD, ["--docs"]))
-ok.append(control("docs: a stale path score in the predictions", FA_MD, "| P3 | ", "| P3x | ", BLD, ["--docs"]))
+ok.append(control("docs: a stale path score in the predictions", FA_MD, "| 36 of 89, 40.4% |", "| 35 of 89, 39.3% |", BLD, ["--docs"], expect="06 lacks P3"))
 ok.append(control("docs: a planned row missing from the record", META_MD, "States, on the PTO liability page, no contractor row, CTR-2001 to CTR-2004.", "States, on the PTO liability page, no contractor row.", BLD, ["--docs"]))
 ok.append(control("docs: a selection dropped from the block", META_MD, "\nHR/Benefits/2026-08-10_Schedule_Change_TRT-0141.pdf\n", "\n", BLD, ["--docs"]))
 ok.append(control("docs: a file missing from the README", README_MD, "`build/task_input_source.md`", "`build/task_input_sources.md`", BLD, ["--docs"]))
 ok.append(control("docs: a non-ASCII character in a package document", META_MD, "## Fences", "## Fences " + "\u2014", BLD, ["--docs"]))
 ok.append(control("docs: a stale explanation in the record's rubric table", BLD,
     "The handbook bars contractors from paid time off.", "The handbook bars contractors from paid leave.", BLD, ["--docs"], expect="stale explanation"))
-ok.append(control("docs: a stale import md5 in the record", META_MD, "d018e720530d412bd593cfd0c0251d85", "d018e720530d412bd593cfd0c0251d86", BLD, ["--docs"], expect="stale md5 for the import"))
-ok.append(control("docs: a stale import md5 in the mappings document", NINE_MD, "d018e720530d412bd593cfd0c0251d85", "d018e720530d412bd593cfd0c0251d86", BLD, ["--docs"], expect="09 lacks the figure"))
-ok.append(control("docs: a stale citation count in the mappings document", NINE_MD, "71 citations over 17 of the", "70 citations over 17 of the", BLD, ["--docs"], expect="09 lacks the figure"))
+ok.append(control("docs: a stale import md5 in the record", META_MD, "65c0814cd454787c5a5ea3203200deb1", "65c0814cd454787c5a5ea3203200deb0", BLD, ["--docs"], expect="stale md5 for the import"))
+ok.append(control("docs: a stale import md5 in the mappings document", NINE_MD, "65c0814cd454787c5a5ea3203200deb1", "65c0814cd454787c5a5ea3203200deb0", BLD, ["--docs"], expect="09 lacks the figure"))
+ok.append(control("docs: a stale citation count in the mappings document", NINE_MD, "92 citations over 17 of the", "91 citations over 17 of the", BLD, ["--docs"], expect="09 lacks the figure"))
 ok.append(control("selection: a wildcard in the block", META_MD, "\nbamboohr/Employee.csv\n", "\nbamboohr/*.csv\n", SELECT))
 
 print("\n%d of %d controls went red" % (sum(ok), len(ok)))
