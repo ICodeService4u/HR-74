@@ -94,4 +94,6 @@ neighbours word-boundary-banned.
 
 **Required of the request**: the page title, the columns, the definition of a current employee,
 what the summary states, the BambooHR ask and the form. The out-of-scope block the memo carried
-through task round 2 is gone since task round 3, and the memo builder bars a fence from returning.
+through task round 2 is gone since task round 3, and the memo builder bars a fence from returning;
+task round 4 took the deadline heading and the retention line the same way, and the builder bars
+both.

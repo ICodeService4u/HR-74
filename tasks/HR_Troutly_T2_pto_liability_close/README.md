@@ -11,8 +11,15 @@ request's last form lines as rows, 3268 of 3268 on 76 snapshots, the runs re-sco
 The third round asked for payroll, compensation and benefits guards, the fence argument a third
 time, and the memo's out-of-scope block is gone on the owner's decision, HR 79 T1's round 9
 remedy: 44 rows and 97 points, a policy row per created record, the two BambooHR guards reworded
-to the schedule's state, 3124 of 3124 on 71 snapshots, the runs re-scoring at 29.3%; the memo
-re-upload, the paste and the three GPT Sol runs are owed.** The second HR 74 ask, built on the
+to the schedule's state, 3124 of 3124 on 71 snapshots, the runs re-scoring at 29.3%. The fourth
+round split the last two form rows three ways each, narrowed the population row to presence, had
+the two BambooHR set rows state every record and value, and asked for a deadline and a retention
+verifier, which closed as the fence did: 48 rows and 101 points, 3408 of 3408 on 71 snapshots,
+the runs re-scoring at 32.1%. The fifth round, 09/21/2026, added a BambooHR balance row for each
+of the twelve moved balances the five mirrored rules had left and, on the owner's decision,
+retired the five exclusion rows for the set row: 55 rows and 105 points, 3905 of 3905 on 71
+snapshots, the runs re-scoring at 23.2%; the memo re-upload, the paste and the three GPT Sol
+runs are owed.** The second HR 74 ask, built on the
 measured record of T1 and T1 v2: thirteen Gemini trajectories healed a population reconciliation
 with and without pointers, so the next ask had to be a determination the tier gets wrong, not a
 lookup. This one is the PTO liability at 08/31/2026, a rule application over 52 people where
@@ -32,7 +39,10 @@ if they fail.
 | Golden page | 09/20/2026 | `04_golden_output_PTO_Liability.md`, generated from the schedule, the battery's correct state |
 | Task round 2 | 09/20/2026 | Two P0, six findings, on the 28-row import; `qc/findings/task_round2_09-20-2026.md`. All six accepted, none disputed, no ask changed: the form row split from the reconciliation, the two BambooHR set rows split to one record a row at 1 with a guard over the 44 policies and the 33 balances the schedule leaves as loaded, the tier on every row, an ID on every row, dates MM/DD/YYYY, and a Greenhouse state-preservation guard, the row task round 1 had refused. The set is 43 rows, 96 points, 22 primary, no page weight moved; 43 row files, **3268 of 3268 verdicts correct** across 76 snapshots, two more engine defects found by the new rows before the paste. The runs re-score at 29.4% |
 | Paste guide | 09/20/2026 | `07_paste_guide.md`, written by `qc/write_paste_guide.py` from the rows: every code-verifier form field per row, the tag, the reference artifacts, the file to paste and the test-run verdict the untouched task should give, held to the plan by the docs build |
-| Task round 3 | 09/20/2026 | One P0 with two asks and one P1, on the 43-row import; `qc/findings/task_round3_09-20-2026.md`. The fence ask, no-change guards on payroll, the compensation cycle and benefits, was the third round on the memo's out-of-scope block and is closed as HR 79 T1 closed it in its round 9: the block is gone from the memo, row 43 with it, and the memo builder bars a fence from returning. Accepted: a policy row per created record, rows 43 and 44; rows 34 and 40 reworded from a no-change to the schedule's state, code unchanged. 44 rows, 97 points, 22 primary; 44 row files, **3124 of 3124 verdicts correct** across 71 snapshots; the runs re-score at 29.3%. The re-rendered memo is owed to 1.4 |
+| Task round 3 | 09/20/2026 | One P0 with two asks and one P1, on the 43-row import; `qc/findings/task_round3_09-20-2026.md`. The fence ask, no-change guards on payroll, the compensation cycle and benefits, was the third round on the memo's out-of-scope block and is closed as HR 79 T1 closed it in its round 9: the block is gone from the memo, row 43 with it, and the memo builder bars a fence from returning. Accepted: a policy row per created record, rows 43 and 44; rows 34 and 40 reworded from a no-change to the schedule's state, code unchanged. 44 rows, 97 points, 22 primary; 44 row files, **3124 of 3124 verdicts correct** across 71 snapshots; the runs re-score at 29.3%. The re-rendered memo was re-uploaded the same day |
+| Prompt round 2 | 09/20/2026 | After the memo re-upload: a P1 on coverage feasibility, 156 employee-level requirements, and a P2 on the Feedback field's model name; `qc/findings/prompt_round2_09-20-2026.md`. Both disputed by the owner on the platform: the gate reads every rule's application at once through the total, and the Feedback field is not editable |
+| Task round 4 | 09/20/2026 | Three findings on the 44-row import; `qc/findings/task_round4_09-20-2026.md`. Accepted: the precision row and the column row split three ways each at 1; the population row narrowed to presence so the five exclusion rows decide absence alone; the two BambooHR set rows state every record and value in their criteria. The deadline heading and the retention line, a verifier asked for each, are gone from the memo on the owner's decision, as the fence went, and the memo builder bars both. 48 rows, 101 points, 22 primary, the free base 14 under a seventh; 48 row files, **3408 of 3408 verdicts correct** across 71 snapshots; the runs re-score at 32.1%. The re-rendered memo is owed to 1.4 |
+| Task round 5 | 09/21/2026 | Two findings on the 48-row import; `qc/findings/task_round5_09-21-2026.md`. Accepted: a BambooHR balance row for each of the twelve moved balances the five mirrored rules had left, eight capped and four wrong-tier. On the owner's decision: the five exclusion rows, the four ended records and the contractors, retired for the set row, which reads the 52 as the only rows again. 55 rows, 105 points, 34 primary; 55 row files, **3905 of 3905 verdicts correct** across 71 snapshots; the runs re-score at 23.2%, and `06_failure_analysis.md` states why |
 
 ## The ask, in one paragraph
 
@@ -78,13 +88,13 @@ carries the record and `qc/README.md` the register.
 | `qc/README.md`, `qc/findings/` | The AutoQC register and the verbatim archive |
 | `qc/ctx.py`, `qc/run_battery.py` | The verifier skill's stand-in `ctx` and battery runner |
 | `qc/scenarios.py`, `qc/verifier_harness.py` | The 71-snapshot battery and the runner over all rows |
-| `qc/verifiers/` | The 44 generated row files |
+| `qc/verifiers/` | The 55 generated row files |
 | `qc/write_paste_guide.py` | Writes `07_paste_guide.md` from the rows, running every row file against the untouched task for the expected test-run line |
 | `qc/archive_run_set.py`, `qc/score_run_set.py` | The archiver and the scorer, each with a `--self-check`: the page and the BambooHR writes read off either route as the app returned them, scored by the reviewer decision rules against the registered paths |
 | `qc/findings/run_set_09-20-2026/` | The five Gemini runs' pages, their BambooHR writes and `runs.json`, read off the exports |
 
 Everything ships from 09/20/2026: the show-your-work, the rubric import, the golden page, the
-verifier engine and its 44 row files, and the battery; the archiver and the scorer are in `qc/`.
+verifier engine and its 55 row files, and the battery; the archiver and the scorer are in `qc/`.
 
 ## Running the checks
 
@@ -126,6 +136,8 @@ python3 qc/score_run_set.py --details
 | memo: an unlicensed date | RED |
 | memo: a fence returning, the Greenhouse line | RED |
 | memo: a fence returning, the scope line | RED |
+| memo: a deadline returning | RED |
+| memo: a retention line returning | RED |
 | names: the upload name the record publishes | RED |
 | world: the cap | RED |
 | world: the posted periods | RED |
@@ -139,7 +151,7 @@ python3 qc/score_run_set.py --details
 | plan: weight band | RED |
 | plan: the gate demoted off the total | RED |
 | plan: a row not opening on States | RED |
-| plan: the free base over an eighth | RED |
+| plan: the free base over a seventh | RED |
 | plan: the golden not scoring every point | RED |
 | plan: a hours row read off a column the page does not carry | RED |
 | plan: P0 scoring over a fifth | RED |
@@ -176,7 +188,6 @@ python3 qc/score_run_set.py --details
 | verifier: a band around a stated balance | RED |
 | verifier: the gate falling back to the rows' sum past a stated total | RED |
 | verifier: the layout row passing two tables | RED |
-| verifier: the absence floor removed | RED |
 | verifier: a table's own id column read as the employee reference | RED |
 | verifier: the policy table taken as the first carrying the names | RED |
 | verifier: a duplicate balance row read as the first | RED |
@@ -212,4 +223,4 @@ python3 qc/score_run_set.py --details
 | docs: a row file missing from the paste guide | RED |
 | selection: a wildcard in the block | RED |
 
-**103 of 103 controls went red**, 09/20/2026, the verifier controls among them: a defect planted in the engine, the battery, a spec or the golden fails the harness or the builder, and the closing rebuild left the tree clean at the published md5s and the battery at 3124 of 3124. Three of the verifier controls came back green on their first run on the 28-row set, each a battery that could not see the planted defect, and the battery was sharpened rather than the control dropped; task round 2 added controls for its rows, a policy row passing any policy, a band around the reconciled total, the date row blind to ISO dates, the tier dropped from the every-row columns and a total line read as a named row among them, and one of its first runs exposed the controls script itself, which reverted a planted engine and left the row files stamped from it. The paste guide, 07, carries two: a criterion and a row file planted stale in it fail the docs build. Task round 3 added two on the memo: either fence line planted back fails the memo build.
+**104 of 104 controls went red**, 09/20/2026, the verifier controls among them: a defect planted in the engine, the battery, a spec or the golden fails the harness or the builder, and the closing rebuild left the tree clean at the published md5s and the battery at 3905 of 3905. Three of the verifier controls came back green on their first run on the 28-row set, each a battery that could not see the planted defect, and the battery was sharpened rather than the control dropped; task round 2 added controls for its rows, a policy row passing any policy, a band around the reconciled total, the date row blind to ISO dates, the tier dropped from the every-row columns and a total line read as a named row among them, and one of its first runs exposed the controls script itself, which reverted a planted engine and left the row files stamped from it. The paste guide, 07, carries two: a criterion and a row file planted stale in it fail the docs build. Task round 3 added two on the memo, either fence line planted back, and task round 4 two more, the deadline heading and the retention line planted back; each fails the memo build. Task round 5 retired the absence-floor control with the rows it guarded.

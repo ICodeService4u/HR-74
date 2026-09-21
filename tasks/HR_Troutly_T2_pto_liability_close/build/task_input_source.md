@@ -61,7 +61,7 @@ The August close is on 09/04/2026 and the PTO liability is the last open item on
 sheet. Grayson prepared the July detail inside the close workbook. From August the schedule is
 yours, and Anjelina and I want it on the wiki so the close package links it.
 
-### What I need by 09/03/2026
+### What I need
 
 One page published in Wiki.js, PTO Liability - 08/31/2026, with a short summary above one table.
 Use 08/31/2026 as the measurement date.
@@ -87,6 +87,6 @@ total is the sum of the rows. An employee ID on every row.
 
 Krystale
 
-Troutly Analytics, Inc. - internal. Retain with the August 2026 close package.
+Troutly Analytics, Inc. - internal.
 
 <!-- MEMO:END -->

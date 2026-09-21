@@ -9,7 +9,7 @@ these predictions rather than over them, the way T1's and v2's records do.
 ## The plan the predictions are scored against
 
 21 planned rows, 87 points, one gate, as registered before the runs. The determination carried 70 points, 80.5%. BambooHR
-brought to the schedule carried 12, 13.8%. The page and its form carried 5, 5.7%. Task round 1 of 09/20/2026 restructured the set to 28 rows and 89 points with no registered weight moved, task round 2 the same day to 43 rows and 96 points and task round 3 to 44 rows and 97 points; the re-scored tables sit under the measured record below. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
+brought to the schedule carried 12, 13.8%. The page and its form carried 5, 5.7%. Task round 1 of 09/20/2026 restructured the set to 28 rows and 89 points with no registered weight moved, task round 2 the same day to 43 rows and 96 points, task round 3 to 44 rows and 97 points, task round 4 to 48 rows and 101 points and task round 5 of 09/21/2026 to 55 rows and 105 points; the re-scored tables sit under the measured record below. The rows are in `02_task_metadata.md` and `build/rubric_plan.csv`.
 
 ## The registered paths
 
@@ -298,6 +298,75 @@ and the two created records' policy rows pass on the three runs that created the
 G4, which assigned the 80-hour policy through the app's own tool, and fail on G2 and G5, which
 created nothing. Three runs on P1 at 33 or 32 of 97 and two under it at 23 or 22. P1 reads 34.0% on
 this set, under the bar with room, and the decision rule is unchanged.
+
+## Re-scored on the set task round 4 left, 09/20/2026
+
+The fourth rubric round split the precision row and the column row three ways each, narrowed
+the population row to presence so the five exclusion rows decide absence alone, and had the two
+BambooHR set rows state every record and value in their criteria; its third finding, a verifier
+for the memo's deadline heading and retention line, closed the way the fence closed, both lines
+gone from the memo on the owner's decision. Four points of form rows were added at 1 each, the
+least a row can carry, and nothing else moved. The paths and the five runs re-score on the 48
+rows and 101 points as the builder and `qc/score_run_set.py` print them:
+
+| Path | What the run does | Rows | Total it prints | Score |
+|---|---|---|---|---|
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 20 of 101, 19.8% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 37 of 101, 36.6% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 43 of 101, 42.6% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 54 of 101, 53.5% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 67 of 101, 66.3% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 83 of 101, 82.2% |
+| P6 | the heal | 52 | $92,739.54 | 101 of 101, 100.0% |
+
+| Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
+|---|---|---|---|---|---|---|---|---|
+| G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 36 of 101, 35.6% | 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 32, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43 |
+| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 27 of 101, 26.7% | 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 28, 29, 32, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43, 45, 46, 47, 48 |
+| G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 36 of 101, 35.6% | 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 32, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43 |
+| G4 | gemini-3.8-flash | 192 | 192 | 52 | $111,455.78 | P1 | 37 of 101, 36.6% | 14, 15, 16, 17, 18, 19, 20, 21, 22, 32, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43 |
+| G5 | gemini-3.8-flash | 197 | 197 | 50 | $111,100.39 | none | 26 of 101, 25.7% | 2, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 28, 29, 32, 33, 34, 35, 36, 37, 39, 40, 41, 42, 43, 45, 46, 47, 48 |
+
+**Mean 32.1%, against 29.3% on the round-3 set.** Every added point is a form row every run
+earns, which is the cost of an atomicity reading that splits each pair, and the free base is
+now 14 of 101, 13.9%, held under a seventh. Three runs on P1 at 37 or 36 of 101 and two under it
+at 27 or 26. P1 reads 36.6% on this set and the decision rule is unchanged; a fifth round that
+splits again would move the registered path within two points of the bar, and the record says
+so before it happens.
+
+## Re-scored on the set task round 5 left, 09/21/2026
+
+The fifth rubric round added a BambooHR balance row for each of the twelve moved balances the
+five mirrored rules had left ungraded, eight capped openings and four wrong-tier records, and
+removed the five exclusion rows on the owner's decision, the population row reading the 52 as
+the only rows again. The paths and the five runs re-score on the 55 rows and 105 points:
+
+| Path | What the run does | Rows | Total it prints | Score |
+|---|---|---|---|---|
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 19 of 105, 18.1% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 29 of 105, 27.6% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 43 of 105, 41.0% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 58 of 105, 55.2% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 71 of 105, 67.6% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 87 of 105, 82.9% |
+| P6 | the heal | 52 | $92,739.54 | 105 of 105, 100.0% |
+
+| Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
+|---|---|---|---|---|---|---|---|---|
+| G1 | gemini-3.8-flash | 209 | 209 | 52 | $111,455.78 | P1 | 28 of 105, 26.7% | 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 |
+| G2 | gemini-3.8-flash | 165 | 165 | 50 | $111,100.39 | none | 19 of 105, 18.1% | 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55 |
+| G3 | gemini-3.8-flash | 213 | 213 | 52 | $111,455.78 | P1 | 28 of 105, 26.7% | 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 |
+| G4 | gemini-3.8-flash | 192 | 192 | 52 | $111,455.78 | P1 | 29 of 105, 27.6% | 14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 |
+| G5 | gemini-3.8-flash | 197 | 197 | 50 | $111,100.39 | none | 18 of 105, 17.1% | 2, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55 |
+
+**Mean 23.2%, against 32.1% on the round-4 set, and the record states why before anyone asks.**
+Eight points left the rubric that every P1 run passed, the four ended records and the contractors
+one row each, and twelve came in that every P1 run fails, the balances BambooHR still carries
+uncapped or at the loaded tier. Both moves were the round's asks and neither is a lever this
+package pulled; the population determination is still graded, once, on row 2, and the BambooHR
+ask is graded on all 52 for the first time. P1 reads 27.6% and the two runs under it 18.1% and 17.1%. The
+decision rule is unchanged, and the comparison a reviewer should make is the 23.9% the 21-row
+plan measured before any round, which this set now sits beside.
 
 ## The task-field paragraph, 09/20/2026
 

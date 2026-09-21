@@ -235,7 +235,8 @@ def check_memo():
     """The request supplies the ask, the measurement date, the page title, the columns, what a
     current employee is, what the summary states, the BambooHR ask and the form, and no fence:
     task round 3 of 09/20/2026 took the out-of-scope block out, HR 79 T1's round 9 remedy, because
-    a fence graded is a fence argued every round and a fence unguarded is a finding every round. It
+    a fence graded is a fence argued every round and a fence unguarded is a finding every round.
+    Task round 4 took the deadline heading and the retention line out the same way. It
     names the July detail it replaces and no rule: the cutover memo, the cap, the accrual period,
     the tiers, the service dates, the rehire rule, the part-time rule, the signed changes and the
     step are the world's to state and the response's to find."""
@@ -274,6 +275,9 @@ def check_memo():
         # a fence: work put out of scope asks for nothing and draws a finding every round
         "no part of this request", "not part of this request", "out of scope", "out-of-scope",
         "change nothing", "do not change", "do not touch", "leave alone", "greenhouse",
+        # a deadline or a filing instruction: neither is a property of app state, and each drew a finding
+        "need by", "needed by", "deadline", "no later than", "due by", "due on", "retain", "file with",
+        "keep with", "attach to the close",
     ) + META_WORDS, "the memo")
     shape_in(low, (
         "whether", "if any", "if either", "if neither", "only", "except", "unless", "instead",
@@ -284,7 +288,7 @@ def check_memo():
         "assumption", "presum", "in case", "just in case", "one way or the other",
         "no longer", "any more", "as loaded", "as recorded", "on file", "stale", "26", "cap", "capped", "step", "import",
     ), "the memo")
-    dates_in(low, {"08/31/2026", "09/01/2026", "09/03/2026", "09/04/2026"}, "the memo")
+    dates_in(low, {"08/31/2026", "09/01/2026", "09/04/2026"}, "the memo")
     header = next(b for b in blocks("memo") if b.startswith("|"))
     rows = head_rows(header)
     assert ("To", "Casey Ouk, People Operations Analyst") in rows, \
