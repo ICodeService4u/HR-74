@@ -1,0 +1,142 @@
+{
+ "id_to_employee_number": {
+  "59": "TRT-0153",
+  "60": "TRT-0155"
+ },
+ "writes": [
+  {
+   "seq": 116,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "location": "TX",
+    "jobTitle": "Customer Success Manager",
+    "employeeNumber": "TRT-0153",
+    "department": "Customer Success",
+    "payType": "salary",
+    "firstName": "Simone",
+    "hireDate": "2026-07-22",
+    "salary": "92000",
+    "lastName": "Okonkwo",
+    "supervisorId": 15,
+    "payRate": "92000",
+    "status": "Active",
+    "workEmail": "simone@troutlyanalytics.com",
+    "paySchedule": "Biweekly"
+   },
+   "result": {
+    "id": "59",
+    "created": "2026-09-21T01:07:56.052182Z"
+   }
+  },
+  {
+   "seq": 117,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "workEmail": "rafael@troutlyanalytics.com",
+    "status": "Active",
+    "paySchedule": "Biweekly",
+    "salary": "56300",
+    "hireDate": "2026-08-03",
+    "payType": "salary",
+    "supervisorId": 1,
+    "lastName": "Ibarra",
+    "location": "TX",
+    "department": "Sales",
+    "payRate": "56300",
+    "jobTitle": "Sales Development Representative",
+    "employeeNumber": "TRT-0155",
+    "firstName": "Rafael"
+   },
+   "result": {
+    "id": "60",
+    "created": "2026-09-21T01:08:03.188826Z"
+   }
+  },
+  {
+   "seq": 118,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "59",
+    "policies": [
+     {
+      "accrualStartDate": "2026-07-22",
+      "timeOffPolicyId": 1
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-07-22"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 119,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "60",
+    "policies": [
+     {
+      "accrualStartDate": "2026-08-03",
+      "timeOffPolicyId": 1
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-08-03"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 121,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "amount": 6.15,
+    "note": "Accrual through 08/31/2026 (Periods 3 and 4)",
+    "employeeId": "59",
+    "date": "2026-08-31",
+    "timeOffTypeId": 1
+   },
+   "result": {
+    "adjustmentId": "1",
+    "newBalance": 6.15,
+    "previousBalance": 0.0,
+    "created": "2026-09-21T01:08:25Z"
+   }
+  },
+  {
+   "seq": 123,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "employeeId": "60",
+    "amount": 3.08,
+    "date": "2026-08-31",
+    "note": "Accrual through 08/31/2026 (Period 4)",
+    "timeOffTypeId": 1
+   },
+   "result": {
+    "adjustmentId": "2",
+    "newBalance": 3.08,
+    "previousBalance": 0.0,
+    "created": "2026-09-21T01:08:38Z"
+   }
+  }
+ ]
+}

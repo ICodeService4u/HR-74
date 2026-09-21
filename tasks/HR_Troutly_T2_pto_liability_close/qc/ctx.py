@@ -11,6 +11,10 @@ Two deliberate differences from a permissive stub, both of which make a bad chec
     has been measured to return. A check that looks a column up by name silently gets nothing, and
     one that names a column in SQL raises - exactly as it would in a real run. Pass
     real_names=True to test the other branch.
+  * Only the three primitives a graded run has been measured to serve are here: `list_tables`,
+    `table_columns` and `query_db`. The 09/21/2026 run set measured them on the platform, on the
+    BambooHR rows that returned their metrics. Nothing measured `has_table`, so the stand-in does
+    not carry it and a check that reads it raises here rather than on the graded run.
   * `list_files`, `read_text`, `exists` and `trajectory` are present but EMPTY. They exist on the
     real ctx, but a verifier that leans on them is grading the run's narration rather than the
     end state. Here that dependency fails loudly instead of passing by luck.
@@ -40,16 +44,11 @@ class Ctx(object):
         return [r[0] for r in self.db.execute(
             "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")]
 
-    def has_table(self, name):
-        return self.db.execute(
-            "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)).fetchone() \
-            is not None
-
     def table_columns(self, name):
         return list(self._names.get(name, []))
 
     def table_row_count(self, name):
-        if not self.has_table(name):
+        if name not in self.list_tables():
             return 0
         return self.db.execute("SELECT COUNT(*) FROM %s" % name).fetchone()[0]
 

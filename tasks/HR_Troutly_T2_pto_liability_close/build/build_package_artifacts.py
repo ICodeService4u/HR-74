@@ -1214,7 +1214,9 @@ FORM_CHECK_TYPE = {"exists": "Existence Check", "idset": "Count Check", "present
                    "absent": "Guard (Negative Check)", "policy": "Content Match",
                    "policies": "Content Match", "balances": "Content Match",
                    "balance_row": "Existence Check"}
-TARGET_APP = {"wiki": "wiki_js", "bamboohr": "bamboohr"}
+# the service each row's code is grounded on, as the run's own tool names spell it: every wiki tool
+# the archived runs called carries the prefix wiki_js_mcp, every BambooHR tool the prefix bamboohr
+TARGET_APP = {"wiki": "wiki_js_mcp", "bamboohr": "bamboohr"}
 
 
 def form_check_type(spec):

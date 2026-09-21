@@ -15,6 +15,10 @@ import importlib.util
 import os
 import sys
 
+# the engine prints its notes so a graded run on the platform shows them; here the verdicts
+# are what is read, and 55 rows over every snapshot would bury them
+os.environ["T2_VERIFIER_QUIET"] = "1"
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 PKG = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
@@ -179,7 +183,12 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `%s`, %d rows, %d poi
    Target Record ID, Target Record Label and Fallback Strategy **DB only** from the block, leave
    Additional Notes empty, and paste the row file whole into the code box. Every row file is the
    engine with the row's SPEC on top, %d to %d lines; if the box balks at the size, say so and the
-   builder stamps only the half a row uses.
+   builder stamps only the half a row uses. **Target database apps on a wiki row is `wiki_js_mcp`**,
+   the service whose tools every archived run called, `wiki_js_mcp_wikijs_mcp_create_page` among
+   them, and the picker offers Wiki.js and Wiki.js MCP as two entries. The 09/21/2026 paste took
+   Wiki.js and every wiki row read fail on a page the app had returned under the exact title, so
+   until a grading says which service holds the pages table, select both and read the tables the
+   details name.
 4. **Run the per-verifier test-run on the untouched task** and compare with the block's expected
    verdict and last `details` line. %d rows fail on the untouched task by design, %d on no page
    under the title and %d on a BambooHR record as loaded or absent; the two guards over the records

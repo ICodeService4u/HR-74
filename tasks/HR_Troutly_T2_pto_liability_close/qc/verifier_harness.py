@@ -21,6 +21,10 @@ import importlib.util
 import os
 import sys
 
+# the engine prints its notes so a graded run on the platform shows them; here the verdicts
+# are what is read, and 55 rows over every snapshot would bury them
+os.environ["T2_VERIFIER_QUIET"] = "1"
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 PKG = os.path.dirname(HERE)
 sys.path.insert(0, HERE)

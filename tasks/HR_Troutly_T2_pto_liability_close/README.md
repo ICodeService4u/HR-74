@@ -17,9 +17,15 @@ the two BambooHR set rows state every record and value, and asked for a deadline
 verifier, which closed as the fence did: 48 rows and 101 points, 3408 of 3408 on 71 snapshots,
 the runs re-scoring at 32.1%. The fifth round, 09/21/2026, added a BambooHR balance row for each
 of the twelve moved balances the five mirrored rules had left and, on the owner's decision,
-retired the five exclusion rows for the set row: 55 rows and 105 points, 3905 of 3905 on 71
-snapshots, the runs re-scoring at 23.2%; the memo re-upload, the paste and the three GPT Sol
-runs are owed.** The second HR 74 ask, built on the
+retired the five exclusion rows for the set row: 55 rows and 105 points, the runs re-scoring at
+23.2%. The paste landed the same day and the rubric graded its first runs: a second Gemini set
+of five means 38.1% on the output, under the registered 40% with G1 at 50.5%, and the platform's
+grading of G5 reads 1.9% against the archive's 18.1% because every wiki row read fail while all
+29 BambooHR rows agreed. The sixth round, on the pasted set, asked that one page under the title
+be enforced; the engine grades the one row now, drops the one ctx primitive no graded run has
+been measured to serve, and prints its notes into the pane: 55 rows and 105 points unchanged,
+4015 of 4015 on 73 snapshots. The round-4 memo landed on 1.4 before those runs, which read it
+word for word. The G1 to G4 panes, a re-grading and the three GPT Sol runs are owed.** The second HR 74 ask, built on the
 measured record of T1 and T1 v2: thirteen Gemini trajectories healed a population reconciliation
 with and without pointers, so the next ask had to be a determination the tier gets wrong, not a
 lookup. This one is the PTO liability at 08/31/2026, a rule application over 52 people where
@@ -43,6 +49,10 @@ if they fail.
 | Prompt round 2 | 09/20/2026 | After the memo re-upload: a P1 on coverage feasibility, 156 employee-level requirements, and a P2 on the Feedback field's model name; `qc/findings/prompt_round2_09-20-2026.md`. Both disputed by the owner on the platform: the gate reads every rule's application at once through the total, and the Feedback field is not editable |
 | Task round 4 | 09/20/2026 | Three findings on the 44-row import; `qc/findings/task_round4_09-20-2026.md`. Accepted: the precision row and the column row split three ways each at 1; the population row narrowed to presence so the five exclusion rows decide absence alone; the two BambooHR set rows state every record and value in their criteria. The deadline heading and the retention line, a verifier asked for each, are gone from the memo on the owner's decision, as the fence went, and the memo builder bars both. 48 rows, 101 points, 22 primary, the free base 14 under a seventh; 48 row files, **3408 of 3408 verdicts correct** across 71 snapshots; the runs re-score at 32.1%. The re-rendered memo is owed to 1.4 |
 | Task round 5 | 09/21/2026 | Two findings on the 48-row import; `qc/findings/task_round5_09-21-2026.md`. Accepted: a BambooHR balance row for each of the twelve moved balances the five mirrored rules had left, eight capped and four wrong-tier. On the owner's decision: the five exclusion rows, the four ended records and the contractors, retired for the set row, which reads the 52 as the only rows again. 55 rows, 105 points, 34 primary; 55 row files, **3905 of 3905 verdicts correct** across 71 snapshots; the runs re-score at 23.2%, and `06_failure_analysis.md` states why |
+| Paste | 09/21/2026 | the 55 row files pasted onto the task, each with its form fields from `07_paste_guide.md`; the exports of the next runs carry all 55 back, byte for byte the files in `qc/verifiers/` |
+| Run set 2 | 09/21/2026, five of five | Gemini 3.8 Flash on task versions 29 and 30, scored from the output alone: G1 53 of 105, 50.5%; G3 52, 49.5%; G4 47, 44.8%; G2 29, 27.6%; G5 19, 18.1%; mean 38.1%, under the registered 40%. All five published the page under the exact title; `qc/findings/run_set_09-21-2026/` |
+| Platform grading, G5 | 09/21/2026 | 2 of 105, 1.9%, against the archive's 19 of 105 on the same row files. 29 of 29 BambooHR rows agree, the 14 wiki rows that should pass all read fail, 17 points. `qc/compare_platform_grade.py` and `qc/findings/platform_grading_09-21-2026.md` carry the reading and the remedy |
+| Task round 6 | 09/21/2026 | One P0 on the pasted 55-row set; `qc/findings/task_round6_09-21-2026.md`. Accepted: the page check grades the one row under the title, two rows fail every wiki row, and a row carrying the title outside its title column is not the page. With the grading read: `has_table` gone from the engine and from the stand-in `ctx`, the notes printed to the pane's stdout box, `page_rows` in every page row's metrics. 55 rows and 105 points unchanged, no weight moved; 55 row files, **4015 of 4015 verdicts correct** across 73 snapshots |
 
 ## The ask, in one paragraph
 
@@ -92,9 +102,12 @@ carries the record and `qc/README.md` the register.
 | `qc/write_paste_guide.py` | Writes `07_paste_guide.md` from the rows, running every row file against the untouched task for the expected test-run line |
 | `qc/archive_run_set.py`, `qc/score_run_set.py` | The archiver and the scorer, each with a `--self-check`: the page and the BambooHR writes read off either route as the app returned them, scored by the reviewer decision rules against the registered paths |
 | `qc/findings/run_set_09-20-2026/` | The five Gemini runs' pages, their BambooHR writes and `runs.json`, read off the exports |
+| `qc/findings/run_set_09-21-2026/` | The second five, the first to run against the pasted rubric, with `G5_platform_grade.json`, the grading pane read back row by row |
+| `qc/compare_platform_grade.py` | Reads a transcribed grading pane against the verifiers' own verdicts on the archived bytes, row by row, and asserts the pane's arithmetic against the plan's weights |
 
 Everything ships from 09/20/2026: the show-your-work, the rubric import, the golden page, the
-verifier engine and its 55 row files, and the battery; the archiver and the scorer are in `qc/`.
+verifier engine and its 55 row files, and the battery; the archiver, the scorer and the grading
+comparison are in `qc/`, the last from 09/21/2026 with the second run set.
 
 ## Running the checks
 
@@ -112,6 +125,8 @@ python3 qc/archive_run_set.py --self-check
 python3 qc/score_run_set.py --self-check
 python3 qc/archive_run_set.py --set run_set_09-20-2026 G1=/path/G1.json G2=/path/G2.json G3=/path/G3.json G4=/path/G4.json G5=/path/G5.json
 python3 qc/score_run_set.py --details
+python3 qc/score_run_set.py --set run_set_09-21-2026 --details
+python3 qc/compare_platform_grade.py --set run_set_09-21-2026 G5
 ```
 
 ## Negative controls
