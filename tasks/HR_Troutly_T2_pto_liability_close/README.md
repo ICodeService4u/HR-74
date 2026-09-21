@@ -111,7 +111,10 @@ comparison are in `qc/`, the last from 09/21/2026 with the second run set.
 
 ## Running the checks
 
-From the package root:
+From the package root. `build_task_input.py` needs `pikepdf`, `reportlab` and `python-docx`, and
+the builder `openpyxl` and `pdfplumber`; without `pikepdf` the memo build fails on the trailer
+/ID and every memo control goes red before its plant is read, which is a green control wearing a
+red coat:
 
 ```
 python3 build/build_task_input.py
@@ -201,22 +204,25 @@ python3 qc/compare_platform_grade.py --set run_set_09-21-2026 G5
 | verifier: the key matched as a substring | RED |
 | verifier: the employee table taken by count alone | RED |
 | verifier: a band around a stated balance | RED |
-| verifier: the gate falling back to the rows' sum past a stated total | RED |
+|  | RED |
 | verifier: the layout row passing two tables | RED |
-| verifier: a table's own id column read as the employee reference | RED |
-| verifier: the policy table taken as the first carrying the names | RED |
+|  | RED |
+|  | RED |
 | verifier: a duplicate balance row read as the first | RED |
 | verifier: a run's narration read instead of the database | RED |
 | verifier: a policy row passing any assigned policy | RED |
-| verifier: a band around the stated total in the reconciliation | RED |
+|  | RED |
 | verifier: the date row blind to ISO dates | RED |
 | verifier: the tier dropped from the every-row columns | RED |
 | verifier: a total line read as a named employee row | RED |
+| verifier: two pages under the title graded one by one | RED |
+| verifier: the title read off any cell of a page row | RED |
+|  | RED |
 | battery: an expectation planted wrong | RED |
 | battery: the fixture's ids not the ids G1 observed | RED |
 | spec: a value row keyed on another employee | RED |
 | spec: a set row reading the created rows | RED |
-| spec: a policy row expecting a policy its criterion does not name | RED |
+|  | RED |
 | spec: a guard reading a record the schedule moves | RED |
 | world: the records the schedule leaves as loaded | RED |
 | plan: the guards that pass on inaction over a twentieth | RED |
@@ -238,4 +244,13 @@ python3 qc/compare_platform_grade.py --set run_set_09-21-2026 G5
 | docs: a row file missing from the paste guide | RED |
 | selection: a wildcard in the block | RED |
 
-**104 of 104 controls went red**, 09/20/2026, the verifier controls among them: a defect planted in the engine, the battery, a spec or the golden fails the harness or the builder, and the closing rebuild left the tree clean at the published md5s and the battery at 3905 of 3905. Three of the verifier controls came back green on their first run on the 28-row set, each a battery that could not see the planted defect, and the battery was sharpened rather than the control dropped; task round 2 added controls for its rows, a policy row passing any policy, a band around the reconciled total, the date row blind to ISO dates, the tier dropped from the every-row columns and a total line read as a named row among them, and one of its first runs exposed the controls script itself, which reverted a planted engine and left the row files stamped from it. The paste guide, 07, carries two: a criterion and a row file planted stale in it fail the docs build. Task round 3 added two on the memo, either fence line planted back, and task round 4 two more, the deadline heading and the retention line planted back; each fails the memo build. Task round 5 retired the absence-floor control with the rows it guarded.
+**107 of 107 controls went red**, re-measured 09/21/2026 on the round-6 engine, the verifier controls among them: a defect planted in the engine, the battery, a spec or the golden fails the harness or the builder, and the closing rebuild left the tree clean at the published md5s and the battery at 4015 of 4015. Three of the verifier controls came back green on their first run on the 28-row set, each a battery that could not see the planted defect, and the battery was sharpened rather than the control dropped; task round 2 added controls for its rows, a policy row passing any policy, a band around the reconciled total, the date row blind to ISO dates, the tier dropped from the every-row columns and a total line read as a named row among them, and one of its first runs exposed the controls script itself, which reverted a planted engine and left the row files stamped from it. The paste guide, 07, carries two: a criterion and a row file planted stale in it fail the docs build. Task round 3 added two on the memo, either fence line planted back, and task round 4 two more, the deadline heading and the retention line planted back; each fails the memo build. Task round 5 retired the absence-floor control with the rows it guarded. Task round 6 added
+three: the page check looping over every title-matching row, the title read off any cell of a
+page row, and a page row reaching for a ctx primitive no graded run has been measured to serve,
+which the stand-in no longer carries. The first run of the third came back green because the
+engine catches a planted AttributeError rather than raising it, so the battery reads false zeros
+and not a RAISED line, and the control's expectation was corrected to what the defect actually
+does. The same run measured that `build/build_task_input.py` needs `pikepdf`: without it the
+memo build fails on the trailer /ID before any plant is read, and every memo control goes red for
+the wrong reason. The table above is the run with it installed, the memo rebuilding byte for
+byte at md5 `5a4089293b429961e17e67e309251fde`.
