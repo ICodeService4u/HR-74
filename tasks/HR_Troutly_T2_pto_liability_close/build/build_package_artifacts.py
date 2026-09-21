@@ -11,7 +11,10 @@ set to 43 rows: the form split from the reconciliation, an ID and a date row, on
 per record the schedule moves with a guard over the records it leaves, and a Greenhouse guard.
 Task round 3 the same day took the memo's out-of-scope block out and the Greenhouse guard with
 it, added a policy row for each record the run creates, and reworded the two BambooHR guards
-to the schedule's state: 44 rows.
+to the schedule's state: 44 rows. Task round 4 the same day split the precision row and the
+column row three ways each, narrowed the population row to presence so the five exclusion rows
+decide absence alone, and put the 44 policies and 33 balances the two BambooHR set rows read
+into their criteria as stated values: 48 rows, 101 points.
 
 Run from anywhere: python3 build/build_package_artifacts.py [--docs] [--table]
 """
@@ -473,14 +476,15 @@ BANDS = {OC: set(range(1, 6)), EA: set(range(1, 11))}
 IMPORT_DB_DROPDOWN = {"Objective Compliance", "Expert Assessment", "Process"}
 FORM_TAG = "Style / formatting"
 IMPORT_TAGS = {"Final Response", FORM_TAG}
-FORM_CRIT = ("States, on the PTO liability page, hours to two decimals, hourly rates to four "
-             "decimals and dollars to the cent.")
+HOURS_CRIT = "States, on the PTO liability page, hours to two decimals."
+RATES_CRIT = "States, on the PTO liability page, hourly rates to four decimals."
+DOLLARS_CRIT = "States, on the PTO liability page, dollars to the cent."
 RECONCILE_CRIT = "States, on the PTO liability page, a total dollar liability equal to the sum of the rows."
 ID_CRIT = "States, on the PTO liability page, an employee ID on every row."
 DATES_CRIT = "States, on the PTO liability page, every date in MM/DD/YYYY form."
 LAYOUT_CRIT = "States, on the PTO liability page, the summary above one table of employee rows."
 # the request's Form section, tagged Style / formatting in the import; the reconciliation is content
-FORM_ROWS = (FORM_CRIT, ID_CRIT, DATES_CRIT, LAYOUT_CRIT)
+FORM_ROWS = (HOURS_CRIT, RATES_CRIT, DOLLARS_CRIT, ID_CRIT, DATES_CRIT, LAYOUT_CRIT)
 REQUEST = TASK_UPLOADS[0]
 
 
@@ -504,7 +508,8 @@ def _row_checks():
         return _same(t, TOTAL, 0.005) or _same(t, TOTAL_POSTED, 0.005)
 
     def rows_ok(s):
-        return set(by(s)) == set(g)
+        # task round 4: presence alone, so the five exclusion rows decide absence and nothing twice
+        return set(g) <= set(by(s))
 
     def bal_ok(i, s):
         b = by(s)
@@ -646,13 +651,21 @@ def _row_checks():
          OC, "No",
          "One page under that title is what the request asks for in Wiki.js, so it exists with its published flag set.",
          [REQUEST, wiki]),
-        ("free", 2, "-", "States, on the PTO liability page, the %d current employees at %s as the only employee rows." % (len(GOLDEN), ASOF), rows_ok,
+        ("free", 2, "-", "States, on the PTO liability page, an employee row for each of the %d current employees at %s." % (len(GOLDEN), ASOF), rows_ok,
          OC, "No",
-         "The request defines a current employee as anyone employed by Troutly on %s. The roster carries %d. BambooHR's 57 active rows hold four contractors and three ended employees and lack two hires." % (ASOF, len(GOLDEN)),
+         "The request defines a current employee as anyone employed by Troutly on %s and the roster carries %d. BambooHR's active rows lack the two hires who started after cutover." % (ASOF, len(GOLDEN)),
          [REQUEST, roster, xwalk, emp]),
-        ("free", 1, "-", FORM_CRIT, always,
+        ("free", 1, "-", HOURS_CRIT, always,
          OC, "No",
-         "The request sets hours to two decimals, rates to four and dollars to the cent, the precision the July close carried.",
+         "Hours to two decimals is the request's form line, and the July close carried its balance column at that precision.",
+         [REQUEST]),
+        ("free", 1, "-", RATES_CRIT, always,
+         OC, "No",
+         "Hourly rates to four decimals is the request's form line, and the July close's rate formula rounds to four.",
+         [REQUEST]),
+        ("free", 1, "-", DOLLARS_CRIT, always,
+         OC, "No",
+         "Dollars to the cent is the request's form line, and the July close carried its liability column at that precision.",
          [REQUEST]),
         ("free", 1, "-", RECONCILE_CRIT, always,
          OC, "No",
@@ -662,10 +675,18 @@ def _row_checks():
          OC, "No",
          "The summary the request asks for states the employee count, the total hours and the total dollar liability.",
          [REQUEST]),
-        ("free", 1, "-", "States, on the PTO liability page, a name, a department and an annual PTO tier on every employee row.", always,
+        ("free", 1, "-", "States, on the PTO liability page, a name on every employee row.", always,
          OC, "No",
-         "The request lists employee ID, name, department, annual PTO tier, PTO balance, hourly rate and dollar liability as the table's columns, and the roster carries every name and department.",
+         "A name on every employee row is the request's column list, and the roster carries every current employee's name.",
          [REQUEST, roster]),
+        ("free", 1, "-", "States, on the PTO liability page, a department on every employee row.", always,
+         OC, "No",
+         "Every employee row carries a department in the request's column list, and the roster and the org chart carry each employee's department.",
+         [REQUEST, roster]),
+        ("free", 1, "-", "States, on the PTO liability page, an annual PTO tier in hours on every employee row.", always,
+         OC, "No",
+         "The annual PTO tier in hours is the request's fourth column, and the cutover memo's table names the three values it can take.",
+         [REQUEST, cut]),
         ("free", 1, "-", ID_CRIT, always,
          OC, "No",
          "An employee ID on every row is the request's own form line, and the roster keys every current employee on one.",
@@ -749,13 +770,16 @@ def _row_checks():
          % (l01["used"], _d(l01_req["start_date"]), _d(l01_req["end_date"]), l01["opening"], round(sum(l01["accruals"]), 2), l01["balance"]),
          [arch, cut, req_t]),
         *policy_rows,
-        ("bamboohr", 1, "-", "States, in BambooHR, the schedule's PTO policy for each of the %d employees whose loaded policy is the schedule's tier." % len(POLICY_SAME), policies_same_ok,
+        ("bamboohr", 1, "-", "States, in BambooHR, for the %d employees whose loaded policy is the tier's at %s, %s." % (len(POLICY_SAME), ASOF, ", ".join(
+            "the %s policy for %s" % (pname, ", ".join(i for i in POLICY_SAME if TIER_POLICY[g[i]["tier"]] == pname))
+            for pname in (TIER_POLICY[80], TIER_POLICY[120], TIER_POLICY[160]))), policies_same_ok,
          OC, "No",
          "The load file put %d of the %d loaded records on the policy the archive's dates give, and the request asks that BambooHR carry the schedule's policy, which leaves those %d as loaded."
          % (len(POLICY_SAME), len(LOADED_IDS), len(POLICY_SAME)),
          [REQUEST, cut, arch, load, pol, poltype]),
         *balance_rows,
-        ("bamboohr", 1, "-", "States, in BambooHR, the schedule's PTO balance for each of the %d employees whose loaded balance is the schedule's." % len(BALANCE_SAME), balances_same_ok,
+        ("bamboohr", 1, "-", "States, in BambooHR, for the %d employees whose loaded balance is the %s figure, a PTO balance of %s." % (len(BALANCE_SAME), ASOF, ", ".join(
+            ("%.2f hours for %s" if n == 0 else "%.2f for %s") % (g[i]["balance"], i) for n, i in enumerate(BALANCE_SAME))), balances_same_ok,
          OC, "No",
          "The loaded balances agree with the schedule on %d of the %d BambooHR records, where no rule the cutover memo or the handbook adds moves the figure, and the request asks that BambooHR carry the schedule's balance."
          % (len(BALANCE_SAME), len(LOADED_IDS)),
@@ -801,11 +825,15 @@ def _specs(g):
     ended = ENDED_IN_BAMBOO + ["TRT-0006"]
     return [
         dict(W, kind="exists"),
-        dict(W, kind="idset", expected_ids=sorted(g)),
-        dict(W, kind="format"),
+        dict(W, kind="present", expected_ids=sorted(g)),
+        dict(W, kind="format", field="balance"),
+        dict(W, kind="format", field="rate"),
+        dict(W, kind="format", field="liability"),
         dict(W, kind="reconcile"),
         dict(W, kind="summary"),
-        dict(W, kind="columns"),
+        dict(W, kind="columns", field="name"),
+        dict(W, kind="columns", field="department"),
+        dict(W, kind="columns", field="tier"),
         dict(W, kind="id_rows"),
         dict(W, kind="dates"),
         dict(W, kind="layout"),
@@ -943,13 +971,19 @@ def check_rubric():
             assert _money(s["expected"][0]) in crit, crit
         if s["kind"] == "policy":
             assert s["expected"] in crit, "spec expects a policy the criterion does not name: " + crit
+        if s["kind"] == "format":
+            assert {"balance": "hours to two decimals", "rate": "rates to four decimals", "liability": "dollars to the cent"}[s["field"]] in crit, crit
+        if s["kind"] == "columns":
+            assert {"name": "a name on", "department": "a department on", "tier": "PTO tier in hours on"}[s["field"]] in crit, crit
         if s["kind"] in ("policies", "balances"):
-            # a guard reads the loaded records the schedule leaves as loaded, and no other
+            # a set row reads the loaded records the schedule leaves as loaded, and no other, and
+            # task round 4 has it state every record and value in terms, so the row resolves alone
             moved = POLICY_MOVED if s["kind"] == "policies" else BALANCE_MOVED
-            assert str(len(s["expected"])) in crit, crit
+            assert str(len(s["expected"])) in crit and "change" not in crit, crit
             assert all(k not in s["expected"] for k in UNLOADED_IDS + moved), "a guard reads a record the schedule moves: " + crit
-            # task round 3: the guard states the schedule's state on those records, not a no-change
-            assert "the schedule's PTO" in crit and "whose loaded" in crit and "change" not in crit, crit
+            for k, v in s["expected"].items():
+                assert k in crit, "a set row omits %s from its criterion" % k
+                assert (v if s["kind"] == "policies" else "%.2f" % v[0]) in crit, "a set row omits %s's value" % k
     kinds = [c[8]["kind"] for c in RUBRIC]
     assert kinds.count("policy") == len(POLICY_MOVED) + len(UNLOADED_IDS), "one BambooHR policy row per record the schedule moves and per record it creates"
     assert kinds.count("balance_row") == len(BAMBOO_BALANCE_ROWS) + len(UNLOADED_IDS), "one BambooHR balance row per mirrored rule and per created row"
@@ -1075,7 +1109,7 @@ def check_import():
         assert r[col["Verifier Type"]] == c["Verifier Type"] == kind, n
         assert "Programmatic" not in str(r[col["Verifier Type"]]), (
             "v%d carries the guide's spelling of the App DB type; the picker spells it Programatic" % n)
-        want_tag = FORM_TAG if any(p in crit for p in ("to two decimals", "summary above one table",
+        want_tag = FORM_TAG if any(p in crit for p in ("to two decimals", "to four decimals", "to the cent", "summary above one table",
                                                         "an employee ID on every row", "MM/DD/YYYY")) else "Final Response"
         assert r[col["Tags"]] == want_tag, "v%d tags %r, wanted %r" % (n, r[col["Tags"]], want_tag)
         assert r[col["Tags"]] in IMPORT_TAGS, n
@@ -1177,7 +1211,7 @@ def check_golden():
         assert "| %s | %s |" % (r["id"], r["name"]) in text
 
 
-FORM_CHECK_TYPE = {"exists": "Existence Check", "idset": "Count Check", "format": "Content Match",
+FORM_CHECK_TYPE = {"exists": "Existence Check", "idset": "Count Check", "present": "Count Check", "format": "Content Match",
                    "reconcile": "Content Match", "summary": "Content Match", "columns": "Content Match",
                    "id_rows": "Content Match", "dates": "Content Match", "layout": "Content Match",
                    "total": "Content Match", "balance": "Content Match", "tier": "Content Match",
@@ -1335,23 +1369,25 @@ def check_plan():
     for f, w, *_ in PLAN:
         fam[f] = fam.get(f, 0) + w
     # the free base: the page's existence and its shape, every point of which the failing tier
-    # earns. Task round 2 added three form rows, so the ceiling is an eighth, and the two BambooHR
-    # guards that pass on inaction stay under a twentieth.
-    assert fam["free"] * 8 <= PLAN_TOTAL, "the free base is over an eighth of the points"
+    # earns. Task round 2 added three form rows and task round 4 split two of them three ways each,
+    # so the ceiling is a seventh, and the two BambooHR set rows that pass on inaction stay under a
+    # twentieth.
+    assert fam["free"] * 7 <= PLAN_TOTAL, "the free base is over a seventh of the points"
     inaction = sum(r[1] for r in PLAN if r[9]["kind"] in ("policies", "balances"))
     assert inaction * 20 <= PLAN_TOTAL, "the guards that pass on inaction carry over a twentieth"
-    scores = score_paths()
-    assert scores[-1][2] == PLAN_TOTAL, "the golden must score every point"
-    assert scores[0][2] * 5 < PLAN_TOTAL, "P0 must score under a fifth"
-    # The two BambooHR guards read the loaded records the schedule leaves as loaded and nothing the
-    # two created rows read, so on a schedule that is the golden less the two hires the guards pass
-    # and every row naming TRT-0153 or TRT-0155 fails. Task round 1 asked for exactly this carve-out.
+    # The two BambooHR set rows read the loaded records the schedule leaves as loaded and nothing
+    # the created rows read, so on a schedule that is the golden less the two hires the set rows
+    # pass and every row naming TRT-0153 or TRT-0155 fails. Task round 1 asked for exactly this
+    # carve-out. It runs before the path scores so a planted row fails on its own message.
     loaded_only = [r for r in GOLDEN if r["id"] in LOADED_IDS]
     for fam_, w, gate, crit, pred, typ, primary, expl, refs, spec in PLAN:
         if spec["kind"] in ("policies", "balances"):
             assert pred(loaded_only), "a set row reads a created row too: " + crit[:70]
         elif "TRT-0153" in crit or "TRT-0155" in crit:
             assert not pred(loaded_only), "a created-row row passes with the row absent: " + crit[:70]
+    scores = score_paths()
+    assert scores[-1][2] == PLAN_TOTAL, "the golden must score every point"
+    assert scores[0][2] * 5 < PLAN_TOTAL, "P0 must score under a fifth"
     return fam, scores
 
 

@@ -275,6 +275,13 @@ def _run_page(kind, page, notes, metrics):
         if page.published is None:
             return False, "the published flag could not be read, so publication is not shown"
         return page.published, "published=%r" % page.published
+    if kind == "present":
+        want = {k.upper() for k in S["expected_ids"]}
+        missing = sorted(want - set(keyed))
+        notes.append("keyed rows %d, expected %d present, missing %d" % (len(keyed), len(want), len(missing)))
+        if missing:
+            return False, "%d expected rows missing (%s)" % (len(missing), ", ".join(missing[:5]))
+        return True, "all %d current employees present" % len(want)
     if kind == "idset":
         want = {k.upper() for k in S["expected_ids"]}
         seen = set(keyed)
@@ -340,8 +347,10 @@ def _run_page(kind, page, notes, metrics):
         bad = []
         pats = {"balance": r"-?[\d,]+\.\d{2}(?:\s*(?:hours|hrs))?", "rate": r"\$?\s?[\d,]+\.\d{4}",
                 "liability": r"-?\$?\s?[\d,]+\.\d{2}"}
+        fields = [S["field"]] if S.get("field") else list(pats)
         for k, (h, r) in keyed.items():
-            for want, pat in pats.items():
+            for want in fields:
+                pat = pats[want]
                 i = page.col(h, want, notes)
                 cell = r[i] if i is not None and i < len(r) else ""
                 if not re.fullmatch(pat, _norm(cell)):
@@ -409,8 +418,9 @@ def _run_page(kind, page, notes, metrics):
         if not keyed:
             return False, "no employee rows"
         blank = []
+        wants = [S["field"]] if S.get("field") else ["name", "department", "tier"]
         for k, (h, r) in keyed.items():
-            for want in ("name", "department", "tier"):
+            for want in wants:
                 i = page.col(h, want, notes)
                 cell = r[i] if i is not None and i < len(r) else ""
                 if not _norm(cell) or _is_id(cell) or (want == "tier" and _tier(cell) is None):

@@ -38,16 +38,17 @@ def expected_content(spec):
     g = B.GOLDEN_BY_ID
     if k == "exists":
         return "one pages row titled %s with isPublished true" % B.PAGE
-    if k == "idset":
-        return "%d employee rows keyed TRT-, the roster's %d and no other" % (len(g), len(g))
+    if k in ("idset", "present"):
+        return "an employee row keyed on each of the roster's %d IDs" % len(g)
     if k == "format":
-        return "every balance 0.00, every rate 0.0000, every liability 0.00"
+        return {"balance": "every balance 0.00", "rate": "every rate 0.0000", "liability": "every liability 0.00"}[spec["field"]]
     if k == "reconcile":
         return "a stated dollar total equal to the sum of the liability cells, within 0.01"
     if k == "summary":
         return "%d, %s hours and a dollar total in the prose" % (len(g), f"{B.TOTAL_HOURS:,.2f}")
     if k == "columns":
-        return "a name, a department and a tier of 80, 120 or 160 on every keyed row"
+        return {"name": "a name on every keyed row", "department": "a department on every keyed row",
+                "tier": "a tier of 80, 120 or 160, or its policy name, on every keyed row"}[spec["field"]]
     if k == "id_rows":
         return "no named row without a TRT- ID"
     if k == "dates":
@@ -72,9 +73,9 @@ def expected_content(spec):
     if k == "policy":
         return "current policy %s" % spec["expected"]
     if k == "policies":
-        return "the schedule's policy on all %d records, which is the loaded one" % len(spec["expected"])
+        return "the policy the criterion names on each of the %d records, which is the loaded one" % len(spec["expected"])
     if k == "balances":
-        return "the schedule's balance on all %d records, which is the loaded one, within 0.005" % len(spec["expected"])
+        return "the balance the criterion states on each of the %d records, the loaded one, within 0.005" % len(spec["expected"])
     raise KeyError(k)
 
 

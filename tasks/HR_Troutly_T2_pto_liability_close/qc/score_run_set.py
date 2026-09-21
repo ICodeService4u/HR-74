@@ -176,14 +176,14 @@ def self_check():
     gold = B.GOLDEN
     bent = [dict(r, balance=r["balance"] + 1.0, liability=round((r["balance"] + 1.0) * r["hourly"], 2)) if r["id"] == B.CAPPED_IDS[0] else r for r in gold]
     v = verdicts(S.snap([(B.PAGE, B.render_page(bent))], S.correct_bamboo()), rowchecks)
-    assert not v[11] and not v[10], "a capped balance moved by an hour must fail rows 10 and 11"
-    print("  control: one capped balance moved by an hour fails rows 10 and 11: RED")
+    assert not v[15] and not v[14], "a capped balance moved by an hour must fail rows 14 and 15"
+    print("  control: one capped balance moved by an hour fails rows 14 and 15: RED")
     v = verdicts(S.snap([(B.PAGE, B.GOLDEN_PAGE, 0)]), rowchecks)
     assert not v[1] and not any(v[i] for i in S.POL_ROWS | S.BAL_ROWS | S.HIRE_ROWS), "an unpublished page and an untouched BambooHR must fail"
     print("  control: unpublished page, BambooHR untouched, fails row 1 and every BambooHR record row: RED")
     v = verdicts(S.snap([(B.PAGE, S.split_tables(B.GOLDEN_PAGE))], S.correct_bamboo()), rowchecks)
-    assert not v[9], "a second employee table must fail the layout row"
-    print("  control: a second employee table fails row 9: RED")
+    assert not v[13], "a second employee table must fail the layout row"
+    print("  control: a second employee table fails row 13: RED")
     print("self-check: the verifiers read the seven registered paths as the plan does")
 
 
