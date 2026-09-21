@@ -1,9 +1,9 @@
 # The task AutoQC register - T2, PTO Liability Schedule and BambooHR PTO Records
 
-**Two prompt rounds, the five Gemini runs and four rubric rounds have landed on T2, 09/20/2026.** Prompt AutoQC now runs in the
+**Two prompt rounds, the five Gemini runs and five rubric rounds have landed on T2, 09/20/2026 and 09/21/2026.** Prompt AutoQC now runs in the
 Trajectories section, so the first round landed beside the first runs and the second after the
-memo re-upload; the rubric rounds ran on the 21-row, 28-row, 43-row and 44-row imports in turn.
-Archive each
+memo re-upload; the rubric rounds ran on the 21-row, 28-row, 43-row, 44-row and 48-row imports in
+turn. Archive each
 round verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or `findings/task_roundN_MM-DD-YYYY.md`
 before triaging it, and keep the verdicts here.
 
@@ -26,7 +26,9 @@ before triaging it, and keep the verdicts here.
 | Task round 4, No Stacked Criteria | 09/20/2026 | P0, two findings on the 44-row set: C3 stacks three precisions and C6 three columns; C2 decides the absences C19 to C23 decide, five redundant pairs | **Accepted.** Rows 3 to 5 read hours, rates and dollars one row each and rows 8 to 10 a name, a department and a tier one row each, at 1, the least a row can carry, so the free base is 14 of 101 and the builder's ceiling moves from an eighth to a seventh with the round cited. Row 2 reads presence alone, an employee row for each of the 52, and rows 23 to 27 decide absence, so no fact is scored twice and no row is dropped; the contractors and the ended records stay one row each because each is a distinct place the world breaks the definition |
 | Task round 4, Verifier Wording Convention | 09/20/2026 | P0: C34 and C40 require an unnamed external schedule; a grader cannot resolve either alone | **Accepted.** Row 38 names the 44 employees and the policy each carries and row 44 names the 33 employees and the balance each carries, in the criterion, so each resolves from its own text. One row each, as before, so the points a run earns on an untouched BambooHR stay at 2; the code is unchanged. Round 2 called a 50-record set stacked and round 4 called an unstated set unresolvable, and the rows now do both things asked of them, one claim over a named set with every value stated |
 | Task round 4, Prompt-Rubric Alignment | 09/20/2026 | P0: no verifier enforces "What I need by 09/03/2026" or "Retain with the August 2026 close package" | **Closed by the second remedy, on the owner's decision of 09/20/2026, as the fence was.** A snapshot has no clock and 1.5 carries no file to retain, so neither line can be graded, and a dispute on that ground has not held on this task. The heading reads What I need, the retention line is gone, the close date stays in the opening sentence as the requester's context, and `build/build_task_input.py` bars a deadline or a filing line from returning, with a control for each. The re-render is owed to 1.4 |
-| Run set, G1 to G5 | 09/20/2026 | Five of five Gemini 3.8 Flash: G1, G3 and G4 P1 row for row, $111,455.78, 24 of 87, 27.6%; G2 and G5 P1 less the two unloaded hires, $111,100.39, 16 of 87, 18.4%; mean 23.9% | Scored from the output alone by `score_run_set.py`; `../06_failure_analysis.md` carries the record. G5's BambooHR writes at step 184 ran in a loop the archiver could not parse and are flagged; its own printed results show they touched only CTR-2002, CTR-2003, CTR-2004, TRT-0037, TRT-0049, TRT-0064, outside the schedule, so no graded row moves. Under 40%: the rubric half is built next. Three GPT Sol 5.6 owed for the record. Re-scored on the 28-row set of task round 1 at 25.6%, three at 29.2% and two at 20.2%, the same rules failing under new numbers; on the 43-row set of task round 2 at 29.4%, three at 33.3% or 32.3% and two at 25.0% or 24.0%, the date row failing G1, G3 and G5 on a spelled August 31, 2026; on the 44-row set of task round 3 at 29.3%, the created records' policy rows passing on the three runs that created them; on the 48-row set of task round 4 at 32.1%, the four added form points earned by every run |
+| Task round 5, Prompt-Rubric Alignment | 09/21/2026 | P0: the BambooHR ask covers every employee on the schedule, and rows 39 to 46 grade balances for 40 of the 52; twelve IDs named as ungraded | **Accepted.** The twelve are the moved balances the round-2 design left to the page rules, eight capped openings and four wrong-tier records. Each has a BambooHR row at 1, Expert Assessment, on the code the five mirrored rows use, rows 34 to 50, so every one of the 17 balances the schedule moves is graded in BambooHR and the 33 it leaves are graded on row 51 |
+| Task round 5, Verifiers Grade Only What the Prompt Asks For | 09/21/2026 | P1: C23 to C27 grade exclusions the memo never states, the contractors and four named people; remove them or add explicit exclusions to the request | **Closed by removal, on the owner's decision of 09/21/2026.** The memo's definition of a current employee is quotable and each row graded it on one record the world breaks it on, which is why round 1 asked for the rows one person each and round 4 accepted granular exclusions as a form; the owner took the removal over a dispute that has not held on this dimension. Row 2 reads the 52 as the only rows again, so the definition is graded once, on the set, and the gate reads every extra row's liability. Eight points the failing tier passed left the rubric; `06_failure_analysis.md` carries the arithmetic |
+| Run set, G1 to G5 | 09/20/2026 | Five of five Gemini 3.8 Flash: G1, G3 and G4 P1 row for row, $111,455.78, 24 of 87, 27.6%; G2 and G5 P1 less the two unloaded hires, $111,100.39, 16 of 87, 18.4%; mean 23.9% | Scored from the output alone by `score_run_set.py`; `../06_failure_analysis.md` carries the record. G5's BambooHR writes at step 184 ran in a loop the archiver could not parse and are flagged; its own printed results show they touched only CTR-2002, CTR-2003, CTR-2004, TRT-0037, TRT-0049, TRT-0064, outside the schedule, so no graded row moves. Under 40%: the rubric half is built next. Three GPT Sol 5.6 owed for the record. Re-scored on the 28-row set of task round 1 at 25.6%, three at 29.2% and two at 20.2%, the same rules failing under new numbers; on the 43-row set of task round 2 at 29.4%, three at 33.3% or 32.3% and two at 25.0% or 24.0%, the date row failing G1, G3 and G5 on a spelled August 31, 2026; on the 44-row set of task round 3 at 29.3%, the created records' policy rows passing on the three runs that created them; on the 48-row set of task round 4 at 32.1%, the four added form points earned by every run; on the 55-row set of task round 5 at 23.2%, twelve BambooHR balance rows failed by every run and eight population points gone |
 
 ## What is graded: the output, and only the output
 
@@ -47,7 +49,7 @@ writes. A platform grading of a T2 run is against those rows and is not read.
 ## The verifier harness
 
 Built 09/20/2026. `verifier_harness.py` runs every row file under `verifiers/` against the 71
-snapshots in `scenarios.py`, each with the rows it must fail named in advance: **3408 of 3408
+snapshots in `scenarios.py`, each with the rows it must fail named in advance: **3905 of 3905
 verdicts correct**. The fixture is the seed pages table plus the six BambooHR seed tables with
 the app's integer ids as G1 observed them, with the fourteen Greenhouse seed tables beside them
 as a third app's that no row reads, and the scenarios carry the golden as the correct state, the
@@ -76,12 +78,17 @@ found and fixed here before anything was pasted, both recorded in `../09_rubric_
   closed the way HR 79 T1 closed it in its round 9: the memo carries no out-of-scope block, so
   there is no fence to grade and none to leave ungraded. A round that asks for one now is asking
   the memo to say what it does not say.
-- **That a set row stacks.** Row 2 states one claim over the 52 IDs, presence alone since task
-  round 4, and rows 38 and 44 one claim each over the records the schedule leaves as loaded, every
-  record and value stated since task round 4; task rounds 1, 2 and 4 asked every per-employee
-  bundle to split, which they did, down to one BambooHR record a row and one form requirement a
-  row. A round that asks rows 38 and 44 to split further is asking for 77 rows at 1 on records
-  every run leaves alone, and the answer is the free-base arithmetic in `02_task_metadata.md`.
+- **That a set row stacks.** Row 2 states one claim over the 52 IDs, the set as a whole again
+  since task round 5 retired the exclusion rows, and rows 33 and 51 one claim each over the
+  records the schedule leaves as loaded, every record and value stated since task round 4; task
+  rounds 1, 2 and 4 asked every per-employee bundle to split, which they did, down to one BambooHR
+  record a row and one form requirement a row. A round that asks rows 33 and 51 to split further
+  is asking for 77 rows at 1 on records every run leaves alone, and the answer is the free-base
+  arithmetic in `02_task_metadata.md`.
+- **That the exclusions need rows, or that the exclusion rows grade an unasked negative.** Both
+  have been raised: round 1 asked for one row per excluded person and round 5 called the rows an
+  implied negative. They are gone on the owner's decision, and row 2 grades the memo's definition
+  on the whole set; a round that asks for them back is asking to reopen round 5.
 - **That the memo's deadline or filing line needs a verifier.** Both lines are gone since task
   round 4, as the out-of-scope block went in task round 3; the memo builder bars each from
   returning.

@@ -267,13 +267,6 @@ def _run_page(kind, page, notes, metrics):
         if page.published is None:
             return False, "the published flag could not be read, so publication is not shown"
         return page.published, "published=%r" % page.published
-    if kind == "present":
-        want = {k.upper() for k in S["expected_ids"]}
-        missing = sorted(want - set(keyed))
-        notes.append("keyed rows %d, expected %d present, missing %d" % (len(keyed), len(want), len(missing)))
-        if missing:
-            return False, "%d expected rows missing (%s)" % (len(missing), ", ".join(missing[:5]))
-        return True, "all %d current employees present" % len(want)
     if kind == "idset":
         want = {k.upper() for k in S["expected_ids"]}
         seen = set(keyed)
@@ -283,16 +276,6 @@ def _run_page(kind, page, notes, metrics):
             return False, "%d expected rows missing (%s) and %d rows outside the population (%s)" % (
                 len(missing), ", ".join(missing[:5]) or "none", len(extra), ", ".join(extra[:5]) or "none")
         return True, "the %d current employees and no other row" % len(want)
-    if kind in ("absent", "no_contractor"):
-        if len(keyed) < S["min_rows"]:
-            return False, "%d keyed rows on the page, under the %d a schedule carries; absence from a thin table shows nothing" % (len(keyed), S["min_rows"])
-        if kind == "absent":
-            hit = [k for k in keyed if k in {x.upper() for x in S["keys"]}]
-        else:
-            hit = [k for k in keyed if k.startswith("CTR-")]
-        if hit:
-            return False, "%s sits on an employee table" % ", ".join(hit)
-        return True, "absent from %d keyed rows" % len(keyed)
     if kind in ("balance", "rate", "tier"):
         want_col = {"balance": "balance", "rate": "rate", "tier": "tier"}[kind]
         cell, h = _cell(page, S["key"], want_col, notes)

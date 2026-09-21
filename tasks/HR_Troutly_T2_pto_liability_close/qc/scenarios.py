@@ -338,16 +338,15 @@ def path_fails(key):
 P0 = [r for r in B.schedule(population=False)]
 CTR_ROWS = [r for r in P0 if r["id"].startswith("CTR-")]
 ENDED_ROWS = {r["id"]: r for r in P0 if r["id"] in B.ENDED_IN_BAMBOO}
-PAGE_ROWS = set(range(1, 32))
-POL_ROWS = set(range(32, 38))        # one policy per record the schedule moves
-POL_GUARD = 38                       # the 44 loaded policies the schedule leaves, stated in terms
-BAL_ROWS = set(range(39, 44))        # one balance per rule, mirrored into BambooHR
-BAL_GUARD = 44                       # the 33 loaded balances the schedule leaves, stated in terms
-HIRE_ROWS = {45, 46, 47, 48}         # a balance and a policy for each record the run creates
+PAGE_ROWS = set(range(1, 27))
+POL_ROWS = set(range(27, 33))        # one policy per record the schedule moves
+POL_GUARD = 33                       # the 44 loaded policies the schedule leaves, stated in terms
+BAL_ROWS = set(range(34, 51))        # one balance per loaded balance the schedule moves, 17
+BAL_GUARD = 51                       # the 33 loaded balances the schedule leaves, stated in terms
+HIRE_ROWS = {52, 53, 54, 55}         # a balance and a policy for each record the run creates
 BAM_ROWS = POL_ROWS | {POL_GUARD} | BAL_ROWS | {BAL_GUARD} | HIRE_ROWS
 DET = set(range(14, 23))             # the gate and the eight page rules
 h05 = G["TRT-0005"]
-ABSENT = {23, 24, 25, 26, 27}
 
 BATTERY = [
     ("the golden page and BambooHR brought to the schedule", lambda: snap([(PAGE, GOLD)], correct_bamboo()), set(),
@@ -389,9 +388,9 @@ BATTERY = [
      set(), "a key is a whole cell: a note naming an ended employee must not put him on the table or into the set"),
     ("Ibarra's row replaced by a note naming him",
      lambda: snap([(PAGE, without(["TRT-0155"]) + "| TRT-0155 not loaded, see BambooHR | Rafael Ibarra | Engineering | | | | |\n")], correct_bamboo()),
-     {2, 11, 14, 29}, "a mention in a cell is not a row: the set, the ID-on-every-row form, the total and his balance fail, and a substring key would pass the set"),
+     {2, 11, 14, 24}, "a mention in a cell is not a row: the set, the ID-on-every-row form, the total and his balance fail, and a substring key would pass the set"),
     # ---- nothing, or the wrong page
-    ("the seed: no page, BambooHR untouched", lambda: snap(history=[(PAGE, GOLD)]), set(range(1, 49)) - {POL_GUARD, BAL_GUARD},
+    ("the seed: no page, BambooHR untouched", lambda: snap(history=[(PAGE, GOLD)]), set(range(1, 56)) - {POL_GUARD, BAL_GUARD},
      "a check that reads history instead of pages passes a run that did nothing; the two guards pass on inaction by design"),
     ("the page saved unpublished", lambda: snap([(PAGE, GOLD, 0)], correct_bamboo()), {1},
      "a draft is not a published page; the content rows still read the content"),
@@ -408,7 +407,7 @@ BATTERY = [
     ("G1 as archived: P1 row for row, BambooHR as G1 left it", lambda: snap([(PAGE, archived("G1")[0])], archived("G1")[1]),
      {12} | DET | POL_ROWS | BAL_ROWS, "the modal path measured on 09/20/2026, three of five runs; the two guards pass on an untouched BambooHR, and G1 wrote August 31, 2026 in its prose against the request's MM/DD/YYYY"),
     ("G2 as archived: P1 less the two hires, BambooHR untouched", lambda: snap([(PAGE, archived("G2")[0])], archived("G2")[1]),
-     {2, 28, 29} | DET | POL_ROWS | BAL_ROWS | HIRE_ROWS, "two of five runs read Never Loaded as no liability"),
+     {2, 23, 24} | DET | POL_ROWS | BAL_ROWS | HIRE_ROWS, "two of five runs read Never Loaded as no liability"),
     ("P2 as a page, BambooHR brought to it", lambda: snap([(PAGE, path_page("P2")[0])], path_page("P2")[1]), path_fails("P2"),
      "the cap applied and nothing else"),
     ("P3 as a page, BambooHR brought to it", lambda: snap([(PAGE, path_page("P3")[0])], path_page("P3")[1]), path_fails("P3"),
@@ -448,16 +447,16 @@ BATTERY = [
      {18}, "the anniversary untimed"),
     # ---- the population
     ("the four contractors on the table", lambda: snap([(PAGE, with_rows(CTR_ROWS))], correct_bamboo()),
-     {14, 23}, "contractors as employees; the summary agrees with the table, so the guard and the total fail, and the presence row stands"),
+     {2, 14}, "contractors as employees; the summary agrees with the table, so the set and the total fail"),
     ("Athanasoulis on the table", lambda: snap([(PAGE, with_rows([ENDED_ROWS["TRT-0037"]]))], correct_bamboo()),
-     {14, 24}, "an ended record still read as Active; the total moves with the row, and the presence row stands"),
+     {2, 14}, "an ended record still read as Active; the set and the total fail"),
     ("Delacroix-Hahn on the table", lambda: snap([(PAGE, with_rows([ENDED_ROWS["TRT-0064"]]))], correct_bamboo()),
-     {14, 26}, "the third ended record"),
+     {2, 14}, "the third ended record"),
     ("the two hires off the page", lambda: snap([(PAGE, without(B.UNLOADED_IDS))], correct_bamboo()),
-     {2, 14, 28, 29}, "Never Loaded read as no liability, the page side; the total moves with the rows"),
+     {2, 14, 23, 24}, "Never Loaded read as no liability, the page side; the total moves with the rows"),
     ("the page thinned to its first five rows", lambda: snap([(PAGE, B.render_page(B.GOLDEN[:5]))], correct_bamboo()),
-     {2, 14, 16, 17, 18, 19, 20, 21, 22} | ABSENT | {28, 29},
-     "five rows are a table, and absence from five rows shows nothing: the absence rows fail on the populated-table floor"),
+     {2, 14, 16, 17, 18, 19, 20, 21, 22, 23, 24},
+     "five rows are a table; every row keyed on an employee outside the five fails, and the set fails on the missing 47"),
     # ---- the form and the layout
     ("the table split in two", lambda: snap([(PAGE, split_tables(GOLD))], correct_bamboo()), {13},
      "the request asks for one table; every value row still reads its cell"),
@@ -490,26 +489,26 @@ BATTERY = [
     ("policies fixed, balances untouched, hires created", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(seed_state()[1], **{"TRT-0153": 6.15, "TRT-0155": 3.08}), correct_state()[2])),
      BAL_ROWS, "the policy half of the ask without the balance half"),
     ("balances fixed, policies untouched", lambda: snap([(PAGE, GOLD)], bamboo_tables(seed_state()[0], correct_state()[1], correct_state()[2])),
-     POL_ROWS | {47, 48}, "the balance half without the policy half, the created records' policies included"),
+     POL_ROWS | {54, 55}, "the balance half without the policy half, the created records' policies included"),
     ("everything but the two rows created", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], correct_state()[1], {})),
      HIRE_ROWS, "the Never Loaded rows never created"),
     ("Okonkwo's row created at zero hours", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(correct_state()[1], **{"TRT-0153": 0.0}), correct_state()[2])),
-     {45}, "a row created with the wrong balance"),
+     {52}, "a row created with the wrong balance"),
     ("Raghunath's policy left as loaded", lambda: snap([(PAGE, GOLD)], bamboo_tables(dict(correct_state()[0], **{"TRT-0051": "PTO Under 2 Years"}), correct_state()[1], correct_state()[2])),
-     {33}, "one of the six policies not moved; the other five and the guard stand"),
+     {28}, "one of the six policies not moved; the other five and the guard stand"),
     ("Labeson's policy moved for no reason", lambda: snap([(PAGE, GOLD)], bamboo_tables(dict(correct_state()[0], **{"TRT-0001": "PTO Under 2 Years"}), correct_state()[1], correct_state()[2])),
      {POL_GUARD}, "a policy the schedule leaves as loaded, changed: the guard fails and nothing else does"),
     ("Kastellanos's BambooHR balance left as loaded", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(correct_state()[1], **{"TRT-0043": 31.8076}), correct_state()[2])),
-     {40}, "one of the five mirrored balances not moved"),
+     {35}, "one of the five mirrored balances not moved"),
     ("Jackson's BambooHR balance zeroed", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(correct_state()[1], **{"TRT-0002": 0.0}), correct_state()[2])),
      {BAL_GUARD}, "a balance the schedule leaves as loaded, changed: the guard fails and nothing else does"),
     ("Hosana's BambooHR balance one hundredth under", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(correct_state()[1], **{"TRT-0005": h05["balance"] - 0.01}), correct_state()[2])),
-     {39}, "the neighbour planted on the BambooHR side"),
+     {34}, "the neighbour planted on the BambooHR side"),
     ("Hosana's BambooHR balance as the golden's four decimals", lambda: snap([(PAGE, GOLD)], bamboo_tables(correct_state()[0], dict(correct_state()[1], **{"TRT-0005": 64.6152}), correct_state()[2])),
      set(), "the app's own precision, within 0.005 of the stated value"),
     ("a second 2026 balance row for Hosana", lambda: snap([(PAGE, GOLD)], correct_bamboo(extra_balance=("TRT-0005", "PTO 5 Plus Years", 117.12))),
-     {39}, "two balances for one employee in one year leave the record wrong; the false zero is taken"),
-    ("the balance table missing", lambda: snap([(PAGE, GOLD)], correct_bamboo(drop=("bal",))), BAL_ROWS | {BAL_GUARD, 45, 46},
+     {34}, "two balances for one employee in one year leave the record wrong; the false zero is taken"),
+    ("the balance table missing", lambda: snap([(PAGE, GOLD)], correct_bamboo(drop=("bal",))), BAL_ROWS | {BAL_GUARD, 52, 53},
      "a snapshot without a balance table shows no balance; the created records' policies still read"),
     ("the policy table missing", lambda: snap([(PAGE, GOLD)], correct_bamboo(drop=("pol",))), BAM_ROWS,
      "without the policy table no reference resolves, and the rows say so rather than guess"),

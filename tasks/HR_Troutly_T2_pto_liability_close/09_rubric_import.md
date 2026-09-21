@@ -8,11 +8,11 @@ criteria, explanations, weights, criterion types, primary flags and verifier typ
 are the same strings.
 
 The shape is HR 32 T24's, carried by HR 79 T1 and by T1 and T1 v2 here: thirteen columns in
-HR 79 T1's order, one row per verifier, the sheet named `Rubric`. **48 rows, 101 points, 1 gate,
-22 primary**, md5 `da6ce70126e4565bf73fbb11e59faaf1`, the md5 a property of the content because
+HR 79 T1's order, one row per verifier, the sheet named `Rubric`. **55 rows, 105 points, 1 gate,
+34 primary**, md5 `132b10edfb5f835facbb529522427bb8`, the md5 a property of the content because
 the builder freezes every timestamp in the file. The rows are the plan's of 09/20/2026 as task
-rounds 1 to 4 left them the same day, no page weight moved after the five Gemini runs read
-23.9%, so every score in `06_failure_analysis.md` stands and the four re-scores sit beside it.
+rounds 1 to 5 left them, no page rule's weight moved after the five Gemini runs read 23.9%, so
+every score in `06_failure_analysis.md` stands and the five re-scores sit beside it.
 
 **Loaded once, and what landed.** The world snapshot id is `snap_c6f6a0879f3d47a19048ee80d7529157`,
 unchanged across the eighteen exports of T1, T1 v2 and T2. The task data id is
@@ -23,21 +23,22 @@ explanations, weights and criterion types, and every row carried
 `verifier_custom_field_values = {}` and no tag. So the Tags, Reference Artifacts and Grading
 Target columns do not populate through the import, which is what HR 79 T24 measured on the tag
 field on 09/11/2026. The 28-row file was loaded next and task round 2 read it, then the 43-row
-file, which task round 3 read, then the 44-row file, which task round 4 read. This 48-row file
-replaces it; count the rows Studio holds against 48, then set Tags and Reference Artifacts in the
+file, which task round 3 read, then the 44-row file, which task round 4 read, then the 48-row
+file, which task round 5 read. This 55-row file replaces it; count the rows Studio holds against
+55, then set Tags and Reference Artifacts in the
 Structured view from `build/rubric_plan.csv`, which carries both per row. Grading Target stays
 empty on an App DB row.
 
 | Column | What this package writes |
 |---|---|
-| Index, Criteria, Numerical Weight | The plan's 48 rows: 101 points, one gate at 10, the only 9 or 10 in the file |
-| Criteria Explanation | The house register, held by `check_register()` on every build: 48 explanations, 107 to 239 characters, 181 average, every figure the build's own |
+| Index, Criteria, Numerical Weight | The plan's 55 rows: 105 points, one gate at 10, the only 9 or 10 in the file |
+| Criteria Explanation | The house register, held by `check_register()` on every build: 55 explanations, 107 to 239 characters, 189 average, every figure the build's own |
 | Verifier Type | **`App DB Programatic`** on every row. One "m", the picker's spelling, not the guide's. `check_import()` refuses a type containing "Programmatic" |
-| Tags | `Final Response` on 42 rows, **`Style / formatting` on the six form rows**, rows 3, 4 and 5, hours, rates and dollars at the request's precision, row 11, an ID on every row, row 12, dates MM/DD/YYYY, and row 13, the summary above one table. Set by hand after import, see above |
-| Criterion Type | `Expert Assessment` on the 22 rows that apply a rule against a record carrying a finished number, `Objective Compliance` on the 26 that read a stated value, a stated set or a stated record. The code-verifier form's own list, `Process` unused |
-| Severity Level | `Critical` on the 22 primary rows, `Major` on the other 26 |
-| Is this a primary criterion? | `Yes` on the 22 rows the determination turns on and the registered paths short of the heal fail: the gate, the cap, the loaded date, the bridge, the timed anniversary, the three rates, the part-time schedule, each unloaded hire, and the eleven BambooHR rows that carry a policy the schedule moves or a balance that mirrors a page rule |
-| Reference Artifacts | The picker's resolved objects, 150 citations over 17 of the 22 selected world files and the one 1.4 upload. Not populated by the import, set by hand, see above |
+| Tags | `Final Response` on 49 rows, **`Style / formatting` on the six form rows**, rows 3, 4 and 5, hours, rates and dollars at the request's precision, row 11, an ID on every row, row 12, dates MM/DD/YYYY, and row 13, the summary above one table. Set by hand after import, see above |
+| Criterion Type | `Expert Assessment` on the 34 rows that apply a rule against a record carrying a finished number, `Objective Compliance` on the 21 that read a stated value, a stated set or a stated record. The code-verifier form's own list, `Process` unused |
+| Severity Level | `Critical` on the 34 primary rows, `Major` on the other 21 |
+| Is this a primary criterion? | `Yes` on the 34 rows the determination turns on and the registered paths short of the heal fail: the gate, the cap, the loaded date, the bridge, the timed anniversary, the three rates, the part-time schedule, each unloaded hire, and the 23 BambooHR rows that carry a policy or a balance the schedule moves |
+| Reference Artifacts | The picker's resolved objects, 167 citations over 17 of the 22 selected world files and the one 1.4 upload. Not populated by the import, set by hand, see above |
 | Grading Target | Empty on every row: no row grades a file. HR 79 T1's registered position, and its round 7 passed with it empty on every App DB row |
 | Output Dependencies | Empty on every row: the deliverable is a wiki page and BambooHR state, and 1.5 carries nothing |
 | Depends on | `None` on every row |
@@ -51,8 +52,8 @@ narrower set of values for their own rows; the rule here is the table's own band
 registered weights stand as scored. The 2 is the two unloaded hires, one row each after task
 round 1, a reasoning row on one cell that moves the total by under a third of a percent. The 1
 on a reasoning row is task round 2's: a BambooHR row that mirrors one page rule on one record,
-priced so the mirror never outweighs the rule it mirrors. Expert Assessment carries 68 of 101,
-67.3%, and a row is primary if and only if it is a reasoning row, which `check_rubric()` also
+priced so the mirror never outweighs the rule it mirrors. Expert Assessment carries 80 of 105,
+76.2%, and a row is primary if and only if it is a reasoning row, which `check_rubric()` also
 holds.
 
 ## Reference Artifacts
@@ -137,13 +138,25 @@ lines gone from the memo and the memo builder barring a deadline or a filing lin
 returning. 48 rows, 101 points, 22 primary, the free base 14 under a seventh; the runs re-score
 at 32.1%. The re-rendered memo, md5 `5a4089293b429961e17e67e309251fde`, is owed to 1.4.
 
+## Task round 5, 09/21/2026
+
+The round read the 48-row file and raised two findings. Prompt-Rubric Alignment: the BambooHR
+ask covers every employee on the schedule and twelve moved balances had no BambooHR row, eight
+capped openings and four wrong-tier records, so each has one at 1, Expert Assessment, on the
+code the five mirrored rows use, rows 34 to 50 with the five. Verifiers Grade Only What the
+Prompt Asks For: the four ended records and the contractors, one row each since task round 1,
+were read as grading a negative the memo never states; on the owner's decision the five rows are
+gone and row 2 reads the 52 as the only rows again, so the memo's definition of a current employee
+is graded once, on the set. 55 rows, 105 points, 34 primary; the runs re-score at 23.2%, and
+`06_failure_analysis.md` states the arithmetic of the fall.
+
 ## The verifier code
 
 Built 09/20/2026. Every row's code is generated into `qc/verifiers/` from the same rows that
 wrote this file: the row's spec stamped onto `build/verifier_engine.py`, so a row file is never
 edited by hand and `check_rubric()` holds each spec to its criterion, the key it names and the
 value it states. `qc/verifier_harness.py` proves the set on 71 snapshots with the answer known,
-**3408 of 3408 verdicts correct**: the golden page and BambooHR brought to the schedule as the
+**3905 of 3905 verdicts correct**: the golden page and BambooHR brought to the schedule as the
 correct state, real and placeholder column names, the page as HTML, the title with an em dash,
 the BambooHR tables keyed on the app's integer ids, on the seed's strings and under other names,
 the Greenhouse seed tables beside them as a third app's that no row reads, the two archived runs
@@ -162,7 +175,7 @@ Notes are written: the route is T1 v2's, generated code pasted per row,
 because HR 79 measured Studio's own generation from notes grading wrongly on three rows of three.
 
 **The form fields at paste time**, per row in `build/rubric_plan.csv`: Target App `wiki_js` on
-rows 1 to 31 and `bamboohr` on rows 32 to 48, Check Type by kind, Target Record ID the page
+rows 1 to 26 and `bamboohr` on rows 27 to 55, Check Type by kind, Target Record ID the page
 title, the employee number or the loaded records a set row states, Fallback Strategy **DB only** on
 every row, the Verifier File to paste. Grading Target stays empty.
 

@@ -23,7 +23,8 @@ import build_package_artifacts as B  # noqa: E402
 import scenarios as S  # noqa: E402
 
 GUIDE = os.path.join(PKG, "07_paste_guide.md")
-FIRST = [1, 34]  # the two routes, pasted first: the pages table and the BambooHR tables
+# the two routes, pasted first: the pages table and the BambooHR tables, the latter on the policy set row
+FIRST = [1, next(i for i, r in enumerate(B.PLAN, 1) if r[9]["kind"] == "policies")]
 
 
 def _name(i):
