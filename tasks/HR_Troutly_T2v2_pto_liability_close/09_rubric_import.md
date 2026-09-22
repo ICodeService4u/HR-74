@@ -106,11 +106,19 @@ so a world byte that moved would move the explanation with it.
 
 ## The verifier record
 
-Built 09/22/2026 and rebuilt for review round 1 the same day. Every row's code is generated into
-`qc/verifiers/` from the same rows that wrote this file: the row's spec stamped onto
-`build/verifier_engine.py`, so a row file is never edited by hand and `check_rubric()` holds each
-spec to its criterion, the line it names and the value it states. The engine is 373 lines and
-reads one app with five check kinds: `exists`, `total`, `hours`, `line_hours` and `line_total`.
+Built 09/22/2026 and rebuilt the same day to the app-db-verifier skill, which the first build of
+this package did not have. Every row's code is generated into `qc/verifiers/` from the same rows
+that wrote this file: the row's spec stamped onto `build/verifier_engine.py`, so a row file is
+never edited by hand and `check_rubric()` holds each spec to its criterion, the line it names and
+the value it states. The engine is 179 lines and a row file under 191, inside the skill's 200,
+which the builder asserts on every build. It reads one app with five check kinds: `exists`,
+`total`, `hours`, `line_hours` and `line_total`.
+
+**How a figure is read, the skill's R3.** A number counts only in the asked unit: its own dollar
+sign or hours word first, then its column's header, then its prose line's single unit cue. A
+bare number on a line that names both units, or neither, is read as neither and logged. So a
+dollar total written in hours, or a line's hours in its dollar column, is not the asked figure,
+and a struck-through figure is not stated at all.
 
 **How a line is read.** A line is stated where the page names it: a table row keyed on no
 employee, one of whose cells is the line's name, whole-cell and with case, markup, an ampersand
@@ -124,14 +132,14 @@ stated hours figure to a twentieth of an hour, `TOL_TOTAL_MONEY` and `TOL_LINE_M
 section and nothing tells a response how many decimals to print. No registered path comes within
 either band, which `06_failure_analysis.md` states path by path.
 
-`qc/verifier_harness.py` proves the set on 40 snapshots with the answer known, **520 of 520
+`qc/verifier_harness.py` proves the set on 46 snapshots with the answer known, **598 of 598
 verdicts correct**, 13 rows against every snapshot: the golden page, real and placeholder column
 names, the page as HTML, the title with an em dash, a 20-column pages table, a second page under
 the same title, a note page carrying the title in its description, the paths P0 to P5 as pages,
 the load copied whole, and one planted defect per way a row can be wrong: a line a tenth of an
 hour or a dollar out, a line dropped, Sales and Marketing given only apart, the joined figures labelled Sales alone in a table and in prose, the lines left to
 the reader, a line's figures inside an employee row, a prose sentence naming Sales, a total a
-dollar out, an hours total a tenth out. Three scenarios carry the over-delivery constraint and
+dollar out, an hours total a tenth out, and the skill's menu for a value in text: the right number in the wrong unit, a line's hours and dollars swapped, a figure present but not as the asked one, a total and a line struck through, and the total shown with its arithmetic. Three scenarios carry the over-delivery constraint and
 fail no row: every employee with a line per department and a summary block, the lines as prose,
 and a second table beside the lines. No Additional Notes are written: the route is T1 v2's and
 T2's, generated code pasted per row, because HR 79 measured Studio's own generation from notes

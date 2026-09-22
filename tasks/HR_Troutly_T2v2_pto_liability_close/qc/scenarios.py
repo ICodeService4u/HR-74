@@ -257,11 +257,11 @@ BATTERY = [
      lambda: snap([(PAGE, set_total(GOLD, money="%.2f" % B.TOTAL, hours="%.2f" % B.TOTAL_HOURS).replace("$", "").replace(",", ""))]), set(),
      "the request carries no Form section, so a figure is a figure however it is punctuated"),
     ("the totals and lines rounded to the dollar and the tenth of an hour",
-     lambda: snap([(PAGE, "\n".join([l for l in set_total(GOLD, money="$%s" % f"{round(B.TOTAL):,}", hours="%.1f" % B.TOTAL_HOURS).split("\n") if not any(l.startswith("| %s |" % n) for n, _ in B.LINES)]
+     lambda: snap([(PAGE, "\n".join([l for l in set_total(GOLD, money="$%s" % f"{round(B.TOTAL):,}", hours="%.1f" % B.TOTAL_HOURS).rstrip("\n").split("\n") if not any(l.startswith("| %s |" % n) for n, _ in B.LINES)]
                                      + ["| %s | %.1f | $%s |" % (n, LG[n][0], f"{round(LG[n][1]):,}") for n, _ in B.LINES]))]), set(),
      "with no Form section a response may round what it states, and the bands are wider than any rounding of a right answer"),
     ("the lines under posted rounding",
-     lambda: snap([(PAGE, "\n".join([l for l in GOLD.split("\n") if not any(l.startswith("| %s |" % n) for n, _ in B.LINES)]
+     lambda: snap([(PAGE, "\n".join([l for l in GOLD.rstrip("\n").split("\n") if not any(l.startswith("| %s |" % n) for n, _ in B.LINES)]
                                      + ["| %s | %s | $%s |" % (n, f"{LG[n][2]:,.2f}", f"{LG[n][3]:,.2f}") for n, _ in B.LINES]))]), set(),
      "each posting rounded is the other reading the totals already accept"),
     ("a second table that carries no line",
@@ -310,6 +310,25 @@ BATTERY = [
      lambda: snap([(PAGE, "\n".join(l for l in GOLD.split("\n") if not l.startswith("Total PTO")) + "\n| Employee ID | Balance | Rate |\n|---|---|---|\n| TRT-0001 | %s | $%s |\n" % (f"{B.TOTAL_HOURS:,.2f}", f"{B.TOTAL:,.2f}"))]),
      {TOTAL_ROW, HOURS_ROW},
      "a figure inside an employee row is that employee's figure; the request asks the page to state the totals"),
+    # ---- the skill's menu for a value in text: the asked figure in the asked unit, not a number
+    ("the total dollars written as hours, the hours total as a bare number",
+     lambda: snap([(PAGE, set_total(GOLD, money="%s hours" % f"{B.TOTAL_HOURS:,.2f}", hours=f"{B.TOTAL:,.2f}"))]), {TOTAL_ROW},
+     "a dollar figure in hours is the right number in the wrong unit, and a bare number on an hours line is hours"),
+    ("Engineering's hours and dollars swapped between the columns",
+     lambda: snap([(PAGE, set_line(GOLD, "Engineering", hours=f"{LG['Engineering'][1]:,.2f}", money="$%s" % f"{LG['Engineering'][0]:,.2f}"))]), {ENG_H, ENG_D},
+     "a cell's unit is its own sign or its column's header, so each figure is read in the column it sits in"),
+    ("Engineering's dollars written as hours in prose",
+     lambda: snap([(PAGE, drop_line(GOLD, "Engineering") + "\nEngineering: %s hours\n" % f"{LG['Engineering'][1]:,.2f}")]), {ENG_H, ENG_D},
+     "the number is on the page and is not the asked figure"),
+    ("the total struck through beside another figure",
+     lambda: snap([(PAGE, set_total(GOLD, money="~~$%s~~ $95,000.00" % f"{B.TOTAL:,.2f}"))]), {TOTAL_ROW},
+     "strikethrough is markup, the one retraction a database check reads"),
+    ("Engineering's dollars struck through beside another figure",
+     lambda: snap([(PAGE, set_line(GOLD, "Engineering", money="~~$%s~~ $40,000.00" % f"{LG['Engineering'][1]:,.2f}"))]), {ENG_D},
+     "a struck figure is not stated"),
+    ("the total shown with its arithmetic",
+     lambda: snap([(PAGE, set_total(GOLD, money="$%s, the load's %s less %s" % (f"{B.TOTAL:,.2f}", B._money(B.LOADED_TOTAL), B._money(round(B.LOADED_TOTAL - B.TOTAL, 2)))))]), set(),
+     "a correct run showing its working must not be failed by the other numbers it shows"),
     # ---- the registered paths
     ("P0 as a page: the July method rolled forward", lambda: snap([(PAGE, path_page("P0"))]), path_fails("P0"),
      "the July close's own method, every rule missed"),

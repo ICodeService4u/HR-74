@@ -19,6 +19,7 @@ What v2 already answers, because T2 and review round 1 met it:
 | No stacked criteria | One row reads one figure of one line, or one stated total. Nothing bundles |
 | Prompt-rubric alignment | The request's lines are the page, the two totals, the five lines and the definition of a current employee, which the totals and lines run over. There is no form line, no measurement-date line, no summary count and no second app written, so there is no explicit ask without a row and no row without an ask |
 | Criteria count justified by scope | 13 rows over a deliverable of two totals and five lines of two figures each, under the 25-criterion limit, which `check_rubric()` asserts |
+| The population definition needs a row of its own | It is graded through the figures it defines. A page with every rule applied and the load's 57 in place of the 52 states $100,630.00 and 1,703.91 hours and fails the gate, the hours total and eight of the ten line figures, Finance and Corporate alone carrying no contractor, ended employee or unloaded hire. The request asks for no employee rows, so a separate population row has nothing on the page to read, and asking for rows again is the 156-value ask review round 1 removed |
 | A fence needs a row | There is no fence. The memo carries no out-of-scope block, no deadline and no retention line, and the builder bars each from returning |
 | Exclusions | Nothing grades the absence of content. A response that also prints every employee, or Sales and Marketing apart beside the joined line, loses nothing, which is what keeps the golden valid when a response over-delivers |
 
@@ -31,13 +32,13 @@ final answer, not the narration, not which tool was used, not the step count. Bo
 
 ## The verifier harness
 
-Built 09/22/2026 and rebuilt for review round 1 the same day. `verifier_harness.py` runs every
-row file under `verifiers/` against the 40 snapshots in `scenarios.py`, each with the rows it must
-fail named in advance: **520 of 520 verdicts correct**. Twelve of the snapshots are correct answers
+Built 09/22/2026 and rebuilt the same day to the app-db-verifier skill. `verifier_harness.py` runs every
+row file under `verifiers/` against the 46 snapshots in `scenarios.py`, each with the rows it must
+fail named in advance: **598 of 598 verdicts correct**. Twelve of the snapshots are correct answers
 in different shapes, three of them pages that carry more than the request asks for, because the
 one thing this battery exists to prove beyond the verdicts is that no row grades the absence of
 content. Seven more hold the line reader to where a line is stated: not Sales alone, in a table or in prose, not a sum left
-to the reader, not an employee row, not a prose word.
+to the reader, not an employee row, not a prose word. Six more are the app-db-verifier skill's menu for a value in text: the wrong unit, swapped columns, a figure present but not as the asked one, two strikethroughs, and the arithmetic shown.
 
 `ctx.py` is the platform's `ctx` stood in with placeholder column names by default and only the
 three database primitives a graded run has been measured to serve, `list_tables`,

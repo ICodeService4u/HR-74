@@ -15,7 +15,7 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `923fcbdd7bdf474a702e
 3. **Code verifier form, per row**: set Target app, Check type, Expected Content, Target Table,
    Target Record ID, Target Record Label and Fallback Strategy **DB only** from the block, leave
    Additional Notes empty, and paste the row file whole into the code box. Every row file is the
-   engine with the row's SPEC on top, 381 to 384 lines; if the box balks at the size, say so and the
+   engine with the row's SPEC on top, 187 to 190 lines; if the box balks at the size, say so and the
    builder stamps only the half a row uses. **Target database apps on a wiki row is `wiki_js_mcp`**,
    the service whose tools every archived run called, `wiki_js_mcp_wikijs_mcp_create_page` among
    them, and the picker offers Wiki.js and Wiki.js MCP as two entries. The 09/21/2026 paste took
