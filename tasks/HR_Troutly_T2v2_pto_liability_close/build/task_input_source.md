@@ -16,19 +16,22 @@ default user and a Wiki.js editor, the agent's seat) **from** Krystale Jumawan, 
 (TRT-0009, who prepared the July close and approved every payroll since cutover), copied to
 Anjelina Brocollini, Head of People.
 
-**What the memo carries, and what it withholds.** The ask, the measurement date, the page title,
-the three columns, the two totals and the definition of a current employee. It names the July
-detail as the thing it replaces, because that is the requester's premise and the requester built
-it. **What T2's memo carried and this one does not**: the summary's employee count, the name,
-department, tier and liability columns, the BambooHR instruction and the whole Form section, the
-date, precision and sum-of-the-rows lines among it. Each of those was an explicit ask, each drew
-a rubric row, and every one of those rows was a point the failing tier earned in full: 14 of
-T2's 105 and 29 more on records a run moves with no rule applied. This memo asks for the two
-totals, the balance and the rate, which are the determination and nothing else. It names no rule: not the cutover memo, not the
-cap, not the accrual period, not the tier basis, not the rate basis, not the rehire rule, not the
-part-time rule, not the step. T1 v2 measured that a memo definition is a rule the tier applies;
-this memo defines the population, which is not the determination, and leaves every rule of the
-determination to the world's own documents.
+**What the memo carries, and what it withholds.** The ask, the page title, the two totals, the
+five department lines with Sales and Marketing joined, and the definition of a current employee.
+It names the July detail as the thing it replaces, because that is the requester's premise and
+the requester built it. **What T2's memo carried and this one does not**: the summary's employee
+count, the name, department, tier and liability columns, the BambooHR instruction and the whole
+Form section. Each of those was an explicit ask, each drew a rubric row, and every one of those
+rows was a point the failing tier earned in full. **What v2's first memo carried and this one
+does not**, since review round 1 of 09/22/2026: the row per current employee with its ID,
+balance and rate, 156 values no 25-criterion rubric covers, and the measurement-date sentence,
+an ask the title already carries that drew a row of its own. The five lines take the per-employee
+table's place. Sales and Marketing are one line because Marketing alone is a figure the load
+already carries right, and a line a copy of the load earns is a free point. The memo names no
+rule: not the cutover memo, not the cap, not the accrual period, not the tier basis, not the rate
+basis, not the rehire rule, not the part-time rule, not the step. T1 v2 measured that a memo
+definition is a rule the tier applies; this memo defines the population, which is not the
+determination, and leaves every rule of the determination to the world's own documents.
 
 **Leak constraints, machine-asserted by `build_task_input.py`.** The memo must NOT state or hint
 at: any policy document, page or record by name other than the July detail; the cap or any
@@ -68,11 +71,11 @@ yours, and Anjelina and I want it on the wiki so the close package links it.
 
 ### What I need
 
-One page published in Wiki.js, PTO Liability - 08/31/2026. Use 08/31/2026 as the measurement
-date.
+One page published in Wiki.js, PTO Liability - 08/31/2026.
 
-The page states the total PTO liability in dollars and the total PTO hours, and carries a row
-for every current employee with the employee ID, the PTO balance in hours and the hourly rate. A
+The page states the total PTO liability in dollars and the total PTO hours, and the PTO hours
+and the PTO liability in dollars for each of five lines, Customer Success, Engineering, Finance
+and Corporate, Product, and Sales and Marketing. The figures cover every current employee. A
 current employee is anyone employed by Troutly on 08/31/2026.
 
 Krystale

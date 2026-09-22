@@ -232,8 +232,10 @@ def required_in(low, terms, label):
 
 
 def check_memo():
-    """The request supplies the ask, the measurement date, the page title, the three columns, the
-    two totals and what a current employee is. It carries no summary count, no name, department,
+    """The request supplies the ask, the page title, the two totals, the five department lines and
+    what a current employee is. Review round 1 of 09/22/2026 took the row per current employee and
+    the measurement-date sentence out: 156 values no 25-criterion rubric covers, and an ask the
+    title already carries. It carries no summary count, no name, department,
     tier or liability column, no BambooHR instruction and no Form section: v2 of 09/22/2026 took
     each of them out because each was an explicit ask that drew a rubric row the failing tier
     earned in full, and the builder bars every one from returning. It carries no fence either:
@@ -303,10 +305,10 @@ def check_memo():
         "casey ouk, people operations analyst", "krystale jumawan, finance manager",
         DOCS["memo"]["doc_id"].lower(), "08/31/2026",
         "one page published in wiki.js, pto liability - 08/31/2026",
-        "use 08/31/2026 as the measurement date",
-        "the page states the total pto liability in dollars and the total pto hours, and carries "
-        "a row for every current employee with the employee id, the pto balance in hours and the "
-        "hourly rate",
+        "the page states the total pto liability in dollars and the total pto hours, and the pto "
+        "hours and the pto liability in dollars for each of five lines, customer success, "
+        "engineering, finance and corporate, product, and sales and marketing",
+        "the figures cover every current employee",
         "a current employee is anyone employed by troutly on 08/31/2026",
     ), "the memo")
     # v2 asks for the determination and nothing beside it: every line T2 carried that drew a
@@ -316,6 +318,10 @@ def check_memo():
         "name, department", "annual pto tier", "dollar liability,", "a short summary",
         "the summary states", "bamboohr", "dates mm/dd/yyyy", "two decimals", "four decimals",
         "to the cent", "the total is the sum of the rows", "an employee id on every row",
+        # review round 1 of 09/22/2026: the per-employee table and the measurement-date sentence,
+        # 156 values no 25-criterion rubric covers and an ask the title already carries
+        "a row for every", "row for each", "employee id", "hourly rate", "balance in hours",
+        "measurement date", "per employee", "each employee", "every employee",
     ), "the memo")
 
 def check_names():

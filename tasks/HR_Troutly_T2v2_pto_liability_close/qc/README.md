@@ -1,19 +1,26 @@
 # The AutoQC register - T2 v2, PTO Liability at 08/31/2026
 
-**No round has run against v2 yet.** The package was built 09/22/2026 and the import is not
-loaded. Archive each round verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or
+**Review round 1, 09/22/2026, read the 27-row file.** Two findings, both accepted and archived in
+the record of `../02_task_metadata.md`, section Review round 1:
+
+| Finding | Verdict | What changed |
+|---|---|---|
+| P1 Prompt scope against rubric coverage: a row per current employee is 156 requirements, over the 25-criterion limit | Accepted | The per-employee table is out of the memo and five department lines are in, Sales and Marketing joined. 13 rows, 79 points |
+| P0 Prompt-rubric alignment: the measurement-date sentence and the per-employee table were asks no row read | Accepted | The date sentence is out of the memo, the title and the subject carry the date, and the table went with the first finding |
+
+Archive each later round verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or
 `findings/task_roundN_MM-DD-YYYY.md` before triaging it, and keep the verdicts here.
 
-What v2 already answers, because T2 met it round after round:
+What v2 already answers, because T2 and review round 1 met it:
 
 | The finding a round is likely to raise | The answer on file |
 |---|---|
-| Verifiers grade only what the prompt asks for | Every row reads a figure the request asks the page to state. The request asks for the two totals and three columns, and the rubric grades the two totals and cells in two of those columns |
-| No stacked criteria | One row reads one cell of one employee, or one stated total. Nothing bundles |
-| Prompt-rubric alignment | The request's lines are the page, the two totals and the three columns. There is no form line, no summary count and no second app, so there is no explicit ask without a row and no row without an ask |
-| Criteria count justified by scope | 27 rows over a deliverable of 52 rows and two totals. A cell is graded only where the load carries it wrong, which is 24 cells over 22 employees |
+| Verifiers grade only what the prompt asks for | Every row reads a figure the request asks the page to state: the two totals and each of the five lines' hours and dollars |
+| No stacked criteria | One row reads one figure of one line, or one stated total. Nothing bundles |
+| Prompt-rubric alignment | The request's lines are the page, the two totals, the five lines and the definition of a current employee, which the totals and lines run over. There is no form line, no measurement-date line, no summary count and no second app written, so there is no explicit ask without a row and no row without an ask |
+| Criteria count justified by scope | 13 rows over a deliverable of two totals and five lines of two figures each, under the 25-criterion limit, which `check_rubric()` asserts |
 | A fence needs a row | There is no fence. The memo carries no out-of-scope block, no deadline and no retention line, and the builder bars each from returning |
-| Exclusions | Nothing grades the absence of content. A response that prints all 52 employees rather than the 22 the load has wrong loses nothing, which is what keeps the golden valid when a response over-delivers |
+| Exclusions | Nothing grades the absence of content. A response that also prints every employee, or Sales and Marketing apart beside the joined line, loses nothing, which is what keeps the golden valid when a response over-delivers |
 
 ## What is graded: the output, and only the output
 
@@ -24,11 +31,13 @@ final answer, not the narration, not which tool was used, not the step count. Bo
 
 ## The verifier harness
 
-Built 09/22/2026. `verifier_harness.py` runs every row file under `verifiers/` against the 31
-snapshots in `scenarios.py`, each with the rows it must fail named in advance: **837 of 837
-verdicts correct**. Eleven of the snapshots are correct answers in different shapes, four of them
-pages that carry more than the request asks for, because the one thing this battery exists to
-prove beyond the verdicts is that no row grades the absence of content.
+Built 09/22/2026 and rebuilt for review round 1 the same day. `verifier_harness.py` runs every
+row file under `verifiers/` against the 40 snapshots in `scenarios.py`, each with the rows it must
+fail named in advance: **520 of 520 verdicts correct**. Twelve of the snapshots are correct answers
+in different shapes, three of them pages that carry more than the request asks for, because the
+one thing this battery exists to prove beyond the verdicts is that no row grades the absence of
+content. Seven more hold the line reader to where a line is stated: not Sales alone, in a table or in prose, not a sum left
+to the reader, not an employee row, not a prose word.
 
 `ctx.py` is the platform's `ctx` stood in with placeholder column names by default and only the
 three database primitives a graded run has been measured to serve, `list_tables`,

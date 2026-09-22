@@ -4,6 +4,7 @@
     python3 qc/score_run_set.py                       # the set archived on 09/21/2026
     python3 qc/score_run_set.py --set run_set_09-20-2026 --details
     python3 qc/score_run_set.py --self-check          # the registered paths, by the plan and by the code
+    python3 qc/score_run_set.py --set run_set_09-20-2026 --as-lines   # each run's own rows summed onto the lines
 
 Each run's page is read from qc/findings/<set>/<run>_pto_liability.md, exactly as the export
 carried it, loaded into the battery's fixture and read by every row file under qc/verifiers/. So
@@ -14,6 +15,13 @@ The two sets archived here are T2's, scored under T2's own rubric on 09/20/2026 
 They are carried into v2 because the pages they hold are the same deliverable in kind, a row per
 employee with a balance and an hourly rate beside it, so they measure what v2's rubric does to a
 response that copies the load. Their own record stays in the T2 package.
+
+Since review round 1 of 09/22/2026 the request asks for five department lines and no employee
+row, and these pages were written to the earlier ask, so they carry no line and the plain score
+reads 1 point each by construction. `--as-lines` is the fair reading: each run's own employee
+rows, read by the engine's own row reader, summed by department onto the request's five lines
+and written back onto the page, so the verifiers score what the run computed and not what it
+was asked to print.
 """
 import importlib.util
 import json
@@ -55,6 +63,34 @@ def weights():
     return {i + 1: r[1] for i, r in enumerate(B.PLAN)}
 
 
+AS_LINES = "--as-lines" in sys.argv
+
+
+def with_lines(text):
+    """The page with a line table appended, each line the sum of the run's own keyed rows: its
+    balance, and its balance times its hourly rate, by the department the roster gives the ID."""
+    eng = importlib.util.spec_from_file_location("eng", os.path.join(HERE, "verifiers", sorted(
+        f for f in os.listdir(os.path.join(HERE, "verifiers")) if f.endswith(".py"))[0]))
+    m = importlib.util.module_from_spec(eng)
+    eng.loader.exec_module(m)
+    page = m._Page(B.PAGE, m._clean(text), True, "archive")
+    sums = {name: [0.0, 0.0] for name, ds in B.LINES}
+    for k, (h, r) in page.keyed().items():
+        if k not in B.GOLDEN_BY_ID:
+            continue
+        bi, ri = page.col(h, "balance", []), page.col(h, "rate", [])
+        bal = m._num(r[bi]) if bi is not None and bi < len(r) else None
+        rate = m._num(r[ri]) if ri is not None and ri < len(r) else None
+        if bal is None or rate is None:
+            continue
+        line = B.LINE_OF[B.GOLDEN_BY_ID[k]["dept"]]
+        sums[line][0] += bal
+        sums[line][1] += round(bal * rate, 2)
+    rows = ["", "| Line | PTO hours | PTO liability |", "|---|---|---|"]
+    rows += ["| %s | %.2f | $%.2f |" % (n, sums[n][0], sums[n][1]) for n, ds in B.LINES]
+    return text.rstrip("\n") + "\n" + "\n".join(rows) + "\n"
+
+
 def score(set_name, details=False):
     folder = os.path.join(HERE, "findings", set_name)
     runs = json.load(open(os.path.join(folder, "runs.json"), encoding="utf8"))
@@ -64,6 +100,8 @@ def score(set_name, details=False):
         path = os.path.join(folder, "%s_pto_liability.md" % r["run"])
         text = open(path, encoding="utf8").read() if os.path.exists(path) else ""
         published = bool((r.get("page") or {}).get("published"))
+        if text and AS_LINES:
+            text = with_lines(text)
         ctx = S.snap([(B.PAGE, text, 1 if published else 0)] if text else [])
         v = verdicts(ctx, rowchecks)
         pts = sum(w[n] for n in v if v[n])
@@ -88,11 +126,19 @@ def self_check():
     print("  control: the golden saved unpublished fails row 1: RED")
     bent = B.render_page([dict(r, balance=r["balance"] + 1.0) if r["id"] == "TRT-0005" else r for r in B.GOLDEN])
     v = verdicts(S.snap([(B.PAGE, bent)]), rowchecks)
-    assert not v[S.CELL_ROW[("balance", "TRT-0005")]], "a capped balance moved by an hour must fail its row"
-    print("  control: one capped balance moved by an hour fails its own row: RED")
+    assert not v[S.CELL_ROW[("line_hours", "Engineering")]], "a capped balance moved by an hour must fail its line"
+    print("  control: one Engineering balance moved by an hour fails the Engineering hours line: RED")
     v = verdicts(S.snap([(B.PAGE, S.wide_page())]), rowchecks)
-    assert all(v.values()), "a page that prints every employee and more columns must score every point"
-    print("  control: the whole schedule with four columns v2 dropped still scores every point: GREEN by design")
+    assert all(v.values()), "a page that prints every employee and every department must score every point"
+    print("  control: every employee and Sales and Marketing apart beside the joined line still score every point: GREEN by design")
+    # --as-lines on a page of employee rows alone must rebuild the golden's lines to the cent
+    rows_only = "\n".join(l for l in S.wide_page().split("\n") if not any(
+        l.startswith("| %s |" % n) for n in list(B.LINE_OF) + [x for x, _ in B.LINES]))
+    v = verdicts(S.snap([(B.PAGE, with_lines(rows_only))]), rowchecks)
+    assert all(v.values()), "the golden's own rows summed onto the lines must score every point: %r" % [n for n in v if not v[n]]
+    v = verdicts(S.snap([(B.PAGE, rows_only)]), rowchecks)
+    assert not any(v[n] for n in v if B.PLAN[n - 1][9]["kind"] in ("line_hours", "line_total")), "a page of employee rows alone states no line"
+    print("  control: the golden's employee rows summed onto the lines score every point, unsummed none of the lines: RED and GREEN as planned")
     print("self-check: the verifiers read the seven registered paths as the plan does")
 
 

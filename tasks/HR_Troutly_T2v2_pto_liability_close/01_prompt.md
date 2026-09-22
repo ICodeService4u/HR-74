@@ -3,7 +3,8 @@
 **Task name:** `PTO Liability at 08/31/2026`
 
 Built 09/22/2026. A rescope of T2 at `../HR_Troutly_T2_pto_liability_close`: the same world, the
-same determination, a narrower ask and a rubric priced by what a cell moves.
+same determination, a narrower ask and a rubric priced by what a figure moves. Review round 1,
+the same day, narrowed the ask again, from a row per current employee to five department lines.
 
 ---
 
@@ -62,12 +63,18 @@ One more row went without a memo line going with it: T2's row 2, the 52 current 
 only employee rows, weight 2. The memo still defines a current employee, because the population is
 what the totals run over. The rubric grades no exclusion, for the reason in the next section.
 
-What survives in the memo is the page title, the measurement date, the two totals, the employee
-ID, the PTO balance in hours, the hourly rate and the definition of a current employee. Nothing
-else. Five negative controls in `build/negative_controls.py` plant the Form section, the BambooHR
-ask, the summary count, a dropped column and the one-table shape back one at a time and confirm
-the build goes red, alongside the controls that hold the fence, the deadline and the retention
-line out.
+**Review round 1, 09/22/2026, took two more lines out.** The row per current employee with its
+ID, balance and rate was 52 rows of three values, 156 requirements no 25-criterion rubric can
+cover, and the 27-row rubric that sampled it was itself over the limit. The sentence "Use
+08/31/2026 as the measurement date" was an explicit ask no row read, and the page title and the
+subject already carry the date. Both are out of the memo and barred from returning. In the
+table's place the memo asks for five department lines, each line's PTO hours and PTO liability.
+
+What survives in the memo is the page title, the two totals, the five lines and the definition
+of a current employee. Nothing else. The negative controls in `build/negative_controls.py` plant
+every removed line back one at a time, the per-employee table and the date sentence among them,
+and confirm the build goes red, alongside the controls that hold the fence, the deadline and the
+retention line out.
 
 ## Why this ask, and the measurement behind it
 
@@ -83,61 +90,48 @@ three ended employees. The wiki page and the 2025 policy say monthly accrual and
 carryover. The roster and BambooHR carry 07/01/2026 as the service date on nine migrated records.
 BambooHR and every payroll register carry the pre-promotion and pre-amendment rates for two
 people. The right number exists only after eight rules are applied in sequence, and the memo
-states none of them.
+states none of them. A department line is the same determination summed: every current employee
+sits on exactly one line, so a line is right only if every balance and rate on it is right.
 
 ## Prompt goal
 
 The request asks for **the PTO liability at 08/31/2026: one page stating the total dollars and
-the total hours, with a row per current employee carrying the ID, the balance in hours and the
-hourly rate**. The determination is the liability, 1,522.17 hours and $92,739.54 across 52
-current employees; the July close booked $90,862.13 under the old method, and the load's own
-figures total 1,751.71 hours and $111,100.39.
+the total hours, and the PTO hours and the PTO liability for each of five lines, Customer
+Success, Engineering, Finance and Corporate, Product, and Sales and Marketing**. The
+determination is the liability, 1,522.17 hours and $92,739.54 across 52 current employees; the
+July close booked $90,862.13 under the old method, and the load's own figures total 1,751.71
+hours and $111,100.39.
 
-The rubric is 27 rows and 143 points, 26 of them primary, every row App DB Programatic on the
+The rubric is 13 rows and 79 points, 12 of them primary, every row App DB Programatic on the
 Wiki.js pages table.
 
-1. **The page.** Row 1, published under the exact title. 1 point of 143, 0.7%, and the only row
-   in the set that is not a determination. It is the whole of what a response earns for
-   publishing a page with the wrong numbers on it.
+1. **The page.** Row 1, published under the exact title. 1 point of 79, 1.3%, and the only row in
+   the set that is not a determination.
 2. **The two totals.** Row 2, the total dollar liability $92,739.54, weight 10 and the Critical
-   value gate. Row 3, the total PTO hours 1,522.17, weight 8. 18 points. Row 2 grades every rule
-   across the whole population at once, because the total matches only if every entry is right,
-   and row 3 reads the same population on the hours axis.
-3. **The 24 moved cells.** Rows 4 to 27, 124 points, 19 balances and 5 rates over 22 employees.
-   A cell is graded only where the figure the world gives at 08/31/2026 is **not** the figure the
-   load carries, so a response that copies the report earns none of them and a response that
-   applies the rules earns them all.
+   value gate. Row 3, the total PTO hours 1,522.17, weight 8. 18 points.
+3. **The five lines.** Rows 4 to 13, 60 points, each line's PTO hours and PTO liability. Every
+   line figure is one the load carries wrong, so a response that copies the report earns none of
+   them, and each line is off in the load for a different mix of rules:
 
-The cell families, and the bytes behind them:
+| Line | Hours | Liability | The load carries | What moves it |
+|---|---|---|---|---|
+| Customer Success | 297.79 | $12,627.20 | 322.95 hours, $14,023.72 | the cap on TRT-0021, the archive's tier for TRT-0083, the part-time schedule of TRT-0141, the unloaded TRT-0153, the signed promotion of TRT-0088 and the step of TRT-0096 |
+| Engineering | 558.31 | $41,542.16 | 694.66 hours, $52,936.56 | five capped balances, the archive's tier for TRT-0051 and the signed amendment of TRT-0117 |
+| Finance and Corporate | 121.53 | $8,187.68 | 165.53 hours, $11,121.71 | the cap on TRT-0009 alone |
+| Product | 170.50 | $10,984.34 | 161.54 hours, $10,957.00 | the cap on TRT-0040 against the bridged TRT-0071 and the archive's tier for TRT-0079, netting to $27.34 |
+| Sales and Marketing | 374.04 | $19,398.16 | 407.03 hours, $22,061.40 | the cap on TRT-0018, TRT-0029 and TRT-0043, TRT-0018's timed tier change, the archive's tier for TRT-0043 and TRT-0058, and the unloaded TRT-0155 |
 
-- **The 40.0-hour cap at 06/30/2026**, from the cutover memo. Eleven employees are capped and ten
-  of them move a graded balance: TRT-0005, TRT-0009, TRT-0012, TRT-0014, TRT-0021, TRT-0023,
-  TRT-0029, TRT-0031, TRT-0040 and TRT-0043. The HRIS report prints the uncapped figure.
-- **The migrated service dates.** Nine records read 07/01/2026 in BambooHR and on the roster and
-  six accrue at the wrong tier there; four move a graded balance, TRT-0051, TRT-0058, TRT-0079
-  and TRT-0083, against the archive's real hire dates.
-- **The rehire bridge.** TRT-0071's rehire bridges a 241-day break to 03/08/2021 under the
-  handbook's 7.6 and the 160-hour tier, 51.87 hours against the report's 39.56.
-- **The timed tier change.** TRT-0018 crosses five years on 08/09/2026, inside the fourth posted
-  period, so three periods accrue at 4.6154 and one at 6.1538.
-- **The two unloaded hires.** TRT-0153 started 07/22/2026 and TRT-0155 on 08/03/2026, both marked
-  Never Loaded on the crosswalk. Four cells, a balance and a rate each, from the roster and the
-  offer letters.
-- **The part-time schedule change.** TRT-0141 was scheduled 25 hours until 08/09/2026 and 32 from
-  08/10/2026, pro-rata under 30 by the handbook's 2.2. The report accrues her at a full week.
-- **The signed pay changes and the step.** TRT-0088's promotion at $118,000.00 from 06/16/2026 and
-  TRT-0117's amendment at $148,200.00 from 05/16/2026 were dropped by the load; TRT-0096's offer
-  letter carries the $3,000.00 anniversary step effective 08/17/2026. Three rates.
+**Why Sales and Marketing are one line.** Marketing alone is a figure the load already carries
+right, so its two figures would have been points a copy of the load earns. Joined to Sales the
+line is wrong on every registered path from P0 to P4.
 
-Each of the 24 rows is priced by the dollars that cell moves in the total: 7 where it moves
-$2,000.00 or more (4 rows), 6 at $800.00 or more (6 rows), 5 at $250.00 or more (7 rows), 4 at
-$80.00 or more (4 rows) and 3 below that (3 rows). Gross movement across the 24 cells is
-$23,184.21. No row in the set weighs 2.
+Each line figure is priced by the dollars it moves off the load, $36,991.13 across the ten: 7
+where it moves $2,000.00 or more (Engineering, Finance and Corporate, and Sales and Marketing,
+six figures), 6 at $800.00 or more (Customer Success, two) and 3 below $80.00 (Product, two). No
+row in the set weighs 2.
 
-**Nothing grades absence.** A response that prints all 52 employees rather than the 22 the load
-has wrong loses nothing by it, and a response that prints only those 22 scores every point. An
-exclusion criterion would invalidate the golden, because the golden over-delivers on purpose: the
-correct page carries all 52 rows. Two battery scenarios prove it in both directions.
+**Nothing grades absence.** A response that also prints every employee, or Sales and Marketing
+apart beside the joined line, loses nothing by it. The battery proves it.
 
 ## Spec compliance notes
 
@@ -146,17 +140,16 @@ correct page carries all 52 rows. Two battery scenarios prove it in both directi
 | **1A** Realistic and complex | A policy cutover two months old, an HRIS load that capped nothing and moved nine service dates, an Office Manager gone who owned the policy page and the July schedule, a Finance Manager who booked July on the loaded numbers, and a handbook that incorporates a dated memo the wiki contradicts |
 | **1B** Natural prompting | One sentence in the owner's register; the request referenced by subject; the page title stated exactly; no step, order, workflow, persona, credential or format convention. The memo names the July detail it replaces and no rule |
 | **1C** Unique correct answer | Every graded value is a document's printed rule applied to a document's printed record, recomputed from the world's bytes by `check_world()` on every build. The two rounding conventions the cutover memo permits are both computed and both accepted; the reviewer decision rules in `02_task_metadata.md` settle the remaining readings |
-| **1D** Timeless | The request dates itself 09/01/2026 and sets 08/31/2026 as the measurement date; every other date is a world date |
-| **1E** Tightly scoped outputs | One page with two stated totals and one table of ID, hours and rate. 27 rows, all App DB Programatic on the Wiki.js pages table. No app but Wiki.js is written and none is graded |
-| **1F** Self-sufficient | Solvable from the request, the world files and the three apps alone. The one input uploads through 1.4 on the Filesystem target, measured at 13 of 13 here |
+| **1D** Timeless | The request dates itself 09/01/2026 and names the page for 08/31/2026; every other date is a world date |
+| **1E** Tightly scoped outputs | One page with two stated totals and five stated lines. 13 rows, all App DB Programatic on the Wiki.js pages table, every explicit ask in the memo read by a row and no row reading anything the memo does not ask for. Wiki.js is written, BambooHR is read, and nothing else is touched |
+| **1F** Self-sufficient | Solvable from the request, the world files and the apps alone. The one input uploads through 1.4 on the Filesystem target, measured at 13 of 13 here |
 | **1G** Purposeful | No persona. The prompt names the request, the one source and the one deliverable |
-| **2A** Genuinely challenging | The registered failing paths score 1 of 143 (P0, 0.7%), 19 (P1, 13.3%), 76 (P2, 53.1%), 100 (P3, 69.9%), 107 (P4, 74.8%) and 119 (P5, 83.2%); the free base is 1 of 143, 0.7%. T2's ten Gemini trajectories re-scored under this rubric read 8.3% and 14.7% by set, against 23.9% and 38.1% under T2's own. Those are re-scorings of runs against a different ask, so they are evidence about the pricing and not a v2 run set. **A v2 run set is owed.** The decision rule is registered in `06_failure_analysis.md`, dated before any run |
+| **2A** Genuinely challenging | The registered failing paths score 1 of 79 (P0 and P1, 1.3%), 15 (P2, 19.0%), 22 (P3, 27.8%), 29 (P4, 36.7%) and 49 (P5, 62.0%); the free base is 1 of 79. T2's ten Gemini trajectories re-scored under this rubric read 1.3% each, as printed and with their own rows summed onto the lines, because none applied the cap. Those are runs against a different ask, so they are evidence about the pricing and not a v2 run set. **A v2 run set is owed.** The decision rule is registered in `06_failure_analysis.md`, dated before any run |
 
-**Tolerances.** A cell is graded to half a hundredth of an hour and half a cent of an hourly rate.
-A stated total is graded to half a dollar and a stated hours figure to a twentieth of an hour,
-because v2's memo carries no Form section and nothing tells a response how many decimals to
-print. No rounding of a right answer fails a band and no registered path reaches one, the nearest
-being P5 at $49.93 and 9.66 hours away.
+**Tolerances.** A stated total or line figure is graded to half a dollar and a stated hours
+figure to a twentieth of an hour, because v2's memo carries no Form section and nothing tells a
+response how many decimals to print. No rounding of a right answer fails a band and no registered
+path reaches one.
 
 ## Withheld from the prompt and from the task input
 
@@ -170,8 +163,9 @@ every total, balance and rate; every word for checking, confirming, correcting, 
 governing; and the shape of the answer, with "whether", "only", "except", "instead", "differ",
 "conflict", "override" and their neighbours word-boundary-banned.
 
-**Required of the request**: the page title, the measurement date, the two totals, the three
-columns and the definition of a current employee. The out-of-scope block the memo carried through
-T2's task round 2 is gone since round 3, the deadline heading and the retention line went the
-same way in round 4, and the builder bars all three. v2 adds the twelve bars in the table above,
-so the ask states the determination and nothing beside it.
+**Required of the request**: the page title, the two totals, the five lines and the definition
+of a current employee. The out-of-scope block the memo carried through T2's task round 2 is gone
+since round 3, the deadline heading and the retention line went the same way in round 4, and the
+builder bars all three. v2 adds the twelve bars in the table above, and review round 1 adds the
+per-employee table and the measurement-date sentence, so the ask states the determination and
+nothing beside it.

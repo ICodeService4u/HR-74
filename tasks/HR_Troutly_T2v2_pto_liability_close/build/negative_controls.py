@@ -56,11 +56,11 @@ def control(label, path, old, new, script, args=(), expect=None, pre=None):
         open(path, "w", encoding="utf8").write(original)
         if pre:
             run(pre)
-    print("%-6s %-62s %s" % ("RED" if red else "GREEN!!", label, msg[:96]))
+    print("%-6s %-62s\t%s" % ("RED" if red else "GREEN!!", label, msg[:96]))
     return red
 
 
-ASK = "The page states the total PTO liability in dollars and the total PTO hours, and carries a row"
+ASK = "The page states the total PTO liability in dollars and the total PTO hours, and the PTO hours"
 CLOSE = "Troutly Analytics, Inc. - internal."
 NEED = "### What I need\n"
 DEFN = "A\ncurrent employee is anyone employed by Troutly on 08/31/2026."
@@ -95,9 +95,15 @@ ok.append(control("memo: the Form section returning", SRC, CLOSE,
 ok.append(control("memo: the BambooHR ask returning", SRC, CLOSE,
     "### BambooHR\n\nOnce the page is published, bring BambooHR to it.\n\n" + CLOSE, TIB))
 ok.append(control("memo: the summary count returning", SRC, ASK,
-    ASK.replace("and carries a row", "and the number of employees on the schedule, and carries a row"), TIB))
-ok.append(control("memo: a dropped column returning", SRC, "the employee ID, the PTO balance in hours and the hourly rate",
-    "the employee ID, name, department, the PTO balance in hours and the hourly rate", TIB))
+    ASK.replace("and the PTO hours", "and the number of employees on the schedule, and the PTO hours"), TIB))
+ok.append(control("memo: a dropped column returning", SRC, "The figures cover every current employee.",
+    "The figures cover every current employee, with the name, department and tier of each.", TIB))
+# ---- review round 1 of 09/22/2026: the two lines it took out, each an ask no row could cover
+ok.append(control("memo: the per-employee table returning", SRC, "The figures cover every current employee.",
+    "The page carries a row for every current employee with the employee ID, the PTO balance in hours and the hourly rate.", TIB))
+ok.append(control("memo: the measurement-date line returning", SRC, "One page published in Wiki.js, PTO Liability - 08/31/2026.",
+    "One page published in Wiki.js, PTO Liability - 08/31/2026. Use 08/31/2026 as the measurement date.", TIB))
+ok.append(control("memo: a line dropped from the ask", SRC, "Engineering, Finance\nand Corporate, Product,", "Engineering, Product,", TIB))
 ok.append(control("memo: the one-table shape returning", SRC, "One page published in Wiki.js, PTO Liability - 08/31/2026.",
     "One page published in Wiki.js, PTO Liability - 08/31/2026, with a short summary above one table.", TIB))
 # ---- the world's own bytes: a rule read wrong is a schedule read wrong
@@ -119,10 +125,13 @@ ok.append(control("plan: the free base over a seventh", BLD, '("free", 1, "-",',
 ok.append(control("plan: a cell priced outside its band", BLD,
     "MONEY_BANDS = [(2000.0, 7), (800.0, 6), (250.0, 5), (80.0, 4), (0.0, 3)]",
     "MONEY_BANDS = [(2000.0, 9), (800.0, 6), (250.0, 5), (80.0, 4), (0.0, 3)]", BLD))
-ok.append(control("plan: a cell the load already carries right", BLD,
-    "if abs(r[\"balance\"] - lb) > TOL_CELL:", "if abs(r[\"balance\"] - lb) >= 0.0:", BLD))
+ok.append(control("plan: a line the load already carries right, Marketing alone", BLD,
+    '("Sales and Marketing", ("Sales", "Marketing"))]', '("Sales", ("Sales",)), ("Marketing", ("Marketing",))]', BLD))
 ok.append(control("plan: the golden not scoring every point", BLD,
-    "    def cell_ok(field, i):", "    def cell_ok(field, i):\n        if i == \"TRT-0005\":\n            return lambda s: False", BLD))
+    "    def line_ok(field, name):", "    def line_ok(field, name):\n        if name == \"Product\":\n            return lambda s: False", BLD))
+ok.append(control("plan: over 25 criteria", BLD,
+    "    for c in CELLS:\n        n = c[\"line\"]\n        expl, refs = expl_refs(c)",
+    "    for c in CELLS * 3:\n        n = c[\"line\"]\n        expl, refs = expl_refs(c)", BLD))
 # ---- the rubric and the register
 ok.append(control("rubric: a compliance row flagged primary", BLD, '         OC, "No",\n         "One page under that title',
     '         OC, "Yes",\n         "One page under that title', BLD))
@@ -145,11 +154,16 @@ ok.append(control("import: a criterion type outside the code-verifier dropdown",
     'EA, OC = "Expert Assessment", "Objective Compliance"', 'EA, OC = "Extraction", "Objective Compliance"', BLD))
 ok.append(control("import: the 1.4 upload dropped from every row", BLD, "REQUEST = TASK_UPLOADS[0]", 'REQUEST = ""', BLD))
 # ---- the verifiers, through the harness: a defect in the engine must fail the battery
-ok.append(control("verifier: the key matched as a substring", ENG,
-    '        if re.fullmatch(ID_RE, n) or re.fullmatch(ID_RE + r" \\(.*\\)", n):\n            return n.split(" (")[0].upper()',
-    '        m = re.search(ID_RE, n)\n        if m:\n            return m.group(0).upper()', VH, expect="WRONG", pre=BLD))
-ok.append(control("verifier: a band around a stated cell", ENG,
-    "TOL_CELL = 0.005", "TOL_CELL = 0.02", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a line matched as a substring", ENG,
+            "            hit = [i for i, c in enumerate(r) if _line_name(c) == want]",
+            "            hit = [i for i, c in enumerate(r) if want in _line_name(c) or _line_name(c) in want]",
+            VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a line read off a prose word", ENG,
+    "        if n.startswith(want) and", "        if want.split()[0] in n and", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a line read off an employee row", ENG,
+    "            if _key_of(r):\n                continue\n            hit =", "            hit =", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a band around a stated line", ENG,
+    "TOL_LINE_MONEY, TOL_LINE_HOURS = TOL_TOTAL_MONEY, TOL_TOTAL_HOURS", "TOL_LINE_MONEY, TOL_LINE_HOURS = 2.0, 0.2", VH, expect="FALSE PASS", pre=BLD))
 ok.append(control("verifier: the band around a stated total", ENG,
     "TOL_TOTAL_MONEY, TOL_TOTAL_HOURS = 0.5, 0.05", "TOL_TOTAL_MONEY, TOL_TOTAL_HOURS = 5.0, 0.5",
     VH, expect="FALSE PASS", pre=BLD))
@@ -168,16 +182,16 @@ ok.append(control("verifier: a run's narration read instead of the database", EN
 ok.append(control("battery: an expectation planted wrong", SCN,
     '("the golden page", lambda: snap([(PAGE, GOLD)]), set(),', '("the golden page", lambda: snap([(PAGE, GOLD)]), {1},', VH, expect="FALSE PASS"))
 ok.append(control("battery: a page that over-delivers expected to fail", SCN,
-    '("every employee, seven columns and a summary block", lambda: snap([(PAGE, wide_page())]), set(),',
-    '("every employee, seven columns and a summary block", lambda: snap([(PAGE, wide_page())]), {1},', VH, expect="FALSE PASS"))
+    '("every employee, a line per department and a summary block", lambda: snap([(PAGE, wide_page())]), set(),',
+    '("every employee, a line per department and a summary block", lambda: snap([(PAGE, wide_page())]), {1},', VH, expect="FALSE PASS"))
 # ---- the golden, the show-your-work and the documents
 ok.append(control("golden: a total the schedule did not give", BLD,
     'lines = ["# %s" % (title or PAGE), "",\n             "Total PTO liability at %s: $%s" % (ASOF, f"{total:,.2f}")',
     'lines = ["# %s" % (title or PAGE), "",\n             "Total PTO liability at %s: $%s" % (ASOF, f"{total + 1:,.2f}")', BLD))
 ok.append(control("docs: a stale figure in the record", META_MD, "$92,739.54", "$92,739.45", BLD, ["--docs"]))
 ok.append(control("docs: a planned row missing from the record", META_MD,
-    "States, on the PTO liability page, total PTO hours of 1,522.17.",
-    "States, on the PTO liability page, total PTO hours of 1,522.18.", BLD, ["--docs"]))
+    "States, on the PTO liability page, PTO hours of 558.31 for Engineering.",
+    "States, on the PTO liability page, PTO hours of 558.13 for Engineering.", BLD, ["--docs"]))
 ok.append(control("docs: a file missing from the README", README_MD, "`build/task_input_source.md`", "`build/task_input_sources.md`", BLD, ["--docs"]))
 ok.append(control("docs: a non-ASCII character in a package document", META_MD, "## Fences", "## Fences " + "\u2014", BLD, ["--docs"]))
 ok.append(control("selection: a wildcard in the block", META_MD, "\nbamboohr/Employee.csv\n", "\nbamboohr/*.csv\n", SELECT))

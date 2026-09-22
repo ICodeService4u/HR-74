@@ -16,7 +16,7 @@ import os
 import sys
 
 # the engine prints its notes so a graded run on the platform shows them; here the verdicts
-# are what is read, and 55 rows over every snapshot would bury them
+# are what is read, and every row over every snapshot would bury them
 os.environ["T2_VERIFIER_QUIET"] = "1"
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -40,8 +40,8 @@ def _name(i):
 
 
 def expected_content(spec):
-    """The Expected Content field per row, from the spec the builder wrote. v2 carries five kinds
-    and no more, so a kind that is not one of them is a defect and raises here."""
+    """The Expected Content field per row, from the spec the builder wrote. A kind the builder
+    does not write is a defect and raises here."""
     k = spec["kind"]
     if k == "exists":
         return "one pages row titled %s with isPublished true" % B.PAGE
@@ -58,6 +58,12 @@ def expected_content(spec):
         return "%.2f hours, or %.2f under posted rounding, within %s" % (a, b, B.TOL_CELL)
     if k == "rate":
         return "%s within %s" % (B._rate(spec["expected"][0]), B.TOL_CELL)
+    if k == "line_hours":
+        return "%s hours on the %s line, or %s under posted rounding, within %s" % (
+            f"{spec['expected'][0]:,.2f}", spec["key"], f"{spec['expected'][1]:,.2f}", B.TOL_LINE_HOURS)
+    if k == "line_total":
+        return "%s on the %s line, or %s under posted rounding, within %s" % (
+            B._money(spec["expected"][0]), spec["key"], B._money(spec["expected"][1]), B.TOL_LINE_MONEY)
     raise KeyError(k)
 
 
@@ -71,6 +77,8 @@ def target_table(spec):
 
 def record_label(spec):
     k = spec["kind"]
+    if spec["target"] == "wiki" and k in ("line_hours", "line_total"):
+        return "the %s line on %s" % (spec["key"], B.PAGE)
     if spec["target"] == "wiki" and "key" in spec:
         return "%s, %s" % (_name(spec["key"]), spec["key"])
     if spec["target"] == "wiki" and k == "absent":
@@ -85,6 +93,8 @@ def record_label(spec):
 
 
 def record_id(spec):
+    if spec["kind"] in ("line_hours", "line_total"):
+        return B.PAGE
     if "key" in spec:
         return spec["key"]
     if "keys" in spec:
@@ -142,7 +152,7 @@ def table(rs):
 
 def guide(rs):
     md5 = B.md5(B.IMPORT)
-    head = """# 07 - the paste, row by row (T2, 09/20/2026)
+    head = """# 07 - the paste, row by row (T2 v2, 09/22/2026)
 
 The rubric import registers criteria, explanations, weights and criterion types and nothing else,
 measured by task round 1. Everything below is what the interface still needs per row, generated
@@ -169,13 +179,13 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `%s`, %d rows, %d poi
    `AttributeError` on `has_table` is a row file older than round 6. Select both services until
    a grading names the one that holds the pages table.
 4. **Run the per-verifier test-run on the untouched task** and compare with the block's expected
-   verdict and last `details` line. %d rows fail on the untouched task by design, %d on no page
-   under the title and %d on a BambooHR record as loaded or absent; the two guards over the records
-   the schedule leaves as loaded, rows %s, pass. A verdict that differs is a defect to read before
-   the next row is pasted.
-5. **Paste rows %s first.** They are the two routes: the pages table and the BambooHR tables.
-   Their `details` name every table and column the code resolved and the route it took, which is
-   the measurement open item 4 in `02_task_metadata.md` owes, so copy those lines into the record.
+   verdict and last `details` line. %d of %d rows fail on the untouched task by design, every one
+   on no page under the title. A row that passes there, or fails on anything else, is a defect to
+   read before the next row is pasted.
+5. **Paste rows %s first.** Row 1 proves the route to the pages table and the gate proves the
+   reader every other row leans on. Their `details` name every table and column the code resolved
+   and the route it took, which is the measurement open item 3 in `02_task_metadata.md` owes, so
+   copy those lines into the record.
 6. If the form offers a dropdown for Target Table, pick the table the block names and record the
    names the dropdown lists; they are the live shape the fixture could not measure.
 
@@ -186,9 +196,7 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `%s`, %d rows, %d poi
 ## The rows
 
 """ % (md5, len(rs), B.PLAN_TOTAL, len(rs), min(_lines(r["file"]) for r in rs), max(_lines(r["file"]) for r in rs),
-       sum(1 for r in rs if r["verdict"] == "FAILED"), sum(1 for r in rs if r["verdict"] == "FAILED" and r["app"] == "wiki_js"),
-       sum(1 for r in rs if r["verdict"] == "FAILED" and r["app"] == "bamboohr"),
-       ", ".join(str(r["i"]) for r in rs if r["verdict"] == "PASSED"), ", ".join(str(n) for n in FIRST), table(rs))
+       sum(1 for r in rs if r["verdict"] == "FAILED"), len(rs), " and ".join(str(n) for n in FIRST), table(rs))
     blocks = []
     for r in rs:
         blocks.append("""### Row %d, weight %d, %s%s
@@ -221,6 +229,8 @@ def _lines(rel):
 
 def main():
     rs = rows()
+    assert all(r["verdict"] == "FAILED" and "no page titled" in r["last"] for r in rs), \
+        "a row does not fail the untouched task on the missing page: %r" % [(r["i"], r["last"]) for r in rs if r["verdict"] != "FAILED" or "no page titled" not in r["last"]]
     text = guide(rs)
     assert all(ord(c) < 128 for c in text), "the paste guide is not ASCII"
     open(GUIDE, "w", encoding="utf8", newline="\n").write(text)
