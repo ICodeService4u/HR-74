@@ -1,8 +1,9 @@
 # T2 v2 - task metadata, weighting and the registered record
 
 Built 09/22/2026 from T2's measured record. Same world, same determination, a narrower ask and
-a rubric priced by what a wrong cell costs the output. T2's own package stays where it is and
-keeps its history; nothing here restates it.
+a rubric priced by what a wrong figure costs the output. T2's own package stays where it is and
+keeps its history; nothing here restates it. Review round 1, the same day, narrowed the ask
+again, from a row per current employee to five department lines, and is recorded below.
 
 ## Identity
 
@@ -11,16 +12,16 @@ keeps its history; nothing here restates it.
 | **Task name** | PTO Liability at 08/31/2026 |
 | **1.1) Prompt** | the one line below, blockquoted verbatim |
 | **1.3) Steps** | `08_section_1_3_step_plan.md` |
-| **1.4) Additional task files** | `00_task_input_pto_liability_request.pdf` on the **Filesystem** target, md5 `b1b8dbf887bfd55f632f4224633fdf14`, 2395 bytes. It uploads as `pto_liability_request.pdf` |
+| **1.4) Additional task files** | `00_task_input_pto_liability_request.pdf` on the **Filesystem** target, md5 `81963ec80cd2bee9fa1cb561c9df1eb7`, 2429 bytes. It uploads as `pto_liability_request.pdf` |
 | **1.5) Expected Output Files** | Nothing. The deliverable is one published page |
 | **Grading target** | None. Every row is App DB Programatic on the Wiki.js `pages` table |
 | **Apps** | Wiki.js (written), BambooHR (read), Greenhouse (untouched and ungraded) |
 | **Deliverable** | one page, `PTO Liability - 08/31/2026` |
 | **World snapshot** | `snap_c6f6a0879f3d47a19048ee80d7529157` |
 | **Task data id** | `snap_1e12795ed0df4d489a36382afdb63279`, the id measured on 09/21/2026. v2's own is read off its first export |
-| **Rubric import** | `05_rubric_import.xlsx`, md5 `12b9c24b04a769ebbfa56ebfb032692d`, **27 rows and 143 points**, 26 primary, one sheet named Rubric in the HR 79 T1 column order |
-| **Golden output** | `04_golden_output_PTO_Liability.md`, md5 `6ff98cc8274ed771391957dda38c3903` |
-| **Verifier code** | 27 row files under `qc/verifiers/`, each the row's spec stamped onto `build/verifier_engine.py`. `qc/verifier_harness.py` reads every row against every snapshot with the answer known |
+| **Rubric import** | `05_rubric_import.xlsx`, md5 `923fcbdd7bdf474a702e26c5e6142039`, **13 rows and 79 points**, 12 primary, one sheet named Rubric in the HR 79 T1 column order |
+| **Golden output** | `04_golden_output_PTO_Liability.md`, md5 `4568b979097e4411479f9960b0e10fae` |
+| **Verifier code** | 13 row files under `qc/verifiers/`, each the row's spec stamped onto `build/verifier_engine.py`. `qc/verifier_harness.py` reads every row against every snapshot with the answer known |
 
 ## 1.1) The prompt, verbatim
 
@@ -44,17 +45,41 @@ are out of the request, so the rubric has nothing to price low.
 | Dates MM/DD/YYYY | gone | the date row |
 | hours to two decimals, rates to four, dollars to the cent | gone | three precision rows |
 | the total is the sum of the rows | gone | the reconciliation row |
-| an employee ID on every row | gone as a line, kept as the key each value row reads | the ID row |
+| an employee ID on every row | gone | the ID row |
 | the BambooHR instruction | gone | 29 BambooHR rows at 1 |
-| the page, the totals, a balance and a rate per employee | kept | every row v2 carries |
+| a row per current employee with ID, balance and rate | gone in review round 1 | 24 cell rows, and 156 values no 25-criterion rubric covers |
+| Use 08/31/2026 as the measurement date | gone in review round 1 | no row, an ask the title already carries that the review found unread |
+| the page and the two totals | kept | rows 1 to 3 |
+| hours and dollars for five department lines, Sales and Marketing joined | added in review round 1 | rows 4 to 13 |
+
+## Review round 1, 09/22/2026
+
+The first review read the 27-row file and raised two findings, both accepted.
+
+1. **Prompt scope against rubric coverage.** The request asked for a row per current employee
+   with three values, 52 by 3, 156 requirements before the title and the totals, and the
+   platform's feasibility limit is 25 criteria. The 27-row rubric was itself over it. The
+   per-employee table is out of the request and five department lines are in: each line's PTO
+   hours and PTO liability, 13 criteria in all.
+2. **Prompt-rubric alignment.** The measurement-date sentence and the per-employee table were
+   explicit asks no row read. The table is gone with finding 1, and the sentence is gone
+   because the page title and the subject already carry the date and every graded figure is a
+   figure at that date.
+
+**Why Sales and Marketing are one line.** Marketing alone is a line the load already carries
+right, so a response that copied the HRIS report would have earned both its figures. Joined to
+Sales, which the load carries wrong until TRT-0018's tier change is timed inside the fourth
+period, the line is wrong on every path from P0 to P4. The memo names the five lines and asks for no
+per-employee figure, and `build/build_task_input.py` bars the table and the date sentence from
+returning, one control each.
 
 `build/build_task_input.py` bars each removed line from returning, one negative control each,
 the way the fence, the deadline and the retention line are barred.
 
 ## The weighting, registered before any v2 run
 
-**27 rows, 143 points.** One row is not a determination: row 1, the page published under the
-title, at 1 point, 0.7% of the set. That is the whole of what a response earns for publishing
+**13 rows, 79 points.** One row is not a determination: row 1, the page published under the
+title, at 1 point, 1.3% of the set. That is the whole of what a response earns for publishing
 a page with the wrong numbers on it.
 
 | Row | Weight | What it reads |
@@ -62,104 +87,75 @@ a page with the wrong numbers on it.
 | 1 | 1 | the page exists under the title with its published flag set |
 | 2 | 10 | the stated total dollar liability, $92,739.54, the gate |
 | 3 | 8 | the stated total PTO hours, 1,522.17 |
-| 4 to 27 | 3 to 7 | one cell each, the 19 balances and 5 hourly rates the load carries wrong |
+| 4 to 13 | 3 to 7 | each line's PTO hours and PTO liability, five lines, every figure one the load carries wrong |
 
-**A cell's weight is the dollars it moves.** Each graded cell is priced by the liability
-between the figure the world gives and the figure the load carries, $23,539.62 across the 24 cells:
+**A line figure's weight is the dollars it moves.** A dollar figure is priced by the liability
+between the line the world gives and the line the load carries, an hours figure by the hours
+it is off by, each at its own employee's rate, $36,991.13 across the 10 figures:
 
 | Band | Weight | Rows |
 |---|---|---|
-| moves $2,000.00 or more | 7 | 4 |
-| moves $800.00 or more | 6 | 6 |
-| moves $250.00 or more | 5 | 7 |
-| moves $80.00 or more | 4 | 4 |
-| moves less than $80.00 | 3 | 3 |
+| moves $2,000.00 or more | 7 | 6 |
+| moves $800.00 or more | 6 | 2 |
+| moves $250.00 or more | 5 | 0 |
+| moves $80.00 or more | 4 | 0 |
+| moves less than $80.00 | 3 | 2 |
 
-**Why the request still asks for a row per current employee.** The rubric reads 24 cells, so a
-request that asked only for the rows the load has wrong would have matched it exactly. It would
-also have told the response that the load is wrong, which is the determination this ask
-measures, and a response told where to look is a response handed the answer. The request asks
-for the whole schedule, in the three columns the totals are built from, and says nothing about
-the report beyond naming it as a source. The rubric then reads the cells that separate a
-response that applied the rules from one that copied the report.
+**Why the lines and not the exceptions.** A request that named the employees the load has
+wrong would have told the response that the load is wrong, which is the determination this ask
+measures. A department line is a figure a finance close asks for anyway, every current
+employee sits on exactly one, and each line is off in the load for a different mix of rules,
+so the lines score a response rule by rule without pointing at a record.
 
-**Nothing in the set grades the absence of content.** A response that prints all 52 current
-employees passes exactly what a response that prints only the 22 the load has wrong passes.
-An exclusion criterion would invalidate the golden, because a correct response over-delivers
-anyway, and the battery proves both directions.
+**Nothing in the set grades the absence of content.** A response that also prints all 52
+current employees, or Sales and Marketing apart beside the joined line, passes exactly what the
+golden passes. An exclusion criterion would invalidate the golden, because a correct response
+over-delivers anyway, and the battery proves both directions.
 
 ## The registered paths
 
 | Path | What the run does | Rows | Total it prints | Score |
 |---|---|---|---|---|
-| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 1 of 143, 0.7% |
-| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 19 of 143, 13.3% |
-| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 76 of 143, 53.1% |
-| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 100 of 143, 69.9% |
-| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 107 of 143, 74.8% |
-| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 119 of 143, 83.2% |
-| P6 | the heal | 52 | $92,739.54 | 143 of 143, 100.0% |
+| P0 | the July close method rolled forward: the HRIS report's rows and balances, the loaded tiers and rates, contractors and ended records inside, the two unloaded hires outside | 57 | $119,758.03 | 1 of 79, 1.3% |
+| P1 | the HRIS report with the population fixed: 52 rows, balances uncapped, the loaded tiers and rates | 52 | $111,455.78 | 1 of 79, 1.3% |
+| P2 | P1 with the 40.0-hour cap applied at 06/30/2026 | 52 | $90,983.94 | 15 of 79, 19.0% |
+| P3 | P2 with tiers from the archive's service dates, the rehire unbridged, the tier change not timed, the rates as loaded | 52 | $92,804.10 | 22 of 79, 27.8% |
+| P4 | P3 with the two signed pay changes applied | 52 | $92,934.50 | 29 of 79, 36.7% |
+| P5 | P4 with the rehire bridged and the tier change timed; the step and the part-time schedule still missed | 52 | $92,789.47 | 49 of 79, 62.0% |
+| P6 | the heal | 52 | $92,739.54 | 79 of 79, 100.0% |
 
-## The graded cells, from the world's own bytes
+## The graded lines, from the world's own bytes
 
-| # | Employee | Cell | The world gives | The load carries | Moves | Weight |
+| # | Line | Figure | The world gives | The load carries | Moves | Weight |
 |---|---|---|---|---|---|---|
-| 1 | Mikelle Hosana, TRT-0005 | balance | 64.62 hours | 117.12 hours | $4,732.82 | 7 |
-| 2 | Krystale Jumawan, TRT-0009 | balance | 64.62 hours | 108.62 hours | $2,934.04 | 7 |
-| 3 | Jessica Ko, TRT-0012 | balance | 18.46 hours | 49.96 hours | $2,671.44 | 7 |
-| 4 | Marisela Thornbury, TRT-0018 | balance | 60.00 hours | 87.87 hours | $2,322.05 | 7 |
-| 5 | Edith Bustamante, TRT-0021 | balance | 42.46 hours | 76.46 hours | $1,982.79 | 6 |
-| 6 | Rohan Iyer, TRT-0014 | balance | 58.46 hours | 84.46 hours | $1,958.75 | 6 |
-| 7 | Maeve Oyinlola, TRT-0023 | balance | 58.46 hours | 78.96 hours | $1,526.66 | 6 |
-| 8 | Zephyr Adebayo, TRT-0031 | balance | 26.46 hours | 38.46 hours | $930.00 | 6 |
-| 9 | Emeka Thorsen, TRT-0029 | balance | 50.46 hours | 67.46 hours | $828.75 | 6 |
-| 10 | Ilse Van der Kolk, TRT-0040 | balance | 58.46 hours | 67.96 hours | $805.67 | 6 |
-| 11 | Samuel Burkenham, TRT-0071 | balance | 51.87 hours | 39.56 hours | $479.38 | 5 |
-| 12 | Priyamvada Raghunath, TRT-0051 | balance | 6.71 hours | 0.56 hours | $383.78 | 5 |
-| 13 | Wren Takahashi-Bell, TRT-0079 | balance | 24.96 hours | 18.81 hours | $353.63 | 5 |
-| 14 | Callum Oyelaran, TRT-0058 | balance | 40.96 hours | 34.81 hours | $280.15 | 5 |
-| 15 | Desmond Achterberg, TRT-0083 | balance | 18.71 hours | 12.56 hours | $275.27 | 5 |
-| 16 | Simone Okonkwo, TRT-0153 | balance | 6.15 hours | 0.00 hours | $272.02 | 5 |
-| 17 | Simone Okonkwo, TRT-0153 | rate | $44.2308 | no record | $272.02 | 5 |
-| 18 | Oren Kastellanos, TRT-0043 | balance | 34.46 hours | 31.81 hours | $124.03 | 4 |
-| 19 | Yolanda Featherstone, TRT-0088 | rate | $56.7308 | $50.0000 | $88.91 | 4 |
-| 20 | Rafael Ibarra, TRT-0155 | balance | 3.08 hours | 0.00 hours | $83.37 | 4 |
-| 21 | Rafael Ibarra, TRT-0155 | rate | $27.0673 | no record | $83.37 | 4 |
-| 22 | Beatriz Quintanilla, TRT-0141 | balance | 29.60 hours | 33.06 hours | $79.58 | 3 |
-| 23 | Belaviv Luk, TRT-0117 | rate | $71.2500 | $66.3462 | $41.49 | 3 |
-| 24 | Delphine Marchetti, TRT-0096 | rate | $29.3269 | $27.8846 | $29.65 | 3 |
+| 1 | Customer Success | hours | 297.79 hours | 322.95 hours | $1,515.08 | 6 |
+| 2 | Customer Success | dollars | $12,627.20 | $14,023.72 | $1,396.52 | 6 |
+| 3 | Engineering | hours | 558.31 hours | 694.66 hours | $11,435.89 | 7 |
+| 4 | Engineering | dollars | $41,542.16 | $52,936.56 | $11,394.40 | 7 |
+| 5 | Finance and Corporate | hours | 121.53 hours | 165.53 hours | $2,934.04 | 7 |
+| 6 | Finance and Corporate | dollars | $8,187.68 | $11,121.71 | $2,934.03 | 7 |
+| 7 | Product | hours | 170.50 hours | 161.54 hours | $27.33 | 3 |
+| 8 | Product | dollars | $10,984.34 | $10,957.00 | $27.34 | 3 |
+| 9 | Sales and Marketing | hours | 374.04 hours | 407.03 hours | $2,663.26 | 7 |
+| 10 | Sales and Marketing | dollars | $19,398.16 | $22,061.40 | $2,663.24 | 7 |
 
 ## The rubric, row by row
 
 | # | Wt | Type | Primary | Criterion | Explanation |
 |---|---|---|---|---|---|
 | 1 | 1 | Objective Compliance | No | States that a Wiki.js page titled PTO Liability - 08/31/2026 is published. | One page under that title is what the request asks for in Wiki.js, so it exists with its published flag set. |
-| 2 | 10 | Expert Assessment | Yes | States, on the PTO liability page, a total dollar liability of $92,739.54. | The cutover memo caps carryover at 40.0 hours, accrues four posted periods at the tier over 26 and values each balance at the rate on file over 2,080. The 52 rows sum to $92,739.54, or $92,772.88 rounding each posting. |
+| 2 | 10 | Expert Assessment | Yes | States, on the PTO liability page, a total dollar liability of $92,739.54. | The cutover memo caps carryover at 40.0 hours, accrues four posted periods at the tier over 26 and values each balance at the rate on file over 2,080. The 52 balances sum to $92,739.54, or $92,772.88 rounding each posting. |
 | 3 | 8 | Expert Assessment | Yes | States, on the PTO liability page, total PTO hours of 1,522.17. | The 52 current employees hold 1,522.17 hours at 08/31/2026 once the cutover memo's cap runs and four posted periods accrue by adjusted service date. The HRIS report's columns add to 1,751.71. |
-| 4 | 7 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 64.62 hours for Mikelle Hosana, TRT-0005. | Hosana carries 117.12 hours on the HRIS report and the archive holds 92.50 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 160-hour tier add 24.6152. |
-| 5 | 7 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 64.62 hours for Krystale Jumawan, TRT-0009. | Jumawan carries 108.62 hours on the HRIS report and the archive holds 84.00 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 160-hour tier add 24.6152. |
-| 6 | 7 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 18.46 hours for Jessica Ko, TRT-0012. | Ko carries 49.96 hours on the HRIS report and the archive holds 71.50 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 7 | 7 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 60.00 hours for Marisela Thornbury, TRT-0018. | The archive dates Thornbury's service from 08/09/2021 and her capped opening is 40.00 hours. She reaches five years on 08/09/2026 inside the fourth posted period, so the cutover memo accrues three periods of 4.6154 hours and one of 6.1538. |
-| 8 | 6 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 42.46 hours for Edith Bustamante, TRT-0021. | Bustamante carries 76.46 hours on the HRIS report and the archive holds 58.50 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 9 | 6 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 58.46 hours for Rohan Iyer, TRT-0014. | Iyer carries 84.46 hours on the HRIS report and the archive holds 66.00 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 10 | 6 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 58.46 hours for Maeve Oyinlola, TRT-0023. | Oyinlola carries 78.96 hours on the HRIS report and the archive holds 60.50 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 11 | 6 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 26.46 hours for Zephyr Adebayo, TRT-0031. | Adebayo carries 38.46 hours on the HRIS report and the archive holds 52.00 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 12 | 6 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 50.46 hours for Emeka Thorsen, TRT-0029. | Thorsen carries 67.46 hours on the HRIS report and the archive holds 57.00 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 13 | 6 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 58.46 hours for Ilse Van der Kolk, TRT-0040. | Kolk carries 67.96 hours on the HRIS report and the archive holds 49.50 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 14 | 5 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 51.87 hours for Samuel Burkenham, TRT-0071. | Burkenham's archive service bridges a 241-day break under the handbook's 7.6, five completed years at 08/31/2026. Four posted periods accrue at the 160-hour tier, so 51.87 hours stand against the HRIS report's 39.56. |
-| 15 | 5 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 6.71 hours for Priyamvada Raghunath, TRT-0051. | Raghunath reads the 80-hour tier in BambooHR and the archive dates the hire 05/03/2022, four completed years at 08/31/2026. The cutover memo accrues at the 120-hour tier, so 6.71 hours stand against the HRIS report's 0.56. |
-| 16 | 5 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 24.96 hours for Wren Takahashi-Bell, TRT-0079. | Takahashi-Bell reads the 80-hour tier in BambooHR and the archive dates the hire 02/06/2023, three completed years at 08/31/2026. The cutover memo accrues at the 120-hour tier, so 24.96 hours stand against the HRIS report's 18.81. |
-| 17 | 5 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 40.96 hours for Callum Oyelaran, TRT-0058. | Oyelaran reads the 80-hour tier in BambooHR and the archive dates the hire 09/12/2022, three completed years at 08/31/2026. The cutover memo accrues at the 120-hour tier, so 40.96 hours stand against the HRIS report's 34.81. |
-| 18 | 5 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 18.71 hours for Desmond Achterberg, TRT-0083. | Achterberg reads the 80-hour tier in BambooHR and the archive dates the hire 06/19/2023, three completed years at 08/31/2026. The cutover memo accrues at the 120-hour tier, so 18.71 hours stand against the HRIS report's 12.56. |
-| 19 | 5 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 6.15 hours for Simone Okonkwo, TRT-0153. | Okonkwo started 07/22/2026 on the roster and the crosswalk marks TRT-0153 Never Loaded. The cutover memo accrues each posted period at the 80-hour tier, 3.0769 hours a period since the start. |
-| 20 | 5 | Expert Assessment | Yes | States, on the PTO liability page, an hourly rate of $44.2308 for Simone Okonkwo, TRT-0153. | Okonkwo's roster salary of $92,000.00 over 2,080 is $44.2308 an hour, and the crosswalk marks TRT-0153 Never Loaded with no BambooHR rate against it. |
-| 21 | 4 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 34.46 hours for Oren Kastellanos, TRT-0043. | Kastellanos carries 31.81 hours on the HRIS report and the archive holds 43.50 at 06/30/2026. The cutover memo caps carryover at 40.0 hours, and four periods at the 120-hour tier add 18.4616. |
-| 22 | 4 | Expert Assessment | Yes | States, on the PTO liability page, an hourly rate of $56.7308 for Yolanda Featherstone, TRT-0088. | The signed promotion approval sets Featherstone's salary at $118,000.00 from 06/16/2026 and the handbook's 3.2 puts the signed document over the record. BambooHR carries $104,000.00. $118,000.00 over 2,080 is $56.7308. |
-| 23 | 4 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 3.08 hours for Rafael Ibarra, TRT-0155. | Ibarra started 08/03/2026 on the roster and the crosswalk marks TRT-0155 Never Loaded. The cutover memo accrues each posted period at the 80-hour tier, 3.0769 hours a period since the start. |
-| 24 | 4 | Expert Assessment | Yes | States, on the PTO liability page, an hourly rate of $27.0673 for Rafael Ibarra, TRT-0155. | Ibarra's roster salary of $56,300.00 over 2,080 is $27.0673 an hour, and the crosswalk marks TRT-0155 Never Loaded with no BambooHR rate against it. |
-| 25 | 3 | Expert Assessment | Yes | States, on the PTO liability page, a balance of 29.60 hours for Beatriz Quintanilla, TRT-0141. | The schedule change form moves Quintanilla from 25 to 32 hours a week on 08/10/2026 and the handbook's 2.2 accrues part-time hours pro-rata under 30. The HRIS report accrues her at a full week and shows 33.06 hours. |
-| 26 | 3 | Expert Assessment | Yes | States, on the PTO liability page, an hourly rate of $71.2500 for Belaviv Luk, TRT-0117. | The signed amendment sets Luk's salary at $148,200.00 from 05/16/2026 and the archive recorded it. BambooHR carries the loaded $138,000.00, and $148,200.00 over 2,080 is $71.2500. |
-| 27 | 3 | Expert Assessment | Yes | States, on the PTO liability page, an hourly rate of $29.3269 for Delphine Marchetti, TRT-0096. | Marchetti's offer letter carries the Support Specialist step on each anniversary and the handbook's 5.4 sets it at $3,000.00. Her anniversary fell 08/17/2026, so the rate on file is $61,000.00, $29.3269 an hour. |
+| 4 | 6 | Expert Assessment | Yes | States, on the PTO liability page, PTO hours of 297.79 for Customer Success. | In Customer Success the cutover memo caps TRT-0021 at 40.0 hours, the archive puts TRT-0083 at the 120-hour tier, handbook 2.2 prorates TRT-0141 and TRT-0153 accrues from the start. The line holds 297.79 hours, the HRIS report 322.95. |
+| 5 | 6 | Expert Assessment | Yes | States, on the PTO liability page, a PTO liability of $12,627.20 for Customer Success. | Handbook 3.2 and 5.4 put TRT-0088 at $118,000.00 and TRT-0096 at $61,000.00, and the roster puts TRT-0153 at $92,000.00. On those rates and the capped balances Customer Success carries $12,627.20 against the load's $14,023.72. |
+| 6 | 7 | Expert Assessment | Yes | States, on the PTO liability page, PTO hours of 558.31 for Engineering. | Five Engineering balances sit over the cutover memo's 40.0-hour cap, TRT-0005 at 92.50 in the archive, and the archive puts TRT-0051 at the 120-hour tier. Engineering holds 558.31 hours against the HRIS report's 694.66. |
+| 7 | 7 | Expert Assessment | Yes | States, on the PTO liability page, a PTO liability of $41,542.16 for Engineering. | The signed amendment sets TRT-0117 at $148,200.00 from 05/16/2026 over the loaded $138,000.00. With the capped balances Engineering carries $41,542.16 of liability against the load's $52,936.56. |
+| 8 | 7 | Expert Assessment | Yes | States, on the PTO liability page, PTO hours of 121.53 for Finance and Corporate. | Finance and Corporate has one balance over the cap, TRT-0009 at 84.00 in the archive, which the cutover memo holds to 40.0 hours. The line holds 121.53 hours against the HRIS report's 165.53. |
+| 9 | 7 | Expert Assessment | Yes | States, on the PTO liability page, a PTO liability of $8,187.68 for Finance and Corporate. | Capping TRT-0009 under the cutover memo takes Finance and Corporate to $8,187.68 at the rates on the roster. The load values the same five employees at $11,121.71. |
+| 10 | 3 | Expert Assessment | Yes | States, on the PTO liability page, PTO hours of 170.50 for Product. | Product nets close to the load because the cutover memo caps TRT-0040 while handbook 7.6 bridges TRT-0071 and the archive puts TRT-0079 at the 120-hour tier. It holds 170.50 hours against the HRIS report's 161.54. |
+| 11 | 3 | Expert Assessment | Yes | States, on the PTO liability page, a PTO liability of $10,984.34 for Product. | At the rates on the roster the Product line carries $10,984.34, the cap on TRT-0040 offset by the bridged TRT-0071 and the retiered TRT-0079 under the cutover memo. The load carries $10,957.00. |
+| 12 | 7 | Expert Assessment | Yes | States, on the PTO liability page, PTO hours of 374.04 for Sales and Marketing. | The request joins Sales and Marketing. The cutover memo caps TRT-0018, TRT-0029 and TRT-0043, times TRT-0018's tier change and accrues TRT-0155 from the start, 374.04 hours against the HRIS report's 407.03. |
+| 13 | 7 | Expert Assessment | Yes | States, on the PTO liability page, a PTO liability of $19,398.16 for Sales and Marketing. | Valued at the roster's rates, TRT-0155 at $56,300.00, the joined Sales and Marketing line carries $19,398.16 under the cutover memo. The load's figures for the same 13 employees come to $22,061.40. |
 
 ## Required world files
 
@@ -209,25 +205,28 @@ nothing, so a row on it is a point every response earns.
 
 1. A stated total is read as stated. The page is asked to state both totals, so a sum a reader
    would have to do themselves is not a stated total.
-2. A cell is read on the row keyed by the employee ID, on a whole-cell match, never a substring.
-3. A balance is graded to half a hundredth of an hour and an hourly rate to half a cent. A
-   response may print more decimals than that and is read at the precision it prints.
-4. The two totals are graded to half a dollar and a twentieth of an hour. The request carries no
-   Form section, so a response that rounds what it states has still stated it, and no registered
-   path comes within either band.
+2. A line is read where the page names it: a table row one of whose cells is the line's name, or
+   a prose line that opens on it. Sales alone is not Sales and Marketing, and a figure inside an
+   employee row is that employee's, never a line's or a total.
+3. A line a reader would have to add up from the employees is not a stated line.
+4. The two totals and the ten line figures are graded to half a dollar and a twentieth of an
+   hour. The request carries no Form section, so a response that rounds what it states has
+   still stated it, and no registered path comes within either band.
 5. Extra rows, extra columns and extra tables cost nothing. Only what the criterion names is read.
 6. The page is the one row of the `pages` table whose title matches. Two rows under the title
    fail every page row, because the request asks for one page.
 
 ## Predictions, dated 09/22/2026, before any v2 run
 
-1. A response that copies the HRIS time off report scores 1 of 143, the page row alone.
+1. A response that copies the HRIS time off report scores 1 of 79, the page row alone.
 2. The gate fails on any response that misses the cap, which is every trajectory measured in
    this world so far, ten of ten.
-3. The two unloaded hires are the cells this tier gets right: nine of the ten measured
-   trajectories created them and computed both balances, so rows on them are earned, not free.
-4. A Gemini set will land under 25%. The ten trajectories already measured against T2's wider
-   ask read 8.3% and 14.7% under this rubric.
+3. Finance and Corporate is the line this tier gets right most often, because the cap is its
+   only rule. Product is the line it gets right least, because the cap and the bridge pull it
+   in opposite directions and net to $27.34.
+4. A Gemini set will land under 25%. The ten trajectories already measured against the earlier
+   ask read 1.3% and 1.3% under this rubric as printed, and 1.3% and 1.3% with each run's own rows
+   summed onto the lines. None of them applied the cap, and the cap moves every line.
 5. If a set lands over 60%, the lever is measured insufficient in this world for this tier and
    the package retires. The rubric is not rescoped around whatever failed.
 

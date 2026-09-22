@@ -12,8 +12,10 @@ asks for real ones, which is what a real grading snapshot has been measured to r
 
 What this battery exists to prove, beyond the verdicts: that NOTHING in the set grades the
 absence of content. Half the correct-state scenarios are pages that carry more than the request
-asks for - every employee rather than the ones the load has wrong, the columns v2 dropped, a
-summary block, a second table - and each must score every point.
+asks for - every employee beside the five lines, the seven columns T2 asked for, a line per
+department beside the joined one, a second table - and each must score every point. Since review
+round 1 of 09/22/2026 the lines are what the rows read, so the battery also proves that a line is
+read where the page names it and nowhere else: not off an employee row, not off Sales alone.
 """
 import csv
 import os
@@ -46,6 +48,7 @@ PAGE_ROW = 1
 TOTAL_ROW = next(i for i, r in enumerate(B.PLAN, 1) if r[9]["kind"] == "total")
 HOURS_ROW = next(i for i, r in enumerate(B.PLAN, 1) if r[9]["kind"] == "hours")
 CELL_ROW = {(r[9]["kind"], r[9]["key"]): i for i, r in enumerate(B.PLAN, 1) if "key" in r[9]}
+LINE_ROWS = lambda n: {CELL_ROW[("line_hours", n)], CELL_ROW[("line_total", n)]}
 ALL_ROWS = set(range(1, ROWS + 1))
 VALUE_ROWS = set(CELL_ROW.values())
 
@@ -114,18 +117,38 @@ def to_html(md):
     return "<table>".join(["\n".join(out[:3]), "\n".join(out[3:]) + "</table>"])
 
 
+def line_table(sched, split_sales=False):
+    """The five lines as the golden prints them, or with Sales and Marketing as two lines."""
+    f = B.line_figures(sched)
+    out = ["| Line | PTO hours | PTO liability |", "|---|---|---|"]
+    for name, ds in B.LINES:
+        if split_sales and len(ds) > 1:
+            for d in ds:
+                rows = [r for r in sched if r["dept"] == d]
+                out.append("| %s | %s | $%s |" % (d, f"{sum(r['balance'] for r in rows):,.2f}",
+                                                   f"{sum(r['liability'] for r in rows):,.2f}"))
+            continue
+        out.append("| %s | %s | $%s |" % (name, f"{f[name][0]:,.2f}", f"{f[name][1]:,.2f}"))
+    return out
+
+
 def wide_page(sched=None):
-    """The page a run writes when it prints the whole schedule: seven columns, a summary block and
-    every current employee, not only the ones the load has wrong. It must score every point."""
+    """The page a run writes when it prints the whole schedule beside the lines: a summary block,
+    a line per department and the joined line, and every current employee in seven columns. It
+    must score every point."""
     sched = sched or B.GOLDEN
     hours = round(sum(r["balance"] for r in sched), 2)
     total = round(sum(r["liability"] for r in sched), 2)
     lines = ["# %s" % PAGE, "", "## Summary", "",
              "- Employees on the schedule: %d" % len(sched),
              "- Total PTO hours: %s" % f"{hours:,.2f}",
-             "- Total PTO liability: $%s" % f"{total:,.2f}", "",
-             "| Employee ID | Name | Department | Annual PTO tier | PTO balance | Hourly rate | Dollar liability |",
-             "|---|---|---|---|---|---|---|"]
+             "- Total PTO liability: $%s" % f"{total:,.2f}", "", "## By department", ""]
+    lines += line_table(sched, split_sales=True)
+    f = B.line_figures(sched)
+    lines += ["| Sales and Marketing | %s | $%s |" % (f"{f['Sales and Marketing'][0]:,.2f}", f"{f['Sales and Marketing'][1]:,.2f}"), "",
+              "## Employees", "",
+              "| Employee ID | Name | Department | Annual PTO tier | PTO balance | Hourly rate | Dollar liability |",
+              "|---|---|---|---|---|---|---|"]
     for r in sched:
         lines.append("| %s | %s | %s | %d | %.2f | $%.4f | $%s |"
                      % (r["id"], r["name"], r["dept"], r["tier"], r["balance"], r["hourly"],
@@ -133,36 +156,50 @@ def wide_page(sched=None):
     return "\n".join(lines) + "\n"
 
 
-def exceptions_page(sched=None):
-    """The page a run writes when it prints only the rows the load has wrong. Also every point."""
+def prose_page(sched=None):
+    """The lines written as prose, one bullet a line, each opening on the line's name."""
     sched = sched or B.GOLDEN
-    by = {r["id"]: r for r in sched}
+    f = B.line_figures(sched)
+    hours = round(sum(r["balance"] for r in sched), 2)
+    total = round(sum(r["liability"] for r in sched), 2)
+    lines = ["# %s" % PAGE, "", "The total PTO liability is $%s on %s hours." % (f"{total:,.2f}", f"{hours:,.2f}"), ""]
+    for name, ds in B.LINES:
+        lines.append("- **%s**: %s hours, $%s" % (name.replace(" and ", " & ") if len(ds) > 1 else name,
+                                                   f"{f[name][0]:,.2f}", f"{f[name][1]:,.2f}"))
+    return "\n".join(lines) + "\n"
+
+
+def employees_only_page(sched=None):
+    """The v2 page as the first version asked for it: totals and every employee, no line."""
+    sched = sched or B.GOLDEN
     hours = round(sum(r["balance"] for r in sched), 2)
     total = round(sum(r["liability"] for r in sched), 2)
     lines = ["# %s" % PAGE, "",
              "Total PTO liability at %s: $%s" % (B.ASOF, f"{total:,.2f}"), "",
              "Total PTO hours at %s: %s" % (B.ASOF, f"{hours:,.2f}"), "",
-             "| Employee ID | PTO balance in hours | Hourly rate |", "|---|---|---|"]
-    for i in B.CELL_IDS:
-        if i in by:
-            lines.append("| %s | %.2f | $%.4f |" % (i, by[i]["balance"], by[i]["hourly"]))
+             "| Employee ID | Department | PTO balance in hours | Hourly rate |", "|---|---|---|---|"]
+    for r in sched:
+        lines.append("| %s | %s | %.2f | $%.4f |" % (r["id"], r["dept"], r["balance"], r["hourly"]))
     return "\n".join(lines) + "\n"
 
 
-def set_cell(page, key, field, value):
-    """One cell of one keyed row replaced, the rest of the page untouched."""
+def set_line(page, name, hours=None, money=None):
+    """One line's figures replaced, the rest of the page untouched."""
     out = []
     for line in page.split("\n"):
-        if line.startswith("| %s " % key):
+        if line.startswith("| %s |" % name):
             cells = [c.strip() for c in line.strip().strip("|").split("|")]
-            cells[1 if field == "balance" else 2] = value
+            if hours is not None:
+                cells[1] = hours
+            if money is not None:
+                cells[2] = money
             line = "| " + " | ".join(cells) + " |"
         out.append(line)
     return "\n".join(out)
 
 
-def drop_row(page, key):
-    return "\n".join(l for l in page.split("\n") if not l.startswith("| %s " % key))
+def drop_line(page, name):
+    return "\n".join(l for l in page.split("\n") if not l.startswith("| %s |" % name))
 
 
 def set_total(page, money=None, hours=None):
@@ -184,8 +221,15 @@ def path_fails(key):
     return set(next(fl for k, d, pts, fl, tot, n in B.score_paths() if k == key))
 
 
-h05 = G["TRT-0005"]
-BAL5, RATE88 = CELL_ROW[("balance", "TRT-0005")], CELL_ROW[("rate", "TRT-0088")]
+LG = B.LINE_GOLD
+ENG_H, ENG_D = CELL_ROW[("line_hours", "Engineering")], CELL_ROW[("line_total", "Engineering")]
+SM = LINE_ROWS("Sales and Marketing")
+NOT_TOTALS = ALL_ROWS - {PAGE_ROW, TOTAL_ROW, HOURS_ROW}
+LOADED_SCHED = [dict(r, balance=B.LOADED[r["id"]][0], hourly=B.LOADED[r["id"]][1],
+                     liability=round(B.LOADED[r["id"]][0] * B.LOADED[r["id"]][1], 2),
+                     balance_posted=B.LOADED[r["id"]][0],
+                     liability_posted=round(B.LOADED[r["id"]][0] * B.LOADED[r["id"]][1], 2))
+                for r in B.GOLDEN]
 
 BATTERY = [
     # ---- the correct state, in every shape a right answer can take
@@ -198,25 +242,31 @@ BATTERY = [
      "the request's dash is a hyphen; a run that types an em dash has still named the page"),
     ("the golden as HTML", lambda: snap([(PAGE, to_html(GOLD))]), set(),
      "a run on the visual editor stores HTML, and a table is still a table"),
-    ("every employee, seven columns and a summary block", lambda: snap([(PAGE, wide_page())]), set(),
-     "NOTHING grades absence: a run that prints the whole schedule and more columns than the request asks for loses not one point"),
-    ("only the rows the load has wrong", lambda: snap([(PAGE, exceptions_page())]), set(),
-     "the other end of the same rule: a run that prints only the exceptions carries every graded cell"),
+    ("every employee, a line per department and a summary block", lambda: snap([(PAGE, wide_page())]), set(),
+     "NOTHING grades absence: a run that prints the whole schedule, Sales and Marketing apart and joined, loses not one point"),
+    ("the lines as prose bullets, an ampersand for and", lambda: snap([(PAGE, prose_page())]), set(),
+     "a line is read where the page names it, in a table or on a line of its own"),
     ("a header with other words",
-     lambda: snap([(PAGE, B.render_page(B.GOLDEN, headers=["ID", "Balance 08/31/2026", "Rate ($/hr)"]))]), set(),
-     "the request's column names in other words are the same columns"),
-    ("a header with no usable words",
-     lambda: snap([(PAGE, B.render_page(B.GOLDEN, headers=["A", "B", "C"]))]), set(),
-     "three columns keyed on an ID in the first cell read in the request's order"),
-    ("the totals without a dollar sign or a comma",
-     lambda: snap([(PAGE, set_total(GOLD, money="%.2f" % B.TOTAL, hours="%.2f" % B.TOTAL_HOURS))]), set(),
-     "the request carries no Form section, so a total is a total however it is punctuated"),
-    ("the totals rounded to the dollar and the tenth of an hour",
-     lambda: snap([(PAGE, set_total(GOLD, money="$%s" % f"{round(B.TOTAL):,}", hours="%.1f" % B.TOTAL_HOURS))]), set(),
+     lambda: snap([(PAGE, B.render_page(B.GOLDEN, headers=["Department", "Hours", "Dollars"]))]), set(),
+     "the lines are found by their names, not by the header's words"),
+    ("line labels with a subtotal word",
+     lambda: snap([(PAGE, "\n".join(l.replace("| %s |" % n, "| %s subtotal |" % n) if l.startswith("| %s |" % n) else l
+                                     for l in GOLD.split("\n") for n in [next((x for x, _ in B.LINES if l.startswith("| %s |" % x)), "")]))]), set(),
+     "Engineering subtotal is the Engineering line"),
+    ("the totals and lines without a dollar sign or a comma",
+     lambda: snap([(PAGE, set_total(GOLD, money="%.2f" % B.TOTAL, hours="%.2f" % B.TOTAL_HOURS).replace("$", "").replace(",", ""))]), set(),
+     "the request carries no Form section, so a figure is a figure however it is punctuated"),
+    ("the totals and lines rounded to the dollar and the tenth of an hour",
+     lambda: snap([(PAGE, "\n".join([l for l in set_total(GOLD, money="$%s" % f"{round(B.TOTAL):,}", hours="%.1f" % B.TOTAL_HOURS).split("\n") if not any(l.startswith("| %s |" % n) for n, _ in B.LINES)]
+                                     + ["| %s | %.1f | $%s |" % (n, LG[n][0], f"{round(LG[n][1]):,}") for n, _ in B.LINES]))]), set(),
      "with no Form section a response may round what it states, and the bands are wider than any rounding of a right answer"),
-    ("a second table that carries no employee row",
+    ("the lines under posted rounding",
+     lambda: snap([(PAGE, "\n".join([l for l in GOLD.split("\n") if not any(l.startswith("| %s |" % n) for n, _ in B.LINES)]
+                                     + ["| %s | %s | $%s |" % (n, f"{LG[n][2]:,.2f}", f"{LG[n][3]:,.2f}") for n, _ in B.LINES]))]), set(),
+     "each posting rounded is the other reading the totals already accept"),
+    ("a second table that carries no line",
      lambda: snap([(PAGE, GOLD + "\n| Source | Read |\n|---|---|\n| Archive | 06/30/2026 |\n")]), set(),
-     "v2 grades no layout, so a working table beside the schedule costs nothing"),
+     "v2 grades no layout, so a working table beside the lines costs nothing"),
     # ---- nothing, or the wrong page
     ("the seed: no page", lambda: snap(history=[(PAGE, GOLD)]), "all",
      "a check that reads history instead of pages passes a run that did nothing"),
@@ -233,20 +283,32 @@ BATTERY = [
      lambda: snap([(PAGE, GOLD), ("PTO Liability Notes", "# Notes\n\nThe schedule is the other page.", 1, PAGE)],
                   real_names=True), set(),
      "a description is not a title, so the one page under the title is the schedule"),
-    ("a note row naming an employee, above the rows it notes",
-     lambda: snap([(PAGE, GOLD.replace("|---|---|---|\n",
-                                       "|---|---|---|\n| Subtotal before TRT-0005 was capped, TRT-0001 to TRT-0155 | 500.00 | $40.0000 |\n", 1))]),
-     set(),
-     "a key is a whole cell: a note that names an employee, and sits before that employee's own row, must not be read as it"),
-    ("an employee row keyed with a note beside the ID",
-     lambda: snap([(PAGE, set_cell(GOLD, "TRT-0005", "balance", "%.2f" % h05["balance"]).replace(
-         "| TRT-0005 |", "| TRT-0005 (capped) |"))]), set(),
-     "the ID with a parenthetical beside it is still that employee's row, and the engine says so"),
+    # ---- where a line is and is not read
+    ("Sales and Marketing given only as two lines",
+     lambda: snap([(PAGE, "\n".join(B.render_page(B.GOLDEN).split("\n")[:8] + line_table(B.GOLDEN, split_sales=True)[2:]) + "\n")]), SM,
+     "the request joins the two departments; Sales alone is not the joined line and neither is a sum the reader does"),
+    ("the joined figures labelled Sales alone, in the table",
+     lambda: snap([(PAGE, GOLD.replace("| Sales and Marketing |", "| Sales |"))]), SM,
+     "a line labelled Sales tells the reader it is Sales without Marketing, whatever figure it carries"),
+    ("the joined figures labelled Sales alone, in prose",
+     lambda: snap([(PAGE, drop_line(GOLD, "Sales and Marketing") + "\n- Sales: %s hours, $%s\n" % (f"{LG['Sales and Marketing'][0]:,.2f}", f"{LG['Sales and Marketing'][1]:,.2f}"))]), SM,
+     "a prose line opens on the line it states, and Sales is not Sales and Marketing"),
+    ("the lines left for the reader to add up from the employees",
+     lambda: snap([(PAGE, employees_only_page())]), NOT_TOTALS,
+     "a department on each employee row is not a stated line"),
+    ("an employee row carrying a line's figures",
+     lambda: snap([(PAGE, drop_line(GOLD, "Engineering") + "| TRT-0005 | Engineering | %s | $%s |\n" % (f"{LG['Engineering'][0]:,.2f}", f"{LG['Engineering'][1]:,.2f}"))]),
+     {ENG_H, ENG_D},
+     "a figure inside an employee row is that employee's, whatever else the row names"),
+    ("a prose sentence that mentions Sales before the joined figure",
+     lambda: snap([(PAGE, drop_line(GOLD, "Sales and Marketing") + "\nSales carried most of the change. Marketing did not move.\n")]), SM,
+     "a line is named where the page states it, not wherever a word appears"),
+    ("the totals written into the line table as a Total row",
+     lambda: snap([(PAGE, "\n".join(l for l in GOLD.split("\n") if not l.startswith("Total PTO")) + "| Total | %s | $%s |\n" % (f"{B.TOTAL_HOURS:,.2f}", f"{B.TOTAL:,.2f}"))]), set(),
+     "a total row in a table keyed on no employee is a stated total"),
     ("the totals written into an employee's own row",
-     lambda: snap([(PAGE, "\n".join(l for l in GOLD.split("\n") if not l.startswith("Total PTO")).replace(
-         "| TRT-0001 | 22.87 | $103.3654 |",
-         "| TRT-0001 | %s | $%s |" % (f"{B.TOTAL_HOURS:,.2f}", f"{B.TOTAL:,.2f}")))]),
-     {TOTAL_ROW, HOURS_ROW, CELL_ROW[("balance", "TRT-0005")]} - {CELL_ROW[("balance", "TRT-0005")]},
+     lambda: snap([(PAGE, "\n".join(l for l in GOLD.split("\n") if not l.startswith("Total PTO")) + "\n| Employee ID | Balance | Rate |\n|---|---|---|\n| TRT-0001 | %s | $%s |\n" % (f"{B.TOTAL_HOURS:,.2f}", f"{B.TOTAL:,.2f}"))]),
+     {TOTAL_ROW, HOURS_ROW},
      "a figure inside an employee row is that employee's figure; the request asks the page to state the totals"),
     # ---- the registered paths
     ("P0 as a page: the July method rolled forward", lambda: snap([(PAGE, path_page("P0"))]), path_fails("P0"),
@@ -261,19 +323,19 @@ BATTERY = [
      "the signed rates found, the bridge and the timing missed"),
     ("P5 as a page", lambda: snap([(PAGE, path_page("P5"))]), path_fails("P5"),
      "everything but the step and the part-time schedule"),
-    # ---- one cell wrong
-    ("Hosana's balance one hundredth under",
-     lambda: snap([(PAGE, set_cell(GOLD, "TRT-0005", "balance", "%.2f" % (h05["balance"] - 0.01)))]), {BAL5},
-     "a stated balance is graded to the hundredth; the totals are graded as stated, so they stand"),
-    ("Hosana's balance a thousandth under",
-     lambda: snap([(PAGE, set_cell(GOLD, "TRT-0005", "balance", "%.3f" % (h05["balance"] - 0.001)))]), set(),
-     "the band is half a hundredth, so a third decimal inside it is the same number"),
-    ("Hosana's row dropped",
-     lambda: snap([(PAGE, drop_row(GOLD, "TRT-0005"))]), {BAL5},
-     "a missing row is a missing value; the request asks for the totals to be stated, not reconciled"),
-    ("Featherstone at the loaded rate",
-     lambda: snap([(PAGE, set_cell(GOLD, "TRT-0088", "rate", "$%.4f" % B.LOADED["TRT-0088"][1]))]), {RATE88},
-     "the rate the load carries is the one the signed approval replaced"),
+    # ---- one figure wrong
+    ("Engineering's hours a tenth out",
+     lambda: snap([(PAGE, set_line(GOLD, "Engineering", hours="%.2f" % (LG["Engineering"][0] + 0.1)))]), {ENG_H},
+     "a twentieth of an hour is the band"),
+    ("Engineering's hours two hundredths out",
+     lambda: snap([(PAGE, set_line(GOLD, "Engineering", hours="%.2f" % (LG["Engineering"][0] + 0.02)))]), set(),
+     "inside the band is the same figure"),
+    ("Engineering's dollars a dollar out",
+     lambda: snap([(PAGE, set_line(GOLD, "Engineering", money="$%s" % f"{LG['Engineering'][1] + 1.0:,.2f}"))]), {ENG_D},
+     "half a dollar is the band; a dollar out is a different figure"),
+    ("the Engineering line dropped",
+     lambda: snap([(PAGE, drop_line(GOLD, "Engineering"))]), {ENG_H, ENG_D},
+     "a missing line is a missing value; the totals are graded as stated, so they stand"),
     ("the total stated a dollar out",
      lambda: snap([(PAGE, set_total(GOLD, money="$%s" % f"{B.TOTAL + 1.0:,.2f}"))]), {TOTAL_ROW},
      "half a dollar is the band; a dollar out is a different total"),
@@ -285,9 +347,6 @@ BATTERY = [
      {TOTAL_ROW, HOURS_ROW},
      "the request asks the page to state both totals, and a sum the reader has to do is not a stated total"),
     ("the load copied whole: the report's balances and the loaded rates",
-     lambda: snap([(PAGE, B.render_page([dict(r, balance=B.LOADED[r["id"]][0], hourly=B.LOADED[r["id"]][1],
-                                              liability=round(B.LOADED[r["id"]][0] * B.LOADED[r["id"]][1], 2))
-                                         for r in B.GOLDEN]))]),
-     ALL_ROWS - {PAGE_ROW},
-     "the failure this ask measures: every graded cell is a cell the load carries wrong, so copying it earns the page and nothing else"),
+     lambda: snap([(PAGE, B.render_page(LOADED_SCHED))]), ALL_ROWS - {PAGE_ROW},
+     "the failure this ask measures: every graded figure is one the load carries wrong, so copying it earns the page and nothing else"),
 ]

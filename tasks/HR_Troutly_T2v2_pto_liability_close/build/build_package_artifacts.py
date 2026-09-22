@@ -519,25 +519,54 @@ LOADED_HOURS = round(sum(b for b, _ in LOADED.values()), 2)
 LOADED_TOTAL = round(sum(round(b * h, 2) for b, h in LOADED.values()), 2)
 
 
-def _exception_cells():
-    """One entry per graded cell, the field, the employee, what the world gives, what the load
-    carries and the dollars between them, heaviest first."""
-    out = []
-    for r in GOLDEN:
-        i = r["id"]
-        lb, lh = LOADED[i]
-        if abs(r["balance"] - lb) > TOL_CELL:
-            out.append(dict(field="balance", id=i, want=r["balance"], loaded=lb,
-                            moves=round(abs(r["balance"] - lb) * r["hourly"], 2)))
-        if abs(r["hourly"] - lh) > TOL_CELL:
-            out.append(dict(field="rate", id=i, want=r["hourly"], loaded=lh,
-                            moves=round(abs(r["hourly"] - lh) * r["balance"], 2)))
-    out.sort(key=lambda c: (-c["moves"], c["id"], c["field"]))
+# Review round 1 of 09/22/2026 narrowed the ask from a row per current employee, 156 values
+# the 25-criterion limit could not cover, to five department lines. Sales and Marketing are
+# one line in the request because Marketing alone is a line the load already carries right,
+# and a line a copy of the load earns is a free point. Each line is stated twice, in hours and
+# in dollars, and each figure is graded at the totals' bands.
+LINES = [("Customer Success", ("Customer Success",)), ("Engineering", ("Engineering",)),
+         ("Finance and Corporate", ("Finance and Corporate",)), ("Product", ("Product",)),
+         ("Sales and Marketing", ("Sales", "Marketing"))]
+LINE_OF = {d: name for name, ds in LINES for d in ds}
+TOL_LINE_MONEY, TOL_LINE_HOURS = TOL_TOTAL_MONEY, TOL_TOTAL_HOURS
+
+
+def line_figures(sched):
+    """{line: (hours, dollars, hours posted, dollars posted)} for a schedule; a row whose
+    department is on no line is on none, and the world asserts there is no such row."""
+    out = {}
+    for name, ds in LINES:
+        rows = [r for r in sched if r["dept"] in ds]
+        out[name] = (round(sum(r["balance"] for r in rows), 2), round(sum(r["liability"] for r in rows), 2),
+                     round(sum(r["balance_posted"] for r in rows), 2),
+                     round(sum(r["liability_posted"] for r in rows), 2))
     return out
 
 
-CELLS = _exception_cells()
-CELL_IDS = sorted({c["id"] for c in CELLS})
+LINE_GOLD = line_figures(GOLDEN)
+LOADED_LINE = {name: (round(sum(LOADED[r["id"]][0] for r in GOLDEN if r["dept"] in ds), 2),
+                      round(sum(round(LOADED[r["id"]][0] * LOADED[r["id"]][1], 2)
+                                for r in GOLDEN if r["dept"] in ds), 2))
+               for name, ds in LINES}
+
+
+def _line_cells():
+    """One entry per graded line figure, in the request's order, hours before dollars: the line,
+    the field, what the world gives, what the load carries and the dollars between them. An
+    hours figure moves the hours it is off by, each at its own employee's rate."""
+    out = []
+    for name, ds in LINES:
+        rows = [r for r in GOLDEN if r["dept"] in ds]
+        h, d = LINE_GOLD[name][0], LINE_GOLD[name][1]
+        lh, ld = LOADED_LINE[name]
+        out.append(dict(field="line_hours", line=name, want=h, loaded=lh,
+                        moves=round(abs(sum((r["balance"] - LOADED[r["id"]][0]) * r["hourly"] for r in rows)), 2)))
+        out.append(dict(field="line_total", line=name, want=d, loaded=ld, moves=round(abs(d - ld), 2)))
+    return out
+
+
+CELLS = _line_cells()
+CELL_LINES = [name for name, ds in LINES]
 assert CELLS and all(c["moves"] > 0 for c in CELLS)
 
 HOURS_CRIT = "States, on the PTO liability page, hours to two decimals."
@@ -574,14 +603,15 @@ def _money(x):
 
 def _row_checks():
     """Each planned row as (family, weight, gate, criterion, predicate, criterion type, primary,
-    explanation, references). v2 of 09/22/2026 grades the determination and nothing beside it:
-    the page under the title at 1, the two totals, and one row for every cell the load has wrong,
-    priced by the dollars that cell moves. There is no form row, no column row, no population row
-    and no BambooHR row, because every one of those was a point the failing tier earned in full.
+    explanation, references). v2 grades the determination and nothing beside it: the page under
+    the title at 1, the two totals, and each department line's hours and dollars, priced by the
+    dollars the figure moves off the load. Review round 1 of 09/22/2026 took the per-employee
+    table out of the request, because 52 rows of three values is an ask no 25-criterion rubric
+    covers, and put the five lines in its place.
 
-    Nothing here grades the ABSENCE of content. A run that prints all 52 employees rather than
-    the 22 the load has wrong passes every row it would otherwise pass, which is what keeps the
-    golden valid when a response over-delivers."""
+    Nothing here grades the ABSENCE of content. A run that also prints every employee, or a
+    line per department with Sales and Marketing joined beside them, passes every row it would
+    otherwise pass, which is what keeps the golden valid when a response over-delivers."""
     g = GOLDEN_BY_ID
     by = lambda s: {r["id"]: r for r in s}
 
@@ -595,15 +625,13 @@ def _row_checks():
         return _same(h, TOTAL_HOURS, TOL_TOTAL_HOURS) or _same(hp, TOTAL_HOURS, TOL_TOTAL_HOURS) \
             or _same(h, TOTAL_HOURS_POSTED, TOL_TOTAL_HOURS)
 
-    def cell_ok(field, i):
+    def line_ok(field, name):
         def ok(s):
-            b = by(s)
-            if i not in b:
-                return False
-            if field == "balance":
-                return _same(b[i]["balance"], g[i]["balance"], TOL_CELL) \
-                    or _same(b[i]["balance"], g[i]["balance_posted"], TOL_CELL)
-            return _same(b[i]["hourly"], g[i]["hourly"], TOL_CELL)
+            f = line_figures(s)[name]
+            gold = LINE_GOLD[name]
+            if field == "line_hours":
+                return any(_same(x, y, TOL_LINE_HOURS) for x in (f[0], f[2]) for y in (gold[0], gold[2]))
+            return any(_same(x, y, TOL_LINE_MONEY) for x in (f[1], f[3]) for y in (gold[1], gold[3]))
         return ok
 
     always = lambda s: True
@@ -613,76 +641,86 @@ def _row_checks():
     sched_form, offer153 = "/" + SCHEDULE_0141, "/" + OFFER_0153
     emp, bal_t, req_t = "bamboohr/Employee.csv", "bamboohr/TimeOffBalance.csv", "bamboohr/TimeOffRequest.csv"
     wiki = "wiki_js/Page.csv"
-    a71 = ARCHIVE_EMP["TRT-0071"]
 
-    def sur(i):
-        return g[i]["name"].split()[-1]
+    def members(name):
+        return {r["id"] for r in GOLDEN if r["dept"] in dict(LINES)[name]}
+
+    def capped(name):
+        return sorted(i for i in CAPPED_IDS if i in members(name))
+
+    def retiered(name):
+        return sorted(i for i in MIGRATED_WRONG_TIER if i in members(name) and i != "TRT-0071")
+
+    def ids(xs):
+        return xs[0] if len(xs) == 1 else ", ".join(xs[:-1]) + " and " + xs[-1]
 
     def expl_refs(c):
-        """The explanation and the references for one graded cell, from the world's own bytes."""
-        i, r, lb = c["id"], g[c["id"]], c["loaded"]
-        tier_loaded = POLICY_TIER.get(BAMBOO_POLICY.get(i, ""), 0)
-        if c["field"] == "rate":
-            if i == "TRT-0088":
-                return ("The signed promotion approval sets Featherstone's salary at %s from %s and the "
-                        "handbook's 3.2 puts the signed document over the record. BambooHR carries %s. "
-                        "%s over %s is %s."
-                        % (_money(SIGNED[i][0]), _d(SIGNED[i][1]), _money(float(BAMBOO[i]["salary"])),
-                           _money(SIGNED[i][0]), f"{HOURS_PER_YEAR:,}", _rate(r["hourly"])),
-                        [REQUEST, promo, hb, arch, emp])
-            if i == "TRT-0117":
-                return ("The signed amendment sets Luk's salary at %s from %s and the archive recorded it. "
-                        "BambooHR carries the loaded %s, and %s over %s is %s."
-                        % (_money(SIGNED[i][0]), _d(SIGNED[i][1]), _money(float(BAMBOO[i]["salary"])),
-                           _money(SIGNED[i][0]), f"{HOURS_PER_YEAR:,}", _rate(r["hourly"])),
-                        [REQUEST, amend, arch, hb, emp])
-            if i == "TRT-0096":
-                return ("Marchetti's offer letter carries the Support Specialist step on each anniversary "
-                        "and the handbook's 5.4 sets it at %s. Her anniversary fell %s, so the rate on "
-                        "file is %s, %s an hour."
-                        % (_money(STEP), _d(r["adj"].replace(year=ASOF_DATE.year)), _money(r["rate"]), _rate(r["hourly"])),
-                        [REQUEST, letters, hb, emp])
-            return ("%s's roster salary of %s over %s is %s an hour, and the crosswalk marks %s Never "
-                    "Loaded with no BambooHR rate against it."
-                    % (sur(i), _money(r["rate"]), f"{HOURS_PER_YEAR:,}", _rate(r["hourly"]), i),
-                    [REQUEST, roster, xwalk, offer153 if i == "TRT-0153" else letters, emp])
-        if i in UNLOADED_IDS:
-            return ("%s started %s on the roster and the crosswalk marks %s Never Loaded. The cutover memo "
-                    "accrues each posted period at the %d-hour tier, %s hours a period since the start."
-                    % (sur(i), _d(r["start"]), i, r["tier"], _hrs(per_period(r["tier"], 40.0))),
-                    [REQUEST, roster, xwalk, cut, proc])
-        if i == "TRT-0018":
-            return ("The archive dates Thornbury's service from %s and her capped opening is %s hours. She "
-                    "reaches five years on %s inside the fourth posted period, so the cutover memo accrues "
-                    "three periods of %s hours and one of %s."
-                    % (_d(r["adj"]), "%.2f" % r["opening"], _d(r["adj"].replace(year=ASOF_DATE.year)),
-                       _hrs(r["accruals"][0]), _hrs(r["accruals"][-1])),
-                    [REQUEST, arch, cut, proc, report])
-        if i == "TRT-0141":
-            was, now, eff = SCHEDULE_CHANGES[i]
-            return ("The schedule change form moves Quintanilla from %d to %d hours a week on %s and the "
-                    "handbook's 2.2 accrues part-time hours pro-rata under %d. The HRIS report accrues her "
-                    "at a full week and shows %.2f hours."
-                    % (was, now, _d(eff), PART_TIME_UNDER, lb),
-                    [REQUEST, sched_form, hb, cut, report])
-        if i == "TRT-0071":
-            return ("Burkenham's archive service bridges a %d-day break under the handbook's 7.6, five "
-                    "completed years at %s. Four posted periods accrue at the %d-hour tier, so %.2f "
-                    "hours stand against the HRIS report's %.2f."
-                    % ((a71["rehire"] - a71["break_from"]).days, ASOF, r["tier"], r["balance"], lb),
-                    [REQUEST, arch, hb, rehire, cut, report])
-        if r["opening_raw"] > CAP:
-            return ("%s carries %.2f hours on the HRIS report and the archive holds %.2f at %s. The "
-                    "cutover memo caps carryover at %.1f hours, and four periods at the %d-hour tier "
-                    "add %s."
-                    % (sur(i), lb, r["opening_raw"], _d(CAP_DATE), CAP, r["tier"], _hrs(r["accrued"])),
-                    [REQUEST, report, arch, cut, proc])
-        return ("%s reads the %d-hour tier in BambooHR and the archive dates the hire %s, %s completed "
-                "years at %s. The cutover memo accrues at the %d-hour tier, so %.2f hours stand "
-                "against the HRIS report's %.2f."
-                % (sur(i), tier_loaded, _d(r["adj"]), _WORDS[years_between(r["adj"], ASOF_DATE)],
-                   ASOF, r["tier"], r["balance"], lb),
-                [REQUEST, arch, cut, emp, report])
+        """The explanation and the references for one graded line figure, from the world's own
+        bytes. Each names the rules that land in its line, and the build asserts that the rules
+        named are the rules the schedule applies there, so a line that drifts stops the build."""
+        n, f = c["line"], c["field"]
+        h, d = LINE_GOLD[n][0], LINE_GOLD[n][1]
+        lh, ld = LOADED_LINE[n]
+        m = members(n)
+        if n == "Customer Success":
+            assert capped(n) == ["TRT-0021"] and retiered(n) == ["TRT-0083"] and {"TRT-0141", "TRT-0153", "TRT-0088", "TRT-0096"} <= m
+            if f == "line_hours":
+                return ("In Customer Success the cutover memo caps TRT-0021 at %.1f hours, the archive puts TRT-0083 at the %d-hour tier, "
+                        "handbook 2.2 prorates TRT-0141 and TRT-0153 accrues from the start. The line holds %s hours, the HRIS report %s."
+                        % (CAP, GOLDEN_BY_ID["TRT-0083"]["tier"], f"{h:,.2f}", f"{lh:,.2f}"),
+                        [REQUEST, cut, arch, hb, sched_form, roster, xwalk, report])
+            return ("Handbook 3.2 and 5.4 put TRT-0088 at %s and TRT-0096 at %s, and the roster puts TRT-0153 at %s. "
+                    "On those rates and the capped balances Customer Success carries %s against the load's %s."
+                    % (_money(GOLDEN_BY_ID["TRT-0088"]["rate"]), _money(GOLDEN_BY_ID["TRT-0096"]["rate"]),
+                       _money(GOLDEN_BY_ID["TRT-0153"]["rate"]), _money(d), _money(ld)),
+                    [REQUEST, promo, hb, letters, roster, offer153, cut, emp])
+        if n == "Engineering":
+            cp = capped(n)
+            assert len(cp) == 5 and retiered(n) == ["TRT-0051"] and "TRT-0117" in m
+            top = max(cp, key=lambda i: GOLDEN_BY_ID[i]["opening_raw"])
+            if f == "line_hours":
+                return ("Five Engineering balances sit over the cutover memo's %.1f-hour cap, %s at %.2f in the archive, and the archive puts "
+                        "TRT-0051 at the %d-hour tier. Engineering holds %s hours against the HRIS report's %s."
+                        % (CAP, top, GOLDEN_BY_ID[top]["opening_raw"], GOLDEN_BY_ID["TRT-0051"]["tier"], f"{h:,.2f}", f"{lh:,.2f}"),
+                        [REQUEST, cut, arch, proc, report])
+            return ("The signed amendment sets TRT-0117 at %s from %s over the loaded %s. With the capped balances "
+                    "Engineering carries %s of liability against the load's %s."
+                    % (_money(SIGNED["TRT-0117"][0]), _d(SIGNED["TRT-0117"][1]), _money(float(BAMBOO["TRT-0117"]["salary"])),
+                       _money(d), _money(ld)),
+                    [REQUEST, amend, arch, cut, emp])
+        if n == "Finance and Corporate":
+            assert capped(n) == ["TRT-0009"] and not retiered(n)
+            if f == "line_hours":
+                return ("Finance and Corporate has one balance over the cap, TRT-0009 at %.2f in the archive, which the cutover memo "
+                        "holds to %.1f hours. The line holds %s hours against the HRIS report's %s."
+                        % (GOLDEN_BY_ID["TRT-0009"]["opening_raw"], CAP, f"{h:,.2f}", f"{lh:,.2f}"),
+                        [REQUEST, cut, arch, report])
+            return ("Capping TRT-0009 under the cutover memo takes Finance and Corporate to %s at the rates on the roster. "
+                    "The load values the same %s employees at %s."
+                    % (_money(d), _WORDS[len(m)], _money(ld)),
+                    [REQUEST, cut, arch, roster, emp])
+        if n == "Product":
+            assert capped(n) == ["TRT-0040"] and retiered(n) == ["TRT-0079"] and "TRT-0071" in m
+            if f == "line_hours":
+                return ("Product nets close to the load because the cutover memo caps TRT-0040 while handbook 7.6 bridges TRT-0071 and "
+                        "the archive puts TRT-0079 at the %d-hour tier. It holds %s hours against the HRIS report's %s."
+                        % (GOLDEN_BY_ID["TRT-0079"]["tier"], f"{h:,.2f}", f"{lh:,.2f}"),
+                        [REQUEST, cut, hb, arch, rehire, report])
+            return ("At the rates on the roster the Product line carries %s, the cap on TRT-0040 offset by the bridged TRT-0071 "
+                    "and the retiered TRT-0079 under the cutover memo. The load carries %s."
+                    % (_money(d), _money(ld)),
+                    [REQUEST, cut, hb, arch, rehire, roster, emp])
+        assert n == "Sales and Marketing"
+        assert capped(n) == ["TRT-0018", "TRT-0029", "TRT-0043"] and "TRT-0155" in m
+        if f == "line_hours":
+            return ("The request joins Sales and Marketing. The cutover memo caps %s, times TRT-0018's tier change and accrues "
+                    "TRT-0155 from the start, %s hours against the HRIS report's %s."
+                    % (ids(capped(n)), f"{h:,.2f}", f"{lh:,.2f}"),
+                    [REQUEST, cut, arch, proc, roster, xwalk, report])
+        return ("Valued at the roster's rates, TRT-0155 at %s, the joined Sales and Marketing line carries %s under the "
+                "cutover memo. The load's figures for the same %d employees come to %s."
+                % (_money(GOLDEN_BY_ID["TRT-0155"]["rate"]), _money(d), len(m), _money(ld)),
+                [REQUEST, cut, roster, xwalk, letters, emp])
 
     rows = [
         ("free", 1, "-", "States that a Wiki.js page titled %s is published." % PAGE, always,
@@ -692,7 +730,7 @@ def _row_checks():
         ("determination", 10, "Critical value",
          "States, on the PTO liability page, a total dollar liability of %s." % _money(TOTAL), total_ok,
          EA, "Yes",
-         "The cutover memo caps carryover at %.1f hours, accrues four posted periods at the tier over %d and values each balance at the rate on file over %s. The %d rows sum to %s, or %s rounding each posting."
+         "The cutover memo caps carryover at %.1f hours, accrues four posted periods at the tier over %d and values each balance at the rate on file over %s. The %d balances sum to %s, or %s rounding each posting."
          % (CAP, PERIODS_PER_YEAR, f"{HOURS_PER_YEAR:,}", len(GOLDEN), _money(TOTAL), _money(TOTAL_POSTED)),
          [cut, hb, arch, roster, proc, promo, amend, letters, sched_form]),
         ("determination", 8, "-",
@@ -703,15 +741,13 @@ def _row_checks():
          [cut, arch, roster, proc, report]),
     ]
     for c in CELLS:
-        i, r = c["id"], g[c["id"]]
+        n = c["line"]
         expl, refs = expl_refs(c)
-        if c["field"] == "balance":
-            crit = "States, on the PTO liability page, a balance of %.2f hours for %s, %s." % (
-                r["balance"], r["name"], i)
+        if c["field"] == "line_hours":
+            crit = "States, on the PTO liability page, PTO hours of %s for %s." % (f"{c['want']:,.2f}", n)
         else:
-            crit = "States, on the PTO liability page, an hourly rate of %s for %s, %s." % (
-                _rate(r["hourly"]), r["name"], i)
-        rows.append(("determination", _band(c["moves"]), "-", crit, cell_ok(c["field"], i),
+            crit = "States, on the PTO liability page, a PTO liability of %s for %s." % (_money(c["want"]), n)
+        rows.append(("determination", _band(c["moves"]), "-", crit, line_ok(c["field"], n),
                      EA, "Yes", expl, refs))
     specs = _specs(g)
     assert len(rows) == len(specs), "%d rows, %d specs" % (len(rows), len(specs))
@@ -726,11 +762,11 @@ def _specs(g):
            dict(W, kind="total", expected=[TOTAL, TOTAL_POSTED]),
            dict(W, kind="hours", expected=[TOTAL_HOURS, TOTAL_HOURS_POSTED])]
     for c in CELLS:
-        i = c["id"]
-        if c["field"] == "balance":
-            out.append(dict(W, kind="balance", key=i, expected=[g[i]["balance"], g[i]["balance_posted"]]))
+        n = c["line"]
+        if c["field"] == "line_hours":
+            out.append(dict(W, kind="line_hours", key=n, expected=[LINE_GOLD[n][0], LINE_GOLD[n][2]]))
         else:
-            out.append(dict(W, kind="rate", key=i, expected=[g[i]["hourly"]]))
+            out.append(dict(W, kind="line_total", key=n, expected=[LINE_GOLD[n][1], LINE_GOLD[n][3]]))
     return out
 
 
@@ -850,8 +886,10 @@ def check_rubric():
             assert ("%d-hour" % s["expected"]) in crit, crit
         if s["kind"] == "absent":
             assert s["keys"][0] in crit, crit
-        if s["kind"] == "total":
+        if s["kind"] in ("total", "line_total"):
             assert _money(s["expected"][0]) in crit, crit
+        if s["kind"] == "line_hours":
+            assert f"{s['expected'][0]:,.2f}" in crit and "hours" in crit, crit
         if s["kind"] == "policy":
             assert s["expected"] in crit, "spec expects a policy the criterion does not name: " + crit
         if s["kind"] == "format":
@@ -868,25 +906,22 @@ def check_rubric():
                 assert k in crit, "a set row omits %s from its criterion" % k
                 assert (v if s["kind"] == "policies" else "%.2f" % v[0]) in crit, "a set row omits %s's value" % k
     kinds = [c[8]["kind"] for c in RUBRIC]
-    # v2: one row per graded cell and nothing else. Every row but the page is a determination, and
-    # no row reads a second app or the absence of anything.
+    # v2 after review round 1: the page, the two totals and each line's hours and dollars, and
+    # nothing else. No row reads a second app, an employee row or the absence of anything.
     assert kinds.count("exists") == kinds.count("total") == kinds.count("hours") == 1
-    assert kinds.count("balance") == sum(1 for c in CELLS if c["field"] == "balance")
-    assert kinds.count("rate") == sum(1 for c in CELLS if c["field"] == "rate")
-    assert set(kinds) == {"exists", "total", "hours", "balance", "rate"}, "a kind v2 does not ask for: %r" % sorted(set(kinds))
+    assert kinds.count("line_hours") == kinds.count("line_total") == len(LINES)
+    assert set(kinds) == {"exists", "total", "hours", "line_hours", "line_total"}, "a kind v2 does not ask for: %r" % sorted(set(kinds))
     assert all(c[8]["target"] == "wiki" for c in RUBRIC), "v2 writes one page and reads one app"
-    assert not any(k in ("absent", "no_contractor", "policies", "balances", "idset", "columns",
-                         "format", "dates", "layout", "id_rows", "reconcile", "summary") for k in kinds), \
-        "v2 grades no form row and no row that reads the absence of content"
-    keyed = [c[8]["key"] for c in RUBRIC if "key" in c[8]]
-    assert len(keyed) == len(CELLS) and set(keyed) == set(CELL_IDS)
+    assert len(RUBRIC) <= 25, "%d criteria, over the platform's 25" % len(RUBRIC)
+    keyed = [(c[8]["kind"], c[8]["key"]) for c in RUBRIC if "key" in c[8]]
+    assert sorted(keyed) == sorted((k, n) for n in CELL_LINES for k in ("line_hours", "line_total"))
     for c in RUBRIC:
         s_ = c[8]
-        if s_["kind"] in ("balance", "rate"):
-            want = GOLDEN_BY_ID[s_["key"]]["balance" if s_["kind"] == "balance" else "hourly"]
-            lb, lh = LOADED[s_["key"]]
-            assert abs(want - (lb if s_["kind"] == "balance" else lh)) > TOL_CELL, \
-                "a graded cell the load already carries right: " + c[5]
+        if s_["kind"] in ("line_hours", "line_total"):
+            lh, ld = LOADED_LINE[s_["key"]]
+            loaded, tol = (lh, TOL_LINE_HOURS) if s_["kind"] == "line_hours" else (ld, TOL_LINE_MONEY)
+            assert all(abs(x - loaded) > tol for x in s_["expected"]), \
+                "a graded line the load already carries right: " + c[5]
     print("rubric: %d verifiers, %d points, %d gate, EA %.1f%%, OC %.1f%%, %d primary"
           % (len(RUBRIC), total, len(gates), 100.0 * ea / total, 100.0 * (total - ea) / total,
              sum(1 for c in RUBRIC if c[4] == "Yes")))
@@ -1066,23 +1101,25 @@ def rubric_table():
 
 
 # ---------------------------------------------------------------- the golden page
-PAGE_HEADERS = ["Employee ID", "PTO balance in hours at %s" % ASOF, "Hourly rate"]
+PAGE_HEADERS = ["Line", "PTO hours at %s" % ASOF, "PTO liability at %s" % ASOF]
 GOLDEN_FILE = "04_golden_output_PTO_Liability.md"
 
 
 def render_page(sched, title=None, headers=None):
     """A page in the request's shape from a schedule: the two totals it asks for, then one table
-    of the three columns it asks for. v2's request carries no Form section, so the golden prints
-    the precision the world's own records print and nothing on the page depends on it."""
+    of the five lines it asks for, each line's hours and dollars. The request carries no Form
+    section, so the golden prints the precision the world's own records print."""
     hours = round(sum(r["balance"] for r in sched), 2)
     total = round(sum(r["liability"] for r in sched), 2)
+    lines_ = line_figures(sched)
     hdr = headers or PAGE_HEADERS
     lines = ["# %s" % (title or PAGE), "",
              "Total PTO liability at %s: $%s" % (ASOF, f"{total:,.2f}"), "",
              "Total PTO hours at %s: %s" % (ASOF, f"{hours:,.2f}"), "",
              "| " + " | ".join(hdr) + " |", "|" + "---|" * len(hdr)]
-    for r in sched:
-        lines.append("| %s | %.2f | $%.4f |" % (r["id"], r["balance"], r["hourly"]))
+    for name, ds in LINES:
+        h, d = lines_[name][0], lines_[name][1]
+        lines.append("| %s | %s | $%s |" % (name, f"{h:,.2f}", f"{d:,.2f}"))
     return "\n".join(lines) + "\n"
 
 
@@ -1097,13 +1134,16 @@ def golden():
 
 def check_golden():
     text = GOLDEN_PAGE
-    assert text.startswith("# %s\n" % PAGE) and text.count("\n| TRT-") == len(GOLDEN), "the golden page is not the schedule"
+    assert text.startswith("# %s\n" % PAGE), "the golden page is not the schedule"
     assert _money(TOTAL) in text and f"{TOTAL_HOURS:,.2f}" in text
     assert all(ord(ch) < 128 for ch in text), "the golden page is not ASCII"
-    # the page carries the three columns the request asks for and nothing the rubric does not read
-    for r in GOLDEN:
-        assert "| %s | %.2f | %s |" % (r["id"], r["balance"], _rate(r["hourly"])) in text
-    for word in ("Department", "Tier", "Summary", "Employees on the schedule"):
+    # the page carries the five lines the request asks for and nothing the rubric does not read
+    for name, ds in LINES:
+        assert "| %s | %s | %s |" % (name, f"{LINE_GOLD[name][0]:,.2f}", _money(LINE_GOLD[name][1])) in text
+    assert _same(sum(v[1] for v in LINE_GOLD.values()), TOTAL, 0.005), "the lines do not add to the total"
+    assert _same(sum(v[0] for v in LINE_GOLD.values()), TOTAL_HOURS, 0.005), "the lines do not add to the hours"
+    assert "TRT-" not in text, "the golden page carries an employee row, which the request no longer asks for"
+    for word in ("Tier", "Summary", "Employees on the schedule"):
         assert word not in text, "the golden page carries %r, which v2's request does not ask for" % word
 
 
@@ -1111,7 +1151,7 @@ FORM_CHECK_TYPE = {"exists": "Existence Check", "hours": "Content Match", "idset
                    "reconcile": "Content Match", "summary": "Content Match", "columns": "Content Match",
                    "id_rows": "Content Match", "dates": "Content Match", "layout": "Content Match",
                    "total": "Content Match", "balance": "Content Match", "tier": "Content Match",
-                   "rate": "Content Match", "no_contractor": "Guard (Negative Check)",
+                   "rate": "Content Match", "line_hours": "Content Match", "line_total": "Content Match", "no_contractor": "Guard (Negative Check)",
                    "absent": "Guard (Negative Check)", "policy": "Content Match",
                    "policies": "Content Match", "balances": "Content Match",
                    "balance_row": "Existence Check"}
@@ -1185,6 +1225,12 @@ def check_world():
     assert "PTO accrues monthly on the 1st of each month" in p25 and "carry over without limit" in p25
     wiki = open(os.path.join(WORLD, WIKI_PTO), encoding="utf8").read()
     assert "accrue PTO **monthly**" in wiki and "carry over without limit" in wiki
+    # the lines: every current employee's department is on exactly one line
+    assert {r["dept"] for r in GOLDEN} == set(LINE_OF), sorted({r["dept"] for r in GOLDEN})
+    assert sum(len([r for r in GOLDEN if r["dept"] in ds]) for n, ds in LINES) == len(GOLDEN)
+    # Marketing alone is the line the load carries right, which is why the request joins it to Sales
+    mk = [r for r in GOLDEN if r["dept"] == "Marketing"]
+    assert _same(round(sum(r["balance"] for r in mk), 2), round(sum(LOADED[r["id"]][0] for r in mk), 2), 0.005)
     # the periods
     assert [p[2].strftime("%m/%d/%Y") for p in POSTED] == ["07/10/2026", "07/24/2026", "08/07/2026", "08/21/2026"], POSTED
     assert PERIODS[4][2].strftime("%m/%d/%Y") == "09/04/2026"
@@ -1325,8 +1371,8 @@ def check_docs():
     # every dollar figure the graded-cell table carries is the build's own arithmetic
     allowed |= {_money(c["moves"]) for c in CELLS}
     allowed |= {_money(SIGNED[i][0]) for i in SIGNED}
-    allowed |= {_money(GOLDEN_BY_ID[i]["rate"]) for i in CELL_IDS}
-    allowed |= {_money(float(BAMBOO[i]["salary"])) for i in CELL_IDS if i in BAMBOO}
+    allowed |= {_money(v[k]) for v in LINE_GOLD.values() for k in (1, 3)}
+    allowed |= {_money(v[1]) for v in LOADED_LINE.values()}
     allowed |= {f"${t:,.2f}" for k, d, pts, fl, t, n in score_paths()}
     for fig in re.findall(r"\$\d{1,3},\d{3}\.\d{2}", meta):
         assert fig in allowed, "02 carries a dollar figure the build did not write: %s" % fig
@@ -1465,7 +1511,7 @@ def _syw_sources():
         ("The July close", "/" + CLOSE_JULY,
          "The requester's method. The HRIS balance, tier and rate per row, three ended employees inside, $90,862.13 booked."),
         ("The BambooHR tables", "Employee, EmployeePolicy, TimeOffBalance, TimeOffPolicy",
-         "57 active rows, the loaded policies, %s of them wrong, and the loaded balances the run brings to the schedule." % _w(len(MIGRATED_WRONG_TIER))),
+         "57 active rows, the loaded policies, %s of them wrong, and the loaded balances. Read, never written." % _w(len(MIGRATED_WRONG_TIER))),
     ]
 
 
@@ -1479,8 +1525,8 @@ def _syw_assembly():
         ("The usage", "%.2f approved hours deducted, %.2f on TRT-0001." % (sum(USED.values()), USED["TRT-0001"])),
         ("The rates", "The rate on file over %s to four decimals. TRT-0088 at %s, TRT-0117 at %s and TRT-0096 at %s by the signed documents and the step." % (f"{HOURS_PER_YEAR:,}", _money(GOLDEN_BY_ID['TRT-0088']['rate']), _money(GOLDEN_BY_ID['TRT-0117']['rate']), _money(GOLDEN_BY_ID['TRT-0096']['rate']))),
         ("The rows and the totals", "Balance to two decimals, liability to the cent, the total the sum of the rounded rows. %s hours and %s, %s under posted rounding." % (f"{TOTAL_HOURS:,.2f}", _money(TOTAL), _money(TOTAL_POSTED))),
-        ("The page", "%s. The summary above the table, seven columns, %d rows keyed by ID, published." % (PAGE, len(GOLDEN))),
-        ("BambooHR", "%s policies reassigned and %d left as loaded. %d balances moved and %d left as loaded. Rows created for %s with the 80-hour policy." % (_w(len(POLICY_MOVED)).capitalize(), len(POLICY_SAME), len(BALANCE_MOVED), len(BALANCE_SAME), " and ".join(UNLOADED_IDS))),
+        ("The lines", "The %d employees summed by department onto the request's five lines, Sales and Marketing together. %s." % (len(GOLDEN), ". ".join("%s %s hours and %s" % (n, f"{LINE_GOLD[n][0]:,.2f}", _money(LINE_GOLD[n][1])) for n in CELL_LINES))),
+        ("The page", "%s. The two totals, then one table of the five lines, published." % PAGE),
     ]
 
 
@@ -1499,14 +1545,11 @@ def write_show_your_work():
     for i, (fam, w, gate, crit, pred, typ, primary, expl, refs, spec) in enumerate(PLAN, 1):
         ws.append([i, crit, w, gate])
     ws.append([])
-    ws.append(["Note", "Row 2 grades every rule across the whole group at once. It reads the total of all %d liabilities, the one number every cell feeds, and it matches the schedule's only if every entry is right. Row 3 reads the same population on the hours axis." % len(GOLDEN)])
-    ws.append(["Note", "Rows %s each read one cell the load carries wrong, %d balances and %d rates over %d employees. A cell is graded only where the figure the world gives is not the figure the load carries, so a response that copies the report earns none of them and a response that applies the rules earns them all." % (
-        _row_list(_rows_of(lambda r: r[9]["kind"] in ("balance", "rate"))),
-        sum(1 for c in CELLS if c["field"] == "balance"), sum(1 for c in CELLS if c["field"] == "rate"), len(CELL_IDS))])
-    ws.append(["Note", "Each of those rows carries the dollars it moves, %s in all, banded %s. Nothing in the set grades the absence of content, so a response that prints all %d employees rather than the %d the load has wrong loses nothing by it." % (
-        _money(sum(c["moves"] for c in CELLS)),
-        ", ".join("%d where the cell moves %s or more" % (w, _money(f)) for f, w in MONEY_BANDS[:-1]) + " and 3 below that",
-        len(GOLDEN), len(CELL_IDS))])
+    ws.append(["Note", "Row 2 reads the total of all %d liabilities, the one number every rule feeds, and it matches the schedule's only if every entry is right. Row 3 reads the same population on the hours axis." % len(GOLDEN)])
+    ws.append(["Note", "Rows %s read the five lines the request asks for, each line's hours and dollars. Every line figure is one the load carries wrong, so a response that copies the report earns none of them and a response that applies the rules earns them all." % (
+        _row_list(_rows_of(lambda r: r[9]["kind"] in ("line_hours", "line_total"))))])
+    ws.append(["Note", "Each line figure carries the dollars it moves off the load, banded %s. Sales and Marketing are one line because Marketing alone is a figure the load already carries right." % (
+        ", ".join("%d where the figure moves %s or more" % (w, _money(f)) for f, w in MONEY_BANDS[:-1]) + " and 3 below that")])
     ws.append(["Note", "Row 1 is the only row that is not a determination. It carries 1 point of %d, which is the whole of what a response earns for publishing a page with the wrong numbers on it." % PLAN_TOTAL])
     ws = wb.create_sheet("Row assembly")
     ws.append(["Step", "Result"])
