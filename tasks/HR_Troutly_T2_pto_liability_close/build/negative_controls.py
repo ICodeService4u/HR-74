@@ -214,6 +214,12 @@ ok.append(control("verifier: the tier dropped from the every-row columns", ENG,
     '        wants = [S["field"]] if S.get("field") else ["name", "department", "tier"]', '        wants = ["name"] if S.get("field") == "tier" else [S.get("field") or "name"]', VH, expect="FALSE PASS", pre=BLD))
 ok.append(control("verifier: a total line read as a named employee row", ENG,
     '        and not re.search(r"\\b(total|totals|subtotal|sum|average|count)\\b", n)', '        and True', VH, expect="WRONG", pre=BLD))
+ok.append(control("verifier: two pages under the title graded one by one", ENG,
+    '        if len(pages) > 1:\n            return out(False, "%d page rows carry the title %r; the request asks for one"\n                       % (len(pages), SPEC["page"]))\n', '', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the title read off any cell of a page row", ENG,
+    '            if cols.index("title") not in hits:\n                notes.append("page row %d carries %r outside its title column, in %r; not this page"\n                             % (n, title, [cols[i] for i in hits]))\n                continue\n', '', VH, expect="WRONG", pre=BLD))
+ok.append(control("verifier: a page row reading a ctx primitive the measured surface does not carry", ENG,
+    '    names = list(ctx.list_tables())', '    names = ["pages"] if ctx.has_table("pages") else list(ctx.list_tables())', VH, expect="WRONG", pre=BLD))
 ok.append(control("battery: an expectation planted wrong", SCN,
     '     {15}, "a stated two-decimal value is graded to the cent; its neighbour is not it"),',
     '     {15, 16}, "a stated two-decimal value is graded to the cent; its neighbour is not it"),', VH, expect="FALSE PASS"))

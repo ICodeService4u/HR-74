@@ -1,9 +1,9 @@
 # The task AutoQC register - T2, PTO Liability Schedule and BambooHR PTO Records
 
-**Two prompt rounds, the five Gemini runs and five rubric rounds have landed on T2, 09/20/2026 and 09/21/2026.** Prompt AutoQC now runs in the
+**Two prompt rounds, two run sets and six rubric rounds have landed on T2, 09/20/2026 and 09/21/2026.** Prompt AutoQC now runs in the
 Trajectories section, so the first round landed beside the first runs and the second after the
-memo re-upload; the rubric rounds ran on the 21-row, 28-row, 43-row, 44-row and 48-row imports in
-turn. Archive each
+memo re-upload; the rubric rounds ran on the 21-row, 28-row, 43-row, 44-row, 48-row and 55-row
+imports in turn, the sixth on the pasted set beside the first platform grading. Archive each
 round verbatim to `findings/prompt_roundN_MM-DD-YYYY.md` or `findings/task_roundN_MM-DD-YYYY.md`
 before triaging it, and keep the verdicts here.
 
@@ -29,6 +29,9 @@ before triaging it, and keep the verdicts here.
 | Task round 5, Prompt-Rubric Alignment | 09/21/2026 | P0: the BambooHR ask covers every employee on the schedule, and rows 39 to 46 grade balances for 40 of the 52; twelve IDs named as ungraded | **Accepted.** The twelve are the moved balances the round-2 design left to the page rules, eight capped openings and four wrong-tier records. Each has a BambooHR row at 1, Expert Assessment, on the code the five mirrored rows use, rows 34 to 50, so every one of the 17 balances the schedule moves is graded in BambooHR and the 33 it leaves are graded on row 51 |
 | Task round 5, Verifiers Grade Only What the Prompt Asks For | 09/21/2026 | P1: C23 to C27 grade exclusions the memo never states, the contractors and four named people; remove them or add explicit exclusions to the request | **Closed by removal, on the owner's decision of 09/21/2026.** The memo's definition of a current employee is quotable and each row graded it on one record the world breaks it on, which is why round 1 asked for the rows one person each and round 4 accepted granular exclusions as a form; the owner took the removal over a dispute that has not held on this dimension. Row 2 reads the 52 as the only rows again, so the definition is graded once, on the set, and the gate reads every extra row's liability. Eight points the failing tier passed left the rubric; `06_failure_analysis.md` carries the arithmetic |
 | Run set, G1 to G5 | 09/20/2026 | Five of five Gemini 3.8 Flash: G1, G3 and G4 P1 row for row, $111,455.78, 24 of 87, 27.6%; G2 and G5 P1 less the two unloaded hires, $111,100.39, 16 of 87, 18.4%; mean 23.9% | Scored from the output alone by `score_run_set.py`; `../06_failure_analysis.md` carries the record. G5's BambooHR writes at step 184 ran in a loop the archiver could not parse and are flagged; its own printed results show they touched only CTR-2002, CTR-2003, CTR-2004, TRT-0037, TRT-0049, TRT-0064, outside the schedule, so no graded row moves. Under 40%: the rubric half is built next. Three GPT Sol 5.6 owed for the record. Re-scored on the 28-row set of task round 1 at 25.6%, three at 29.2% and two at 20.2%, the same rules failing under new numbers; on the 43-row set of task round 2 at 29.4%, three at 33.3% or 32.3% and two at 25.0% or 24.0%, the date row failing G1, G3 and G5 on a spelled August 31, 2026; on the 44-row set of task round 3 at 29.3%, the created records' policy rows passing on the three runs that created them; on the 48-row set of task round 4 at 32.1%, the four added form points earned by every run; on the 55-row set of task round 5 at 23.2%, twelve BambooHR balance rows failed by every run and eight population points gone |
+| Task round 6, Prompt-Rubric Alignment | 09/21/2026 | P0 under Minor issues, on the pasted 55-row set: the memo asks for one page published under the title, and C1 and the shared page check loop over every title-matching row and pass when all of them satisfy, so two correctly formed duplicates pass; enforce exactly one | **Accepted.** The engine reads the pages table once and grades the one row under the title: two rows fail every wiki row with the count in the details, because the request asks for one page and a duplicate that is right today is a second page to maintain tomorrow. A page row now also rejects a row that carries the title outside its title column, so a description equal to the title is not a duplicate. Two scenarios were added, a correct duplicate and a note page carrying the title in its description, and two controls: the loop planted back goes red on a FALSE PASS, the title read off any cell goes red on a false zero. 73 scenarios, **4015 of 4015 verdicts correct**; no criterion, weight or ask changed |
+| Run set, G1 to G5, the second | 09/21/2026 | Five Gemini 3.8 Flash on task versions 29 and 30, the first set to run against the pasted rubric: scored from the output alone, G1 53 of 105, G3 52, G4 47, G2 29 and G5 19, mean 38.1%, low 18.1%, high 50.5% | Archived to `findings/run_set_09-21-2026/`. All five published the page under the exact title; the mean is 14.2 points over the 23.2% of 09/20/2026 on the same 55 rows, and the set is still under the registered 40%, with G1 and G3 within ten points of it. `../06_failure_analysis.md` carries the record and the reading |
+| Platform grading, G5 | 09/21/2026 | The grading pane reports 2 passes of 55, 2 of 105, 1.9%; the same run's archived bytes score 19 of 105 by the same row files | **A read, not a verdict: measured and acted on.** `compare_platform_grade.py` puts the two readings row by row: 29 of 29 BambooHR rows agree, and the 14 wiki rows that should pass all read fail, 17 points. The BambooHR rows returned their metrics, so `list_tables`, `table_columns` and `query_db` are served on a graded run; `has_table`, which only the page rows read, is measured by nothing and is gone from the engine and from `ctx.py`. The engine now prints its notes, so the pane's stdout box carries the tables it saw, and page rows carry `page_rows` in their metrics. `findings/platform_grading_09-21-2026.md` carries the evidence, including that all 55 pasted verifiers are byte for byte the row files. **Two causes fit and the score cannot separate them.** The pasted code, re-run here on 09/22/2026 against the archived G5 page, scores 19 of 105 on a ctx that carries `has_table` and **2 of 105 on one that does not, passing rows 33 and 51**, which is the pane's own number and its own two rows. A wiki row grounded on the wrong service gives the same 2 by another route: every wiki tool the five runs called carries the prefix `wiki_js_mcp`, the picker offers Wiki.js and Wiki.js MCP, and the rows were pasted on Wiki.js. One test run of row 1 as pasted tells them apart on its details line, `AttributeError ... has_table` against `no pages table in this snapshot`, and decides whether the 26 rows need the round-6 file or only the other service. Owed: that test run, the fix it names, a re-grading, and the panes for G1 to G4 |
 
 ## What is graded: the output, and only the output
 
@@ -43,13 +46,16 @@ show is flagged, and the platform's grading snapshot decides those rows. Both sc
 `--self-check`: the scorer reads the seven registered paths as the plan's predicates do and
 goes red on a planted defect; the archiver reads both routes and flags what it cannot see.
 
-The twenty verifiers the exports carry are T1's synth set, targeting two pages this task never
-writes. A platform grading of a T2 run is against those rows and is not read.
+The exports of 09/20/2026 carry T1's twenty synth verifiers, targeting two pages this task never
+writes, so no platform score on that set means anything. The exports of 09/21/2026 carry this
+package's own 55, byte for byte, and the first platform grading of a T2 run was read back on
+that day: `findings/platform_grading_09-21-2026.md` carries it beside the archive's own reading,
+and the two are compared by `compare_platform_grade.py` rather than argued over.
 
 ## The verifier harness
 
-Built 09/20/2026. `verifier_harness.py` runs every row file under `verifiers/` against the 71
-snapshots in `scenarios.py`, each with the rows it must fail named in advance: **3905 of 3905
+Built 09/20/2026. `verifier_harness.py` runs every row file under `verifiers/` against the 73
+snapshots in `scenarios.py`, each with the rows it must fail named in advance: **4015 of 4015
 verdicts correct**. The fixture is the seed pages table plus the six BambooHR seed tables with
 the app's integer ids as G1 observed them, with the fourteen Greenhouse seed tables beside them
 as a third app's that no row reads, and the scenarios carry the golden as the correct state, the
@@ -57,7 +63,9 @@ archived G1 and G2 pages with the BambooHR state their writes left, the paths P2
 and one planted defect per way a row can be wrong.
 `ctx.py` is the platform's `ctx`
 stood in with placeholder column names by default and its file and trajectory surfaces empty on
-purpose. `run_battery.py` runs one pasted check against the battery. Two engine defects were
+purpose, and since 09/21/2026 with only the three database primitives a graded run has been
+measured to serve, `list_tables`, `table_columns` and `query_db`: a check that reaches past them
+raises here rather than on a graded run. `run_battery.py` runs one pasted check against the battery. Two engine defects were
 found and fixed here before anything was pasted, both recorded in `../09_rubric_import.md`.
 
 ## What a round is likely to raise, and the answer already on file
@@ -73,6 +81,9 @@ found and fixed here before anything was pasted, both recorded in `../09_rubric_
 - **Rubric Realism and Verifier Type, that no row grades a file.** The deliverable is a wiki page
   and BambooHR rows and no file. Task round 1 read the rows as judge-style because they carried no
   code; the code is the next step.
+- **That a duplicate page can pass.** Round 6 asked and the engine now grades the one row under
+  the title, so the question is answered in code and not in the register. A round that asks for
+  a uniqueness constraint in the app is asking the world for a configuration it does not carry.
 - **That a fence needs a row.** Raised three rounds running, on Greenhouse in rounds 1 and 2 and
   on payroll, the compensation cycle and benefits in round 3; disputed once, guarded once, and
   closed the way HR 79 T1 closed it in its round 9: the memo carries no out-of-scope block, so

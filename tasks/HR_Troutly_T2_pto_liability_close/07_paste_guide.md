@@ -15,10 +15,17 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `132b10edfb5f835facbb
 3. **Code verifier form, per row**: set Target app, Check type, Expected Content, Target Table,
    Target Record ID, Target Record Label and Fallback Strategy **DB only** from the block, leave
    Additional Notes empty, and paste the row file whole into the code box. Every row file is the
-   engine with the row's SPEC on top, 761 to 814 lines; if the box balks at the size, say so and the
-   builder stamps only the half a row uses.
+   engine with the row's SPEC on top, 778 to 831 lines; if the box balks at the size, say so and the
+   builder stamps only the half a row uses. **Target database apps on a wiki row is `wiki_js_mcp`**,
+   the service whose tools every archived run called, `wiki_js_mcp_wikijs_mcp_create_page` among
+   them, and the picker offers Wiki.js and Wiki.js MCP as two entries. The 09/21/2026 paste took
+   Wiki.js and every wiki row read fail on a page the app had returned under the exact title.
+   Two causes fit that equally, the service and a ctx without `has_table`, and the row's own
+   details line separates them: `no pages table in this snapshot` is the service, an
+   `AttributeError` on `has_table` is a row file older than round 6. Select both services until
+   a grading names the one that holds the pages table.
 4. **Run the per-verifier test-run on the untouched task** and compare with the block's expected
-   verdict and last `details` line. 53 rows fail on the untouched task by design, 26 on no page
+   verdict and last `details` line. 53 rows fail on the untouched task by design, 0 on no page
    under the title and 27 on a BambooHR record as loaded or absent; the two guards over the records
    the schedule leaves as loaded, rows 33, 51, pass. A verdict that differs is a defect to read before
    the next row is pasted.
@@ -32,32 +39,32 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `132b10edfb5f835facbb
 
 | # | Wt | Target app | Check type | Target Record ID | Expected Content | Test-run on the untouched task |
 |---|---|---|---|---|---|---|
-| 1 | 1 | wiki_js | Existence Check | PTO Liability - 08/31/2026 | one pages row titled PTO Liability - 08/31/2026 with isPublished true | FAILED |
-| 2 | 2 | wiki_js | Count Check | PTO Liability - 08/31/2026 | an employee row keyed on each of the roster's 52 IDs | FAILED |
-| 3 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | every balance 0.00 | FAILED |
-| 4 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | every rate 0.0000 | FAILED |
-| 5 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | every liability 0.00 | FAILED |
-| 6 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | a stated dollar total equal to the sum of the liability cells, within 0.01 | FAILED |
-| 7 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | 52, 1,522.17 hours and a dollar total in the prose | FAILED |
-| 8 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | a name on every keyed row | FAILED |
-| 9 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | a department on every keyed row | FAILED |
-| 10 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | a tier of 80, 120 or 160, or its policy name, on every keyed row | FAILED |
-| 11 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | no named row without a TRT- ID | FAILED |
-| 12 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | every date MM/DD/YYYY, no ISO, spelled or dotted date | FAILED |
-| 13 | 1 | wiki_js | Content Match | PTO Liability - 08/31/2026 | the count and a dollar figure above the one employee table | FAILED |
-| 14 | 10 | wiki_js | Content Match | PTO Liability - 08/31/2026 | $92,739.54, or $92,772.88 under posted rounding | FAILED |
-| 15 | 5 | wiki_js | Content Match | TRT-0005 | 64.62 hours, or 64.60 under posted rounding, within 0.005 | FAILED |
-| 16 | 5 | wiki_js | Content Match | TRT-0043 | 120, or the policy name for 120 hours | FAILED |
-| 17 | 7 | wiki_js | Content Match | TRT-0071 | 160, or the policy name for 160 hours | FAILED |
-| 18 | 6 | wiki_js | Content Match | TRT-0018 | 60.00 hours, or 60.01 under posted rounding, within 0.005 | FAILED |
-| 19 | 7 | wiki_js | Content Match | TRT-0088 | $56.7308 within 0.00005 | FAILED |
-| 20 | 6 | wiki_js | Content Match | TRT-0117 | $71.2500 within 0.00005 | FAILED |
-| 21 | 3 | wiki_js | Content Match | TRT-0096 | $29.3269 within 0.00005 | FAILED |
-| 22 | 4 | wiki_js | Content Match | TRT-0141 | 29.60 hours, or 29.59 under posted rounding, within 0.005 | FAILED |
-| 23 | 2 | wiki_js | Content Match | TRT-0153 | 6.15 hours, or 6.16 under posted rounding, within 0.005 | FAILED |
-| 24 | 2 | wiki_js | Content Match | TRT-0155 | 3.08 hours under either rounding, within 0.005 | FAILED |
-| 25 | 3 | wiki_js | Content Match | TRT-0002 | 62.62 hours, or 62.60 under posted rounding, within 0.005 | FAILED |
-| 26 | 2 | wiki_js | Content Match | TRT-0001 | 22.87 hours, or 22.85 under posted rounding, within 0.005 | FAILED |
+| 1 | 1 | wiki_js_mcp | Existence Check | PTO Liability - 08/31/2026 | one pages row titled PTO Liability - 08/31/2026 with isPublished true | FAILED |
+| 2 | 2 | wiki_js_mcp | Count Check | PTO Liability - 08/31/2026 | an employee row keyed on each of the roster's 52 IDs | FAILED |
+| 3 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | every balance 0.00 | FAILED |
+| 4 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | every rate 0.0000 | FAILED |
+| 5 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | every liability 0.00 | FAILED |
+| 6 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | a stated dollar total equal to the sum of the liability cells, within 0.01 | FAILED |
+| 7 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | 52, 1,522.17 hours and a dollar total in the prose | FAILED |
+| 8 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | a name on every keyed row | FAILED |
+| 9 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | a department on every keyed row | FAILED |
+| 10 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | a tier of 80, 120 or 160, or its policy name, on every keyed row | FAILED |
+| 11 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | no named row without a TRT- ID | FAILED |
+| 12 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | every date MM/DD/YYYY, no ISO, spelled or dotted date | FAILED |
+| 13 | 1 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | the count and a dollar figure above the one employee table | FAILED |
+| 14 | 10 | wiki_js_mcp | Content Match | PTO Liability - 08/31/2026 | $92,739.54, or $92,772.88 under posted rounding | FAILED |
+| 15 | 5 | wiki_js_mcp | Content Match | TRT-0005 | 64.62 hours, or 64.60 under posted rounding, within 0.005 | FAILED |
+| 16 | 5 | wiki_js_mcp | Content Match | TRT-0043 | 120, or the policy name for 120 hours | FAILED |
+| 17 | 7 | wiki_js_mcp | Content Match | TRT-0071 | 160, or the policy name for 160 hours | FAILED |
+| 18 | 6 | wiki_js_mcp | Content Match | TRT-0018 | 60.00 hours, or 60.01 under posted rounding, within 0.005 | FAILED |
+| 19 | 7 | wiki_js_mcp | Content Match | TRT-0088 | $56.7308 within 0.00005 | FAILED |
+| 20 | 6 | wiki_js_mcp | Content Match | TRT-0117 | $71.2500 within 0.00005 | FAILED |
+| 21 | 3 | wiki_js_mcp | Content Match | TRT-0096 | $29.3269 within 0.00005 | FAILED |
+| 22 | 4 | wiki_js_mcp | Content Match | TRT-0141 | 29.60 hours, or 29.59 under posted rounding, within 0.005 | FAILED |
+| 23 | 2 | wiki_js_mcp | Content Match | TRT-0153 | 6.15 hours, or 6.16 under posted rounding, within 0.005 | FAILED |
+| 24 | 2 | wiki_js_mcp | Content Match | TRT-0155 | 3.08 hours under either rounding, within 0.005 | FAILED |
+| 25 | 3 | wiki_js_mcp | Content Match | TRT-0002 | 62.62 hours, or 62.60 under posted rounding, within 0.005 | FAILED |
+| 26 | 2 | wiki_js_mcp | Content Match | TRT-0001 | 22.87 hours, or 22.85 under posted rounding, within 0.005 | FAILED |
 | 27 | 1 | bamboohr | Content Match | TRT-0043 | current policy PTO 2 to 5 Years | FAILED |
 | 28 | 1 | bamboohr | Content Match | TRT-0051 | current policy PTO 2 to 5 Years | FAILED |
 | 29 | 1 | bamboohr | Content Match | TRT-0058 | current policy PTO 2 to 5 Years | FAILED |
@@ -96,7 +103,7 @@ States that a Wiki.js page titled PTO Liability - 08/31/2026 is published.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Existence Check |
 | Expected Content | one pages row titled PTO Liability - 08/31/2026 with isPublished true |
 | Target Table | pages, the documented Wiki.js table |
@@ -115,7 +122,7 @@ States, on the PTO liability page, the 52 current employees at 08/31/2026 as the
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Count Check |
 | Expected Content | an employee row keyed on each of the roster's 52 IDs |
 | Target Table | pages, the documented Wiki.js table |
@@ -134,7 +141,7 @@ States, on the PTO liability page, hours to two decimals.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | every balance 0.00 |
 | Target Table | pages, the documented Wiki.js table |
@@ -153,7 +160,7 @@ States, on the PTO liability page, hourly rates to four decimals.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | every rate 0.0000 |
 | Target Table | pages, the documented Wiki.js table |
@@ -172,7 +179,7 @@ States, on the PTO liability page, dollars to the cent.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | every liability 0.00 |
 | Target Table | pages, the documented Wiki.js table |
@@ -191,7 +198,7 @@ States, on the PTO liability page, a total dollar liability equal to the sum of 
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | a stated dollar total equal to the sum of the liability cells, within 0.01 |
 | Target Table | pages, the documented Wiki.js table |
@@ -210,7 +217,7 @@ States, on the PTO liability page, a summary with the employee count, the total 
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 52, 1,522.17 hours and a dollar total in the prose |
 | Target Table | pages, the documented Wiki.js table |
@@ -229,7 +236,7 @@ States, on the PTO liability page, a name on every employee row.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | a name on every keyed row |
 | Target Table | pages, the documented Wiki.js table |
@@ -248,7 +255,7 @@ States, on the PTO liability page, a department on every employee row.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | a department on every keyed row |
 | Target Table | pages, the documented Wiki.js table |
@@ -267,7 +274,7 @@ States, on the PTO liability page, an annual PTO tier in hours on every employee
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | a tier of 80, 120 or 160, or its policy name, on every keyed row |
 | Target Table | pages, the documented Wiki.js table |
@@ -286,7 +293,7 @@ States, on the PTO liability page, an employee ID on every row.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | no named row without a TRT- ID |
 | Target Table | pages, the documented Wiki.js table |
@@ -305,7 +312,7 @@ States, on the PTO liability page, every date in MM/DD/YYYY form.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | every date MM/DD/YYYY, no ISO, spelled or dotted date |
 | Target Table | pages, the documented Wiki.js table |
@@ -324,7 +331,7 @@ States, on the PTO liability page, the summary above one table of employee rows.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | the count and a dollar figure above the one employee table |
 | Target Table | pages, the documented Wiki.js table |
@@ -343,7 +350,7 @@ States, on the PTO liability page, a total dollar liability of $92,739.54.
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | $92,739.54, or $92,772.88 under posted rounding |
 | Target Table | pages, the documented Wiki.js table |
@@ -362,7 +369,7 @@ States, on the PTO liability page, a balance of 64.62 hours for Mikelle Hosana, 
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 64.62 hours, or 64.60 under posted rounding, within 0.005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -381,7 +388,7 @@ States, on the PTO liability page, the 120-hour tier for Oren Kastellanos, TRT-0
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 120, or the policy name for 120 hours |
 | Target Table | pages, the documented Wiki.js table |
@@ -400,7 +407,7 @@ States, on the PTO liability page, the 160-hour tier for Samuel Burkenham, TRT-0
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 160, or the policy name for 160 hours |
 | Target Table | pages, the documented Wiki.js table |
@@ -419,7 +426,7 @@ States, on the PTO liability page, a balance of 60.00 hours for Marisela Thornbu
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 60.00 hours, or 60.01 under posted rounding, within 0.005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -438,7 +445,7 @@ States, on the PTO liability page, an hourly rate of $56.7308 for Yolanda Feathe
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | $56.7308 within 0.00005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -457,7 +464,7 @@ States, on the PTO liability page, an hourly rate of $71.2500 for Belaviv Luk, T
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | $71.2500 within 0.00005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -476,7 +483,7 @@ States, on the PTO liability page, an hourly rate of $29.3269 for Delphine March
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | $29.3269 within 0.00005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -495,7 +502,7 @@ States, on the PTO liability page, a balance of 29.60 hours for Beatriz Quintani
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 29.60 hours, or 29.59 under posted rounding, within 0.005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -514,7 +521,7 @@ States, on the PTO liability page, a balance of 6.15 hours for Simone Okonkwo, T
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 6.15 hours, or 6.16 under posted rounding, within 0.005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -533,7 +540,7 @@ States, on the PTO liability page, a balance of 3.08 hours for Rafael Ibarra, TR
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 3.08 hours under either rounding, within 0.005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -552,7 +559,7 @@ States, on the PTO liability page, a balance of 62.62 hours for Sora Jackson, TR
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 62.62 hours, or 62.60 under posted rounding, within 0.005 |
 | Target Table | pages, the documented Wiki.js table |
@@ -571,7 +578,7 @@ States, on the PTO liability page, a balance of 22.87 hours for Michael Labeson,
 
 | Field | Value |
 |---|---|
-| Target app | `wiki_js` |
+| Target app | `wiki_js_mcp` |
 | Check type | Content Match |
 | Expected Content | 22.87 hours, or 22.85 under posted rounding, within 0.005 |
 | Target Table | pages, the documented Wiki.js table |

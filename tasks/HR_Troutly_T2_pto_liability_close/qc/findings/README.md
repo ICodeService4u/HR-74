@@ -6,13 +6,21 @@ folder, `../README.md`, carries the verdicts. A run set is archived as `run_set_
 BambooHR writes with the app's results, `<run>_bamboohr_writes.json`, and a `runs.json` with the
 model, trajectory id, tool-call count, snapshot ids and the verifier set read off the export.
 
-`run_set_09-20-2026/` holds G1 to G5, the five Gemini 3.8 Flash runs. The prompt round of 09/20/2026 is at `prompt_round1_09-20-2026.md`, transcribed from two
+`run_set_09-20-2026/` holds G1 to G5, the five Gemini 3.8 Flash runs of that day, and
+`run_set_09-21-2026/` the five that ran on task versions 29 and 30 with the verifier code
+pasted. The second set carries one more file per graded run, `<run>_platform_grade.json`, the
+platform's own grading pane read back row by row; `../compare_platform_grade.py` reads it
+against the verifiers' verdicts on the archived bytes, and
+`platform_grading_09-21-2026.md` carries what the first grading measured and what it did not.
+
+The prompt round of 09/20/2026 is at `prompt_round1_09-20-2026.md`, transcribed from two
 screenshots of its Major tab with the disputes as posted; the Passed and Neutral tabs were not
 captured. The first rubric round, run after the import was loaded, is at
 `task_round1_09-20-2026.md`, transcribed from three screenshots, and the second, run on the
 28-row set, at `task_round2_09-20-2026.md`, from two. The third, run on the 43-row set before
 the paste, is at `task_round3_09-20-2026.md`, from two, the fourth, on the 44-row set, at
 `task_round4_09-20-2026.md`, from two, and the fifth, on the 48-row set, at
-`task_round5_09-21-2026.md`, from one. The second prompt round, after the memo re-upload, is at
+`task_round5_09-21-2026.md`, from one, and the sixth, the first round on the pasted 55-row set,
+at `task_round6_09-21-2026.md`, from one. The second prompt round, after the memo re-upload, is at
 `prompt_round2_09-20-2026.md`, from one, with the owner's disputes as posted. Every verdict is in
 `../README.md`.

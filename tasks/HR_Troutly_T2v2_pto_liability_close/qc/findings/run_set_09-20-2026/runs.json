@@ -1,0 +1,322 @@
+[
+ {
+  "run": "G1",
+  "trajectory_id": "traj_4f6423feac9e4f80a389b67ad71a5b0d",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 209,
+  "assistant_messages": 209,
+  "elapsed_seconds": 1854,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_45e68b376f2547dca61408b65d8ba774",
+  "task_version": 17,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 139,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 20,
+   "target_record_labels": [
+    "Approved Hiring View \u2014 August 2026",
+    "Approved Hiring View \u2014 August 2026; Staffed Role View \u2014 August 2026",
+    "Staffed Role View \u2014 August 2026"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 5256,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 207,
+   "observations": [
+    {
+     "seq": 202,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 5256
+    },
+    {
+     "seq": 207,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5256
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 11,
+   "by_tool": {
+    "bamboo_employees_create": 2,
+    "bamboo_time_off_assign_policy": 4,
+    "bamboo_time_off_update_balance": 5
+   },
+   "by_route": {
+    "toolbelt": 11
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G2",
+  "trajectory_id": "traj_43e4ed4770124156985eee8883199d9a",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 165,
+  "assistant_messages": 165,
+  "elapsed_seconds": 1830,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_45e68b376f2547dca61408b65d8ba774",
+  "task_version": 18,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 119,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 20,
+   "target_record_labels": [
+    "Approved Hiring View \u2014 August 2026",
+    "Approved Hiring View \u2014 August 2026; Staffed Role View \u2014 August 2026",
+    "Staffed Role View \u2014 August 2026"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 6016,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 162,
+   "observations": [
+    {
+     "seq": 159,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 6016
+    },
+    {
+     "seq": 162,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 6016
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 2,
+   "by_tool": {
+    "bamboo_time_off_assign_policy": 1,
+    "bamboo_time_off_update_balance": 1
+   },
+   "by_route": {
+    "toolbelt": 2
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G3",
+  "trajectory_id": "traj_e0bfaf50ef7d451fbacfa96c7639178e",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 213,
+  "assistant_messages": 213,
+  "elapsed_seconds": 2155,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_45e68b376f2547dca61408b65d8ba774",
+  "task_version": 17,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 148,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 20,
+   "target_record_labels": [
+    "Approved Hiring View \u2014 August 2026",
+    "Approved Hiring View \u2014 August 2026; Staffed Role View \u2014 August 2026",
+    "Staffed Role View \u2014 August 2026"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 4894,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 207,
+   "observations": [
+    {
+     "seq": 207,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 4894
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [
+   {
+    "seq": 206,
+    "tool": "wikijs_mcp_create_page",
+    "literal": "{\n            'request': {\n                'title': 'PTO Liability - 08/31/2026',\n                'path': 'pto-liability-08-31-2026',\n                'content': content,\n                'description':"
+   }
+  ],
+  "bamboohr_writes": {
+   "count": 6,
+   "by_tool": {
+    "bamboo_employees_create": 2,
+    "bamboo_time_off_assign_policy": 2,
+    "bamboo_time_off_update_balance": 2
+   },
+   "by_route": {
+    "shell": 6
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G4",
+  "trajectory_id": "traj_75b173ce1cb641fc9fcf09419ee67caf",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 192,
+  "assistant_messages": 192,
+  "elapsed_seconds": 2172,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_45e68b376f2547dca61408b65d8ba774",
+  "task_version": 18,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 134,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 20,
+   "target_record_labels": [
+    "Approved Hiring View \u2014 August 2026",
+    "Approved Hiring View \u2014 August 2026; Staffed Role View \u2014 August 2026",
+    "Staffed Role View \u2014 August 2026"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 4873,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 186,
+   "observations": [
+    {
+     "seq": 186,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 4873
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 8,
+   "by_tool": {
+    "bamboo_employees_create": 2,
+    "bamboo_time_off_assign_policy": 2,
+    "bamboo_time_off_update_balance": 4
+   },
+   "by_route": {
+    "toolbelt": 8
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G5",
+  "trajectory_id": "traj_8805c80d23144ec2bd53b3381f89acef",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 197,
+  "assistant_messages": 197,
+  "elapsed_seconds": 2133,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_45e68b376f2547dca61408b65d8ba774",
+  "task_version": 18,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 143,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 20,
+   "target_record_labels": [
+    "Approved Hiring View \u2014 August 2026",
+    "Approved Hiring View \u2014 August 2026; Staffed Role View \u2014 August 2026",
+    "Staffed Role View \u2014 August 2026"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 5247,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 191,
+   "observations": [
+    {
+     "seq": 190,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 5247
+    },
+    {
+     "seq": 191,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5247
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 5,
+   "by_tool": {
+    "bamboo_time_off_assign_policy": 2,
+    "bamboo_time_off_update_balance": 3
+   },
+   "by_route": {
+    "shell": 5
+   },
+   "unparsed": [
+    {
+     "seq": 184,
+     "tool": "bamboo_time_off_assign_policy",
+     "literal": "{\n                'employeeId': emp_id,\n                'policies': [{'timeOffPolicyId': pol_id, 'accrualStartDate': None}]\n            }"
+    },
+    {
+     "seq": 184,
+     "tool": "bamboo_time_off_update_balance",
+     "literal": "{\n                'employeeId': emp_id,\n                'timeOffTypeId': 1,\n                'amount': -bal,\n                'note': note\n            }"
+    }
+   ],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": false
+  }
+ }
+]

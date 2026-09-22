@@ -1,0 +1,296 @@
+{
+ "id_to_employee_number": {
+  "1": "TRT-0001",
+  "2": "TRT-0018",
+  "3": "TRT-0037",
+  "4": "TRT-0049",
+  "5": "TRT-0002",
+  "6": "TRT-0012",
+  "7": "CTR-2001",
+  "8": "CTR-2002",
+  "9": "CTR-2003",
+  "10": "CTR-2004",
+  "11": "TRT-0005",
+  "12": "TRT-0006",
+  "13": "TRT-0009",
+  "14": "TRT-0014",
+  "15": "TRT-0021",
+  "16": "TRT-0066",
+  "17": "TRT-0023",
+  "18": "TRT-0027",
+  "19": "TRT-0029",
+  "20": "TRT-0031",
+  "21": "TRT-0154",
+  "22": "TRT-0034",
+  "23": "TRT-0040",
+  "24": "TRT-0043",
+  "25": "TRT-0045",
+  "26": "TRT-0047",
+  "27": "TRT-0051",
+  "28": "TRT-0052",
+  "29": "TRT-0055",
+  "30": "TRT-0058",
+  "31": "TRT-0062",
+  "32": "TRT-0064",
+  "33": "TRT-0069",
+  "34": "TRT-0071",
+  "35": "TRT-0074",
+  "36": "TRT-0076",
+  "37": "TRT-0079",
+  "38": "TRT-0083",
+  "39": "TRT-0086",
+  "40": "TRT-0088",
+  "41": "TRT-0091",
+  "42": "TRT-0093",
+  "43": "TRT-0096",
+  "44": "TRT-0099",
+  "45": "TRT-0102",
+  "46": "TRT-0105",
+  "47": "TRT-0108",
+  "48": "TRT-0110",
+  "49": "TRT-0113",
+  "50": "TRT-0117",
+  "51": "TRT-0119",
+  "52": "TRT-0122",
+  "53": "TRT-0128",
+  "54": "TRT-0131",
+  "55": "TRT-0135",
+  "56": "TRT-0141",
+  "57": "TRT-0150",
+  "58": "TRT-0156",
+  "59": "TRT-0153",
+  "60": "TRT-0155"
+ },
+ "writes": [
+  {
+   "seq": 96,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "timeOffTypeId": 1,
+    "employeeId": "7",
+    "note": "test",
+    "date": "2026-08-31",
+    "amount": 1
+   },
+   "result": "Error: 'bamboohr_bamboo_time_off_update_balance' not in toolbelt. Use toolbelt_add_tool first."
+  },
+  {
+   "seq": 98,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "note": "test",
+    "employeeId": "7",
+    "amount": 1,
+    "timeOffTypeId": 1,
+    "date": "2026-08-31"
+   },
+   "result": {
+    "adjustmentId": "1",
+    "newBalance": 13.31,
+    "previousBalance": 12.31,
+    "created": "2026-09-20T02:32:40Z"
+   }
+  },
+  {
+   "seq": 99,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "timeOffTypeId": 1,
+    "employeeId": "7",
+    "amount": -1,
+    "note": "revert test",
+    "date": "2026-08-31"
+   },
+   "result": {
+    "adjustmentId": "2",
+    "newBalance": 12.31,
+    "previousBalance": 13.31,
+    "created": "2026-09-20T02:32:46Z"
+   }
+  },
+  {
+   "seq": 173,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "timeOffPolicyId": 1,
+      "accrualStartDate": "2026-07-22"
+     }
+    ],
+    "employeeId": "12"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-07-22"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 175,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "12",
+    "policies": [
+     {
+      "timeOffPolicyId": 1,
+      "accrualStartDate": "0000-00-00"
+     }
+    ]
+   },
+   "result": {
+    "assigned": [],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 181,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "employeeNumber": "TRT-0153",
+    "payType": "salary",
+    "location": "TX",
+    "salary": "92000",
+    "jobTitle": "Customer Success Manager",
+    "hireDate": "2026-07-22",
+    "department": "Customer Success",
+    "lastName": "Okonkwo",
+    "displayName": "Simone Okonkwo",
+    "firstName": "Simone",
+    "supervisorId": 15,
+    "workEmail": "simone@troutlyanalytics.com",
+    "status": "Active",
+    "paySchedule": "Biweekly"
+   },
+   "result": {
+    "id": "59",
+    "created": "2026-09-20T02:47:14.195260Z"
+   }
+  },
+  {
+   "seq": 182,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "hireDate": "2026-08-03",
+    "workEmail": "rafael@troutlyanalytics.com",
+    "salary": "56300",
+    "displayName": "Rafael Ibarra",
+    "jobTitle": "Sales Development Representative",
+    "paySchedule": "Biweekly",
+    "supervisorId": 2,
+    "lastName": "Ibarra",
+    "firstName": "Rafael",
+    "department": "Sales",
+    "location": "TX",
+    "payType": "salary",
+    "employeeNumber": "TRT-0155",
+    "status": "Active"
+   },
+   "result": {
+    "id": "60",
+    "created": "2026-09-20T02:47:21.164143Z"
+   }
+  },
+  {
+   "seq": 183,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "59",
+    "policies": [
+     {
+      "accrualStartDate": "2026-07-22",
+      "timeOffPolicyId": 1
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-07-22"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 184,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "timeOffPolicyId": 1,
+      "accrualStartDate": "2026-08-03"
+     }
+    ],
+    "employeeId": "60"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-08-03"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 186,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "note": "PTO balance as of 08/31/2026",
+    "amount": 6.15,
+    "timeOffTypeId": 1,
+    "employeeId": "59",
+    "date": "2026-08-31"
+   },
+   "result": {
+    "adjustmentId": "3",
+    "newBalance": 6.15,
+    "previousBalance": 0.0,
+    "created": "2026-09-20T02:47:48Z"
+   }
+  },
+  {
+   "seq": 187,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "employeeId": "60",
+    "note": "PTO balance as of 08/31/2026",
+    "amount": 3.08,
+    "date": "2026-08-31",
+    "timeOffTypeId": 1
+   },
+   "result": {
+    "adjustmentId": "4",
+    "newBalance": 3.08,
+    "previousBalance": 0.0,
+    "created": "2026-09-20T02:47:56Z"
+   }
+  }
+ ]
+}

@@ -368,6 +368,62 @@ ask is graded on all 52 for the first time. P1 reads 27.6% and the two runs unde
 decision rule is unchanged, and the comparison a reviewer should make is the 23.9% the 21-row
 plan measured before any round, which this set now sits beside.
 
+## Measured 09/21/2026 - the second five runs, on the pasted rubric
+
+The 55 rows were pasted on 09/21/2026 and five more Gemini 3.8 Flash trajectories ran against
+the task, G1 and G2 on task version 29 and G3, G4 and G5 on 30. They are archived under
+`qc/findings/run_set_09-21-2026/` and scored the same way, from the page the app returned and
+the BambooHR writes with the app's own results, by the same 55 row files:
+
+| Run | Model | Tool calls | Assistant turns | Rows | Total it prints | Path | Score | Rows failed |
+|---|---|---|---|---|---|---|---|---|
+| G1 | gemini-3.8-flash | 287 | 287 | 52 | $111,497.27 | none | 53 of 105, 50.5% | 14, 15, 18, 19, 21, 22, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 |
+| G2 | gemini-3.8-flash | 146 | 146 | 52 | $111,455.78 | P1 | 29 of 105, 27.6% | 14, 15, 16, 17, 18, 19, 20, 21, 22, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 |
+| G3 | gemini-3.8-flash | 235 | 190 | 52 | $113,515.83 | none | 52 of 105, 49.5% | 14, 15, 18, 19, 20, 21, 22, 34, 35, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46 |
+| G4 | gemini-3.8-flash | 296 | 296 | 52 | $111,455.78 | none | 47 of 105, 44.8% | 14, 15, 18, 19, 20, 21, 22, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 |
+| G5 | gemini-3.8-flash | 220 | 220 | 50 | $111,100.39 | none | 19 of 105, 18.1% | 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 27, 28, 29, 30, 31, 32, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55 |
+
+gemini-3.8-flash: 5 runs, mean 38.1%, low 18.1%, high 50.5%
+
+**The mean rose and the ask did not heal.** Row 14, the gate on $92,739.54, fails five of five,
+and row 15, Hosana's capped balance, fails five of five: no run applied the 40.0-hour cap, which
+is the determination this ask exists to measure, and every run still prints a total between
+$111,100.39 and $113,515.83. What the second set earns that the first did not is the BambooHR
+half and the tier rows: G1, G3 and G4 created both unloaded hires, assigned the six moved
+policies, and read the archive's service dates for the 120- and 160-hour tiers, so rows 16, 17,
+23, 24, 27 to 32 and 52 to 55 come in on all three. G1 alone values Luk at the signed rate,
+row 20; G3 alone moves five BambooHR balances, rows 36 and 47 to 50. G2 takes P1 row for row and
+G5 takes P1 less the two hires, the two shapes the first set measured.
+
+The registered decision rule is unchanged and the set is still under it: 38.1% against a 40%
+line, with G1 at 50.5% and G3 at 49.5%. Two runs inside ten points of the line is the number to
+watch, and the next set decides it. Nothing in the rubric was rescoped around this; the rows the
+runs now pass are the rows they now earn.
+
+## The first platform grading, 09/21/2026, and what it measured
+
+G5's grading pane reports 2 passes of 55, a weighted 2 of 105, 1.9%. The same run's archived
+bytes score 19 of 105, 18.1%, on the same row files. `qc/compare_platform_grade.py` puts the two
+readings side by side row by row: 29 of 29 BambooHR rows agree, and the 14 wiki rows that should
+pass all read fail, 17 points. The twelve wiki rows that agree fail on both readings for G5's
+own arithmetic, so they carry nothing about the read.
+
+The section above says to read a row's `details` before reading a zero as a failure of the run.
+This is that case, and the details were not on the pane: every failing row printed `Metrics: {}`
+and an empty stdout box. Re-run here on 09/22/2026 against the archived G5 page, the code as
+pasted scores 19 of 105 on a ctx that carries `has_table` and **2 of 105 on one that does not,
+passing rows 33 and 51**, the pane's own number and its own two rows; a wiki row grounded on a
+service the runs never wrote through gives the same 2 by another route, so the score cannot
+separate the two and one test run's details line can. What the grading does measure is that the pasted code is this package's
+code, all 55 byte for byte, that `list_tables`, `table_columns` and `query_db` are served on a
+graded run, since the BambooHR rows returned their metrics through them, and that the one
+primitive only the page rows read, `has_table`, is measured by nothing. It is gone from the
+engine and from the stand-in `ctx`; the engine prints its notes so the next pane carries the
+tables it saw; and every page row now reports `page_rows`, which separates a page the check
+could not reach from a page it read and graded. `qc/findings/platform_grading_09-21-2026.md`
+carries the evidence. Until a re-grading lands, no platform score on this task is read as the
+run's score.
+
 ## The task-field paragraph, 09/20/2026
 
 Entered in the Additional Notes box on G1 on 09/20/2026, three sentences: what the run did and

@@ -1,0 +1,679 @@
+{
+ "id_to_employee_number": {
+  "1": "TRT-0001",
+  "2": "TRT-0018",
+  "3": "TRT-0037",
+  "4": "TRT-0049",
+  "5": "TRT-0002",
+  "6": "TRT-0012",
+  "7": "CTR-2001",
+  "8": "CTR-2002",
+  "9": "CTR-2003",
+  "10": "CTR-2004",
+  "11": "TRT-0005",
+  "12": "TRT-0006",
+  "13": "TRT-0009",
+  "14": "TRT-0014",
+  "15": "TRT-0021",
+  "16": "TRT-0066",
+  "17": "TRT-0023",
+  "18": "TRT-0027",
+  "19": "TRT-0029",
+  "20": "TRT-0031",
+  "21": "TRT-0154",
+  "22": "TRT-0034",
+  "23": "TRT-0040",
+  "24": "TRT-0043",
+  "25": "TRT-0045",
+  "26": "TRT-0047",
+  "27": "TRT-0051",
+  "28": "TRT-0052",
+  "29": "TRT-0055",
+  "30": "TRT-0058",
+  "31": "TRT-0062",
+  "32": "TRT-0064",
+  "33": "TRT-0069",
+  "34": "TRT-0071",
+  "35": "TRT-0074",
+  "36": "TRT-0076",
+  "37": "TRT-0079",
+  "38": "TRT-0083",
+  "39": "TRT-0086",
+  "40": "TRT-0088",
+  "41": "TRT-0091",
+  "42": "TRT-0093",
+  "43": "TRT-0096",
+  "44": "TRT-0099",
+  "45": "TRT-0102",
+  "46": "TRT-0105",
+  "47": "TRT-0108",
+  "48": "TRT-0110",
+  "49": "TRT-0113",
+  "50": "TRT-0117",
+  "51": "TRT-0119",
+  "52": "TRT-0122",
+  "53": "TRT-0128",
+  "54": "TRT-0131",
+  "55": "TRT-0135",
+  "56": "TRT-0141",
+  "57": "TRT-0150",
+  "58": "TRT-0156",
+  "59": "TRT-0153",
+  "60": "TRT-0155"
+ },
+ "writes": [
+  {
+   "seq": 142,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "note": "test adjustment",
+    "timeOffTypeId": 1,
+    "employeeId": "10",
+    "amount": 1,
+    "date": "2026-08-31"
+   },
+   "result": {
+    "adjustmentId": "1",
+    "newBalance": 13.31,
+    "previousBalance": 12.31,
+    "created": "2026-09-21T00:31:26Z"
+   }
+  },
+  {
+   "seq": 143,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "employeeId": "10",
+    "note": "revert test adjustment",
+    "date": "2026-08-31",
+    "timeOffTypeId": 1,
+    "amount": -1
+   },
+   "result": {
+    "adjustmentId": "2",
+    "newBalance": 12.31,
+    "previousBalance": 13.31,
+    "created": "2026-09-21T00:31:33Z"
+   }
+  },
+  {
+   "seq": 145,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "10",
+    "policies": [
+     {
+      "accrualStartDate": "2026-06-08",
+      "timeOffPolicyId": 2
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 2,
+      "policyName": "PTO 2 to 5 Years",
+      "effectiveDate": "2026-06-08"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 147,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "10",
+    "policies": [
+     {
+      "timeOffPolicyId": 1,
+      "accrualStartDate": "2026-06-08"
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-06-08"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 2,
+      "policyName": "PTO 2 to 5 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 150,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "timeOffTypeId": 1,
+    "date": "2026-08-31",
+    "note": "reset balance",
+    "amount": 12.31,
+    "employeeId": "10"
+   },
+   "result": {
+    "adjustmentId": "3",
+    "newBalance": 12.31,
+    "previousBalance": 0.0,
+    "created": "2026-09-21T00:32:20Z"
+   }
+  },
+  {
+   "seq": 172,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "status": "Active",
+    "jobTitle": "Customer Success Manager",
+    "hireDate": "2026-07-22",
+    "location": "TX",
+    "payType": "Salary",
+    "displayName": "Simone Okonkwo",
+    "payRate": "92000",
+    "firstName": "Simone",
+    "salary": "92000",
+    "lastName": "Okonkwo",
+    "employeeNumber": "TRT-0153",
+    "workEmail": "simone@troutlyanalytics.com",
+    "department": "Customer Success",
+    "supervisorId": 15
+   },
+   "result": {
+    "id": "59",
+    "created": "2026-09-21T00:39:36.857725Z"
+   }
+  },
+  {
+   "seq": 173,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "accrualStartDate": "2026-07-22",
+      "timeOffPolicyId": 1
+     }
+    ],
+    "employeeId": "59"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-07-22"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 174,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "employeeId": "59",
+    "amount": 6.15,
+    "date": "2026-08-31",
+    "note": "August 2026 close PTO balance",
+    "timeOffTypeId": 1
+   },
+   "result": {
+    "adjustmentId": "4",
+    "newBalance": 6.15,
+    "previousBalance": 0.0,
+    "created": "2026-09-21T00:39:53Z"
+   }
+  },
+  {
+   "seq": 175,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_create",
+   "args": {
+    "location": "TX",
+    "jobTitle": "Sales Development Representative",
+    "payType": "Salary",
+    "status": "Active",
+    "hireDate": "2026-08-03",
+    "lastName": "Ibarra",
+    "employeeNumber": "TRT-0155",
+    "firstName": "Rafael",
+    "payRate": "56300",
+    "salary": "56300",
+    "department": "Sales",
+    "displayName": "Rafael Ibarra",
+    "supervisorId": 2,
+    "workEmail": "rafael@troutlyanalytics.com"
+   },
+   "result": {
+    "id": "60",
+    "created": "2026-09-21T00:40:04.312898Z"
+   }
+  },
+  {
+   "seq": 176,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "accrualStartDate": "2026-08-03",
+      "timeOffPolicyId": 1
+     }
+    ],
+    "employeeId": "60"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years",
+      "effectiveDate": "2026-08-03"
+     }
+    ],
+    "removed": []
+   }
+  },
+  {
+   "seq": 177,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_update_balance",
+   "args": {
+    "note": "August 2026 close PTO balance",
+    "employeeId": "60",
+    "amount": 3.08,
+    "timeOffTypeId": 1,
+    "date": "2026-08-31"
+   },
+   "result": {
+    "adjustmentId": "5",
+    "newBalance": 3.08,
+    "previousBalance": 0.0,
+    "created": "2026-09-21T00:40:20Z"
+   }
+  },
+  {
+   "seq": 178,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "24",
+    "policies": [
+     {
+      "accrualStartDate": "2021-10-15",
+      "timeOffPolicyId": 2
+     }
+    ]
+   },
+   "result": {
+    "error": {
+     "code": 422,
+     "message": "Accrual start date (2021-10-15) cannot be before hire date (2026-07-01)"
+    }
+   }
+  },
+  {
+   "seq": 179,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2021-10-15",
+    "employeeId": "24"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:40:39.111272+00:00"
+   }
+  },
+  {
+   "seq": 180,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "accrualStartDate": "2021-10-15",
+      "timeOffPolicyId": 2
+     }
+    ],
+    "employeeId": "24"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 2,
+      "policyName": "PTO 2 to 5 Years",
+      "effectiveDate": "2021-10-15"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 183,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2022-05-03",
+    "employeeId": "27"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:41:07.836649+00:00"
+   }
+  },
+  {
+   "seq": 184,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "timeOffPolicyId": 2,
+      "accrualStartDate": "2022-05-03"
+     }
+    ],
+    "employeeId": "27"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 2,
+      "policyName": "PTO 2 to 5 Years",
+      "effectiveDate": "2022-05-03"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 186,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2022-09-12",
+    "employeeId": "30"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:41:32.408603+00:00"
+   }
+  },
+  {
+   "seq": 187,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "30",
+    "policies": [
+     {
+      "accrualStartDate": "2022-09-12",
+      "timeOffPolicyId": 2
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 2,
+      "policyName": "PTO 2 to 5 Years",
+      "effectiveDate": "2022-09-12"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 189,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2021-03-08",
+    "employeeId": "34"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:41:58.145565+00:00"
+   }
+  },
+  {
+   "seq": 190,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "timeOffPolicyId": 3,
+      "accrualStartDate": "2021-03-08"
+     }
+    ],
+    "employeeId": "34"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 3,
+      "policyName": "PTO 5 Plus Years",
+      "effectiveDate": "2021-03-08"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 192,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2023-02-06",
+    "employeeId": "37"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:42:30.174779+00:00"
+   }
+  },
+  {
+   "seq": 193,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "employeeId": "37",
+    "policies": [
+     {
+      "timeOffPolicyId": 2,
+      "accrualStartDate": "2023-02-06"
+     }
+    ]
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 2,
+      "policyName": "PTO 2 to 5 Years",
+      "effectiveDate": "2023-02-06"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 195,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2023-06-19",
+    "employeeId": "38"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:42:53.589956+00:00"
+   }
+  },
+  {
+   "seq": 196,
+   "route": "toolbelt",
+   "tool": "bamboo_time_off_assign_policy",
+   "args": {
+    "policies": [
+     {
+      "timeOffPolicyId": 2,
+      "accrualStartDate": "2023-06-19"
+     }
+    ],
+    "employeeId": "38"
+   },
+   "result": {
+    "assigned": [
+     {
+      "policyId": 2,
+      "policyName": "PTO 2 to 5 Years",
+      "effectiveDate": "2023-06-19"
+     }
+    ],
+    "removed": [
+     {
+      "policyId": 1,
+      "policyName": "PTO Under 2 Years"
+     }
+    ]
+   }
+  },
+  {
+   "seq": 198,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2025-08-17",
+    "employeeId": "43"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:43:18.063205+00:00"
+   }
+  },
+  {
+   "seq": 199,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "employeeId": "45",
+    "hireDate": "2025-01-20"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:43:27.347048+00:00"
+   }
+  },
+  {
+   "seq": 200,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "hireDate": "2025-03-17",
+    "employeeId": "48"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:43:38.132986+00:00"
+   }
+  },
+  {
+   "seq": 201,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "salary": "148200",
+    "employeeId": "50",
+    "payRate": "148200"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:43:47.291361+00:00"
+   }
+  },
+  {
+   "seq": 202,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "terminationDate": "2026-03-20",
+    "employeeId": "3",
+    "status": "Terminated"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:43:54.807547+00:00"
+   }
+  },
+  {
+   "seq": 203,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "status": "Terminated",
+    "terminationDate": "2026-05-08",
+    "employeeId": "4"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:44:04.975567+00:00"
+   }
+  },
+  {
+   "seq": 204,
+   "route": "toolbelt",
+   "tool": "bamboo_employees_update",
+   "args": {
+    "employeeId": "32",
+    "status": "Terminated",
+    "terminationDate": "2026-06-15"
+   },
+   "result": {
+    "success": true,
+    "updated": "2026-09-21T00:44:12.501454+00:00"
+   }
+  }
+ ]
+}

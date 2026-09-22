@@ -26,7 +26,12 @@ SPEC = {'criterion': 'States, in BambooHR, a PTO balance of 58.46 hours for Ilse
 #     balance tables by their references into those two, integer id or seed string alike;
 #   * it never raises, and details name every table, column list, row and candidate it read, with
 #     the reason each was accepted or rejected.
+import os
 import re
+
+# the battery runs 55 rows over every snapshot and reads the verdicts, not the notes; the platform
+# runs one row over one snapshot and shows what it printed. QUIET keeps the battery readable.
+QUIET = os.environ.get("T2_VERIFIER_QUIET") == "1"
 
 PAGES_COLS = ["id", "path", "hash", "title", "description", "isPrivate", "isPublished",
               "privateNS", "publishStartDate", "publishEndDate", "content", "render", "toc",
@@ -200,9 +205,15 @@ class _Page(object):
 
 
 def _pages_table(ctx, notes):
-    if ctx.has_table("pages"):
-        return "pages"
-    for name in ctx.list_tables():
+    """The pages table, by name and then by content word. Only the three primitives the BambooHR
+    side already reads are used - list_tables, table_columns and query_db - so a ctx that carries
+    no has_table cannot take the page rows down with it."""
+    names = list(ctx.list_tables())
+    notes.append("tables in the snapshot: %r" % names)
+    for name in names:
+        if name.lower() == "pages":
+            return name
+    for name in names:
         low = name.lower()
         if "page" in low and not any(x in low for x in ("history", "tree", "link", "tag", "meta")):
             notes.append("no table named pages; using %s" % name)
@@ -228,6 +239,10 @@ def _load_pages(ctx, title, notes):
         if not hits:
             continue
         if real:
+            if cols.index("title") not in hits:
+                notes.append("page row %d carries %r outside its title column, in %r; not this page"
+                             % (n, title, [cols[i] for i in hits]))
+                continue
             body = _clean(r[cols.index("content")])
             pub = _bool(r[cols.index("isPublished")]) if "isPublished" in cols else None
             route = "real names"
@@ -735,29 +750,31 @@ def _run_bamboo(kind, bam, notes, metrics):
 def check(ctx):
     notes, metrics = [], {}
 
-    def fail(reason):
-        return {"passed": False, "details": "\n".join(notes + ["", "FAILED - " + reason]), "metrics": metrics}
+    def out(passed, line):
+        details = "\n".join(notes + ["", ("PASSED - " if passed else "FAILED - ") + line])
+        if not QUIET:
+            # the platform prints a verifier's stdout beside its metrics; the notes belong in both,
+            # so a verdict that reads wrong can be read back from the graded run and not guessed at
+            print(details)
+        return {"passed": passed, "details": details, "metrics": metrics}
 
     try:
         if SPEC["target"] == "bamboohr":
             bam = _Bamboo(ctx, notes)
             ok, why = _run_bamboo(SPEC["kind"], bam, notes, metrics)
-            if ok:
-                return {"passed": True, "metrics": metrics, "details": "\n".join(notes + ["", "PASSED - " + why])}
-            return fail(why)
+            return out(ok, why)
         pages = _load_pages(ctx, SPEC["page"], notes)
+        metrics["page_rows"] = len(pages)
         if not pages:
-            return fail("no page titled %r" % SPEC["page"])
-        verdicts = []
-        for p in pages:
-            ok, why = _run_page(SPEC["kind"], p, notes, metrics)
-            notes.append("page %r: %s - %s" % (SPEC["page"], "ok" if ok else "NO", why))
-            verdicts.append(ok)
-        # every row carrying the title has to satisfy: a wrong duplicate leaves the wiki wrong
-        if verdicts and all(verdicts):
-            return {"passed": True, "metrics": metrics,
-                    "details": "\n".join(notes + ["", "PASSED - %d page row(s) satisfy" % len(verdicts)])}
-        return fail("%d of %d page rows fail" % (verdicts.count(False), len(verdicts)))
+            return out(False, "no page titled %r" % SPEC["page"])
+        # the request asks for one page under the title: two rows leave the close's reader to pick,
+        # and a duplicate that is right today is a second page to maintain tomorrow
+        if len(pages) > 1:
+            return out(False, "%d page rows carry the title %r; the request asks for one"
+                       % (len(pages), SPEC["page"]))
+        ok, why = _run_page(SPEC["kind"], pages[0], notes, metrics)
+        notes.append("page %r: %s - %s" % (SPEC["page"], "ok" if ok else "NO", why))
+        return out(ok, why)
     except Exception as exc:
         notes.append("unexpected error: %s: %s" % (type(exc).__name__, str(exc)[:300]))
-        return fail("the check could not complete; see the error above")
+        return out(False, "the check could not complete; see the error above")

@@ -1,0 +1,18 @@
+{
+  "run": "G5",
+  "graded_on": "09/21/2026",
+  "judge_line": "Judge Grades - vertex_ai/gemini-3-flash-preview - default",
+  "passes": 2,
+  "fails": 53,
+  "final_score_pct": 1.9,
+  "weighted_sum": 2,
+  "total_weights": 105,
+  "verifier_count": 55,
+  "passed_rows": [33, 51],
+  "metrics": {
+    "33": {"wrong": 0, "employees": 44},
+    "51": {"wrong": 0, "employees": 33}
+  },
+  "empty_metrics_rows": "every other row printed Metrics {} and an empty Verifier stdout box",
+  "source": "the grading pane for G5, pasted into the session of 09/21/2026 row by row"
+}

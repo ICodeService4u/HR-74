@@ -64,8 +64,8 @@ def _slug(title):
     return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
 
 
-def _page_row(i, title, content, published=1, path=None):
-    return [i, path or _slug(title), "h%d" % i, title, "", 0, published, None, None, None,
+def _page_row(i, title, content, published=1, path=None, desc=""):
+    return [i, path or _slug(title), "h%d" % i, title, desc, 0, published, None, None, None,
             content, "<p>rendered</p>", "[]", "markdown", "2026-08-31 09:00:00",
             "2026-08-31 09:00:00", "markdown", "en", 5, 5, "{}"]
 
@@ -77,7 +77,8 @@ def wiki_tables(pages=(), cols=PAGES_COLS, history=()):
     for n, spec in enumerate(pages, 11):
         title, content = spec[0], spec[1]
         pub = spec[2] if len(spec) > 2 else 1
-        rows.append(_page_row(n, title, content, pub))
+        desc = spec[3] if len(spec) > 3 else ""
+        rows.append(_page_row(n, title, content, pub, desc=desc))
     rows = [r[:len(cols)] for r in rows]
     hist = [[n, 99, _slug(t), "h", t, "", 0, 1, None, None, "updated", c, "markdown",
              "2026-08-31 09:00:00", "2026-08-31 09:00:00", "en", 5] for n, (t, c) in enumerate(history, 1)]
@@ -402,7 +403,14 @@ BATTERY = [
      lambda: snap([(PAGE, GOLD), (PAGE, B.render_page([dict(r, balance=r["opening_raw"] + round(sum(r["accruals"]), 2),
                                                          liability=round((r["opening_raw"] + round(sum(r["accruals"]), 2)) * r["hourly"], 2))
                                                     if r["id"] == "TRT-0005" else r for r in B.GOLDEN]))], correct_bamboo()),
-     {14, 15}, "a wrong duplicate leaves the wiki wrong; every row under the title has to satisfy"),
+     PAGE_ROWS, "a wrong duplicate leaves the wiki wrong, and the request asks for one page under the title"),
+    ("a second page with the same title carrying the same schedule",
+     lambda: snap([(PAGE, GOLD), (PAGE, GOLD)], correct_bamboo()), PAGE_ROWS,
+     "the memo asks for one page published under the title; two correct copies are two pages, and a check that reads them row by row passes them"),
+    ("a note page carrying the title in its description, real column names",
+     lambda: snap([(PAGE, GOLD), ("PTO Liability Notes", "# PTO Liability Notes\n\nThe schedule is the other page.", 1, PAGE)],
+                  correct_bamboo(), real_names=True), set(),
+     "a description is not a title: the one page under the title is the schedule, and a title read off any cell would call this a duplicate"),
     # ---- the archived runs and the registered paths
     ("G1 as archived: P1 row for row, BambooHR as G1 left it", lambda: snap([(PAGE, archived("G1")[0])], archived("G1")[1]),
      {12} | DET | POL_ROWS | BAL_ROWS, "the modal path measured on 09/20/2026, three of five runs; the two guards pass on an untouched BambooHR, and G1 wrote August 31, 2026 in its prose against the request's MM/DD/YYYY"),
