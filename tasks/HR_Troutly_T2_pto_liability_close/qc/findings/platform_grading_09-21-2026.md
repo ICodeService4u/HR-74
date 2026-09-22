@@ -128,20 +128,44 @@ Page rows now carry `page_rows` in their metrics, the number of rows in the page
 the title. On the pane that number alone separates a page the check could not reach, 0, from a
 page it read and graded.
 
-## The reading, 09/21/2026
+## The reading, 09/22/2026, after the pasted code was re-run here
 
-Two candidates fit the shape, one primitive and one target app, and the second is now the
-leading one on the evidence above: a verifier grounded on Wiki.js is handed a database that is
-not the one the runs write to, so no row of its pages table carries the title, every wiki row
-fails on the first read and no BambooHR row is touched. The engine change stands either way -
-the primitive it dropped was never measured, and the notes it now prints name the tables the
-snapshot actually holds, which is what tells the two apart on the next grading.
+Two candidates fit the shape, the primitive and the target app, and **neither is ruled out by
+the score**, because both produce the same one: every wiki row fails on the first read and no
+BambooHR row is touched.
+
+The pasted code was run here against the archived G5 page, present and published, on two
+stand-ins that differ in one method:
+
+| The ctx | What the pasted code scores | Rows it passes |
+|---|---|---|
+| carries `has_table` | 19 of 105 | 1, 3 to 13, 25, 26, 33, 51 |
+| does not carry `has_table` | **2 of 105** | **33, 51** |
+
+The second line is the grading pane's own number and its own two rows. So the pasted code, on a
+harness whose ctx has no `has_table`, reproduces the 09/21/2026 grading exactly, and row 1's
+details in that case read `unexpected error: AttributeError: ... has no attribute 'has_table'`.
+A verifier grounded on the wrong service reproduces the same 2 of 105 by a different route, and
+its row 1 details read `no pages table in this snapshot: [...]` with the tables it was handed.
+
+**The details string of one test run separates them, on the code already pasted**, because the
+two cases cannot both print the same line:
+
+- `AttributeError ... has_table` - the primitive. Switching the target app does not help; the 26
+  wiki rows need the round-6 file, which reads the table from `list_tables` alone.
+- `no pages table in this snapshot: [...]` - the service. The pasted code is sound as it stands
+  and the 26 rows need Wiki.js MCP on Target database apps, nothing else.
+- `table pages: 21 columns [...], 10 rows` then `no row of pages carries the title` - both are
+  fine and this is the line the untouched task should give; the cause is then neither and the
+  next grading's notes decide it.
 
 ## What is owed
 
-- The 26 wiki rows re-grounded on Wiki.js MCP, the service whose tools every run called, and a
-  re-grading. The next pane's `page_rows` metric and the `tables in the snapshot` line in its
-  stdout box say whether the check reached the page.
+- One test run of row 1 as pasted, read for the line above. It costs nothing, changes nothing,
+  and it says whether the 26 rows need a new service or a new file.
+- Then either the 26 wiki rows re-grounded on Wiki.js MCP, the service whose tools every run
+  called, or the round-6 file pasted into them, and a re-grading. The next pane's `page_rows`
+  metric and the `tables in the snapshot` line in its stdout box confirm it either way.
 - The grading panes for G1 to G4, read back the same way. G1 and G3 moved records the schedule
   moves, so their BambooHR rows carry information G5's cannot: if their policy rows pass on the
   platform, the graded snapshot holds the run's writes and the wiki rows alone are unreached.

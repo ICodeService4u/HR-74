@@ -19,9 +19,11 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `132b10edfb5f835facbb
    builder stamps only the half a row uses. **Target database apps on a wiki row is `wiki_js_mcp`**,
    the service whose tools every archived run called, `wiki_js_mcp_wikijs_mcp_create_page` among
    them, and the picker offers Wiki.js and Wiki.js MCP as two entries. The 09/21/2026 paste took
-   Wiki.js and every wiki row read fail on a page the app had returned under the exact title, so
-   until a grading says which service holds the pages table, select both and read the tables the
-   details name.
+   Wiki.js and every wiki row read fail on a page the app had returned under the exact title.
+   Two causes fit that equally, the service and a ctx without `has_table`, and the row's own
+   details line separates them: `no pages table in this snapshot` is the service, an
+   `AttributeError` on `has_table` is a row file older than round 6. Select both services until
+   a grading names the one that holds the pages table.
 4. **Run the per-verifier test-run on the untouched task** and compare with the block's expected
    verdict and last `details` line. 53 rows fail on the untouched task by design, 0 on no page
    under the title and 27 on a BambooHR record as loaded or absent; the two guards over the records

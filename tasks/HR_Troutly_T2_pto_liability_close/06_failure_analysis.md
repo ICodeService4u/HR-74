@@ -410,7 +410,11 @@ own arithmetic, so they carry nothing about the read.
 
 The section above says to read a row's `details` before reading a zero as a failure of the run.
 This is that case, and the details were not on the pane: every failing row printed `Metrics: {}`
-and an empty stdout box. What the grading does measure is that the pasted code is this package's
+and an empty stdout box. Re-run here on 09/22/2026 against the archived G5 page, the code as
+pasted scores 19 of 105 on a ctx that carries `has_table` and **2 of 105 on one that does not,
+passing rows 33 and 51**, the pane's own number and its own two rows; a wiki row grounded on a
+service the runs never wrote through gives the same 2 by another route, so the score cannot
+separate the two and one test run's details line can. What the grading does measure is that the pasted code is this package's
 code, all 55 byte for byte, that `list_tables`, `table_columns` and `query_db` are served on a
 graded run, since the BambooHR rows returned their metrics through them, and that the one
 primitive only the page rows read, `has_table`, is measured by nothing. It is gone from the
