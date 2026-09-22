@@ -155,30 +155,31 @@ ok.append(control("import: a criterion type outside the code-verifier dropdown",
 ok.append(control("import: the 1.4 upload dropped from every row", BLD, "REQUEST = TASK_UPLOADS[0]", 'REQUEST = ""', BLD))
 # ---- the verifiers, through the harness: a defect in the engine must fail the battery
 ok.append(control("verifier: a line matched as a substring", ENG,
-            "            hit = [i for i, c in enumerate(r) if _line_name(c) == want]",
-            "            hit = [i for i, c in enumerate(r) if want in _line_name(c) or _line_name(c) in want]",
-            VH, expect="FALSE PASS", pre=BLD))
-ok.append(control("verifier: a line read off a prose word", ENG,
-    "        if n.startswith(want) and", "        if want.split()[0] in n and", VH, expect="FALSE PASS", pre=BLD))
-ok.append(control("verifier: a line read off an employee row", ENG,
-    "            if _key_of(r):\n                continue\n            hit =", "            hit =", VH, expect="FALSE PASS", pre=BLD))
-ok.append(control("verifier: a band around a stated line", ENG,
-    "TOL_LINE_MONEY, TOL_LINE_HOURS = TOL_TOTAL_MONEY, TOL_TOTAL_HOURS", "TOL_LINE_MONEY, TOL_LINE_HOURS = 2.0, 0.2", VH, expect="FALSE PASS", pre=BLD))
-ok.append(control("verifier: the band around a stated total", ENG,
-    "TOL_TOTAL_MONEY, TOL_TOTAL_HOURS = 0.5, 0.05", "TOL_TOTAL_MONEY, TOL_TOTAL_HOURS = 5.0, 0.5",
+    "            if lab and not any(_label(c) == lab for c, h in cells):",
+    "            if lab and not any(lab in _label(c) or _label(c) in lab for c, h in cells if _label(c)):",
     VH, expect="FALSE PASS", pre=BLD))
-ok.append(control("verifier: a total read off an employee row", ENG,
-    "                if not _key_of(r):\n                    figures += [x for c in r for x in read(c)]",
-    "                figures += [x for c in r for x in read(c)]", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a line read off a prose word", ENG,
+    "            if lab and not (n.startswith(lab) and", "            if lab and not (lab.split()[0] in n and", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a figure read off an employee row", ENG,
+    "        if not _keyed(cells):", "        if True:", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a figure read in any unit (R3)", ENG,
+    "        if unit == want:", "        if True:", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a struck figure read as stated", ENG,
+    '    s = re.sub(r"~~.*?~~", " ", s, flags=re.S)\n', "", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a band around a stated line", ENG,
+    '"line_total": 0.5,', '"line_total": 2.0,', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the band around a stated total", ENG,
+    'TOL = {"total": 0.5,', 'TOL = {"total": 5.0,', VH, expect="FALSE PASS", pre=BLD))
 ok.append(control("verifier: two pages under the title graded one by one", ENG,
-    '        if len(pages) > 1:\n            return out(False, "%d page rows carry the title %r; the request asks for one"\n                       % (len(pages), SPEC["page"]))\n', "", VH, expect="FALSE PASS", pre=BLD))
+    "        if len(pages) > 1:\n", "        if len(pages) > 99:\n", VH, expect="FALSE PASS", pre=BLD))
 ok.append(control("verifier: the title read off any cell of a page row", ENG,
-    '            if cols.index("title") not in hits:\n                notes.append("page row %d carries %r outside its title column, in %r; not this page"\n                             % (n, title, [cols[i] for i in hits]))\n                continue\n', "", VH, expect="WRONG", pre=BLD))
+    '        if real and cols.index("title") in hits:', "        if real:", VH, expect="WRONG", pre=BLD))
 ok.append(control("verifier: a page row reading a ctx primitive the measured surface does not carry", ENG,
     "    names = list(ctx.list_tables())", '    names = ["pages"] if ctx.has_table("pages") else list(ctx.list_tables())', VH, expect="WRONG", pre=BLD))
 ok.append(control("verifier: a run's narration read instead of the database", ENG,
-    '        pages = _load_pages(ctx, SPEC["page"], notes)',
-    '        pages = _load_pages(ctx, SPEC["page"], notes) or [_Page(SPEC["page"], _clean(ctx.final_answer), True, "final answer")]', VH, pre=BLD))
+    "        pages = _pages(ctx, notes)\n", "        pages = _pages(ctx, notes) or [(_clean(ctx.final_answer), True)]\n", VH, pre=BLD))
+ok.append(control("verifier: a row file over the skill's 200 lines", ENG,
+    "import os\n", "import os\n" + "# padding\n" * 40, BLD))
 ok.append(control("battery: an expectation planted wrong", SCN,
     '("the golden page", lambda: snap([(PAGE, GOLD)]), set(),', '("the golden page", lambda: snap([(PAGE, GOLD)]), {1},', VH, expect="FALSE PASS"))
 ok.append(control("battery: a page that over-delivers expected to fail", SCN,

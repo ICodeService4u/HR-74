@@ -1173,14 +1173,12 @@ def slug(crit):
 
 
 def verifiers():
-    """One standalone check(ctx) per rubric row: the row's SPEC stamped onto the engine."""
+    """One standalone check(ctx) per rubric row: the row's SPEC stamped onto the engine. Every file
+    is built and held to the skill before any old file is removed, so a refused build leaves the
+    row files on disk as they were."""
     engine = open(os.path.join(HERE, "verifier_engine.py"), encoding="utf8").read()
     vdir = os.path.join(PKG, "qc", "verifiers")
-    os.makedirs(vdir, exist_ok=True)
-    for old in os.listdir(vdir):
-        if re.match(r"row\d\d_.*\.py$", old):
-            os.remove(os.path.join(vdir, old))
-    names = []
+    files = []
     for i, c in enumerate(RUBRIC, 1):
         spec = dict(c[8])
         spec["criterion"] = c[5]
@@ -1189,9 +1187,18 @@ def verifiers():
                 "edited here.\n# Criterion: %s\n# Target app: %s, check kind %s\n"
                 "SPEC = %s\n\n" % (i, TASK_NAME, c[5], spec["target"], spec["kind"],
                                    pprint.pformat(spec, width=96, sort_dicts=True)))
-        open(os.path.join(vdir, name), "w", encoding="utf8").write(head + engine)
-        names.append(name)
-    return names
+        # the app-db-verifier skill's section 6: under 200 lines including comments, or the question
+        # has drifted from the database's state to something a judge should answer
+        assert (head + engine).count("\n") < 200, "row file %s runs to %d lines, over the skill's 200" % (name, (head + engine).count("\n"))
+        assert (head + engine).isascii(), "row file %s is not ASCII" % name
+        files.append((name, head + engine))
+    os.makedirs(vdir, exist_ok=True)
+    for old in os.listdir(vdir):
+        if re.match(r"row\d\d_.*\.py$", old):
+            os.remove(os.path.join(vdir, old))
+    for name, text in files:
+        open(os.path.join(vdir, name), "w", encoding="utf8").write(text)
+    return [name for name, text in files]
 
 
 # ---------------------------------------------------------------- guards

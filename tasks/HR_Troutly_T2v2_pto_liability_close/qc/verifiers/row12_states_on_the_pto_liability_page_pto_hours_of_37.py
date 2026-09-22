@@ -8,48 +8,25 @@ SPEC = {'criterion': 'States, on the PTO liability page, PTO hours of 374.04 for
  'page': 'PTO Liability - 08/31/2026',
  'target': 'wiki'}
 
-# ---- verifier engine. The builder prepends `SPEC = {...}` to this file to make one standalone
-# ---- check(ctx) per rubric row, written to qc/verifiers/. Edit the engine here, never a row file.
-#
-# What keeps it honest, in the order the app-db-verifier skill lists them:
-#   * it reads the grading database and nothing else - no files, no trajectory, no final answer;
-#   * it never names a column in SQL; a table's columns are resolved by content, or by a documented
-#     layout only when the row's shape validates, and the route taken is written into details;
-#   * the page is found by its TITLE on a whole-field match, dashes and case normalised;
-#   * an employee row is found by a WHOLE-CELL match on the employee ID, never a substring, and
-#     nothing inside an employee row is read as a total or a line;
-#   * a department line is found by a WHOLE-CELL match on the line's name in a table row, or by a
-#     prose line that opens on the name, so Sales never reads as Sales and Marketing;
-#   * a stated total or line figure is graded at half a dollar and a twentieth of an hour, and
-#     its neighbours fail;
-#   * the BambooHR tables are discovered by name hint and validated by content, the employee table
-#     by its employee numbers, the policy table by its three policy names, the assignment and
-#     balance tables by their references into those two, integer id or seed string alike;
-#   * it never raises, and details name every table, column list, row and candidate it read, with
-#     the reason each was accepted or rejected.
+# ---- Engine, built to the app-db-verifier skill. The builder stamps SPEC on top: one row file,
+# ---- one check(ctx). Edit here, never a row file. Content Match, and one Existence Check.
+# R1 SELECT * only, columns by content or by the validated Wiki.js layout. R3 a figure counts only
+# in the asked unit, by its own $ or hours, else its column header, else its prose line. R5 the
+# title, an employee key and a line label match whole-field. R12 details say what was read.
+# R13 the database only. R15 never raises. Strikethrough is dropped. Two pages under the title fail.
 import os
 import re
 
-# the battery runs every row over every snapshot and reads the verdicts, not the notes; the platform
-# runs one row over one snapshot and shows what it printed. QUIET keeps the battery readable.
 QUIET = os.environ.get("T2_VERIFIER_QUIET") == "1"
-
 PAGES_COLS = ["id", "path", "hash", "title", "description", "isPrivate", "isPublished",
               "privateNS", "publishStartDate", "publishEndDate", "content", "render", "toc",
               "contentType", "createdAt", "updatedAt", "editorKey", "localeCode", "authorId",
               "creatorId", "extra"]
-TRUE_VALUES = ("1", "true", "t", "yes", "y")
-SEPS = " -(:,.;/["
+TOL = {"total": 0.5, "line_total": 0.5, "hours": 0.05, "line_hours": 0.05}
+MONEY_CUE, HOUR_CUE = r"\$|liabilit|dollar|usd", r"\bhours?\b|\bhrs?\b"
 ID_RE = r"(?:trt|ctr)-\d{4}"
-# the request's column order, the fallback when a header carries no usable words
-MEMO_COLS = ["employee id", "balance", "rate"]
-HINTS = {"employee id": ("employee id", "id"), "balance": ("balance",), "rate": ("rate",)}
-# The two totals and the ten line figures are graded at half a dollar and a twentieth of an hour,
-# because v2's request carries no Form section and nothing tells a response how many decimals to
-# print; no registered path comes within either band. A cell keeps the hundredth of an hour.
-TOL_CELL = 0.005
-TOL_TOTAL_MONEY, TOL_TOTAL_HOURS = 0.5, 0.05
-TOL_LINE_MONEY, TOL_LINE_HOURS = TOL_TOTAL_MONEY, TOL_TOTAL_HOURS
+NUM_RE = re.compile(r"(\$\s?)?(?<![\w.,])(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?![\d,]*\d)"
+                    r"(\s*(?:hours?|hrs?|usd|dollars)\b)?", re.I)
 
 
 def _text(v):
@@ -57,301 +34,125 @@ def _text(v):
 
 
 def _norm(s):
-    s = _text(s).replace("–", "-").replace("—", "-").replace("−", "-")
-    s = re.sub(r"[*_`]+", "", s)
-    s = re.sub(r"\s+", " ", s).strip().lower()
-    return s
+    s = re.sub("[%s]" % (chr(0x2013) + chr(0x2014) + chr(0x2212)), "-", _text(s))
+    return re.sub(r"\s+", " ", re.sub(r"[*_`]+", "", s)).strip().lower()
 
 
 def _clean(raw):
-    """Markup out, line structure and table rows kept, so an HTML page reads like markdown."""
+    """Markup out, strikethrough dropped, table rows kept as rows."""
     s = _text(raw).replace("\\n", "\n")
     s = re.sub(r"<(?:del|s|strike)\b[^>]*>.*?</(?:del|s|strike)\s*>", " ", s, flags=re.I | re.S)
     s = re.sub(r"~~.*?~~", " ", s, flags=re.S)
     s = re.sub(r"</(?:td|th)\s*>", " | ", s, flags=re.I)
-    s = re.sub(r"<tr\b[^>]*>", "\n| ", s, flags=re.I)
-    s = re.sub(r"</(?:tr|p|div|li|h[1-6])\s*>|<br\s*/?>", "\n", s, flags=re.I)
-    s = re.sub(r"<[^>]+>", " ", s)
-    s = s.replace("&nbsp;", " ").replace("&amp;", "&")
+    if re.search(r"<tr\b", s, re.I):  # an HTML row starts a line; source newlines between rows are not blank lines
+        s = re.sub(r"</(?:td|th)\s*>\s*</tr>\s*", "</td>", s, flags=re.I)
+    s = re.sub(r"\s*<tr\b[^>]*>", "\n| ", s, flags=re.I)
+    s = re.sub(r"</(?:table|p|div|li|h[1-6])\s*>|<br\s*/?>", "\n", s, flags=re.I)  # a row ends at the next <tr>
+    s = re.sub(r"<[^>]+>", " ", s).replace("&nbsp;", " ").replace("&amp;", "&")
     s = re.sub(r"&(?:ndash|mdash|minus);", "-", s)
-    s = re.sub(r"[ \t]+", " ", s)
-    return "\n".join(l.strip() for l in s.split("\n")).strip()
+    return "\n".join(l.strip() for l in re.sub(r"[ \t]+", " ", s).split("\n")).strip()
 
 
-def _tables(body):
-    """Every pipe table on the page as (headers, rows, first_line); separator lines dropped."""
-    out, header, rows, first = [], None, [], None
-    lines = body.split("\n")
-    for n, line in enumerate(lines + ["end"]):
-        if not line.strip() and n < len(lines):
-            continue
+def _label(s):
+    """A line label as compared: an ampersand read as and, a trailing total or subtotal dropped."""
+    n = re.sub(r"[:.]+$", "", _norm(s).replace("&", " and ")).strip()
+    return re.sub(r"\s+", " ", re.sub(r"\s+(total|subtotal|line)$", "", n)).strip()
+
+
+def _keyed(cells):
+    return any(re.fullmatch(ID_RE + r"(?: \(.*\))?", _norm(c)) for c in cells)
+
+
+def _figures(text, unit_hint, want):
+    """The numbers in text read in the unit `want` ("money" or "hours"). A number's own $ or hours
+    decides; a bare number takes unit_hint, the column header's or the line's single unit cue."""
+    out = []
+    for m in NUM_RE.finditer(text):
+        tail = (m.group(3) or "").strip().lower()
+        unit = "money" if m.group(1) or tail in ("usd", "dollars") else "hours" if tail else unit_hint
+        if unit == want:
+            out.append(float(m.group(2).replace(",", "")))
+    return out
+
+
+def _hint(text):
+    money, hours = re.search(MONEY_CUE, text, re.I), re.search(HOUR_CUE, text, re.I)
+    return "money" if money and not hours else "hours" if hours and not money else None
+
+
+def _sources(body):
+    """(where, text, unit_hint, cells) for every prose line and every table row keyed on no
+    employee; a cell's hint is its column header's. Employee rows are never a source."""
+    out, header = [], None
+    for line in body.split("\n"):
         if line.count("|") < 2:
-            if header is not None and rows:
-                out.append((header, rows, first))
-            header, rows, first = None, [], None
+            header = None  # a blank or prose line ends a table, as markdown reads it
+            if line.strip():
+                out.append(("prose", line, _hint(line), None))
             continue
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         if all(re.fullmatch(r":?-{2,}:?", c or "--") for c in cells):
             continue
         if header is None:
-            header, first = [_norm(c) for c in cells], n
+            header = cells
             continue
-        if not any(c for c in cells):
-            continue
-        rows.append(cells)
+        if not _keyed(cells):
+            hints = [_hint(header[i]) if i < len(header) else None for i in range(len(cells))]
+            out.append(("row", line, None, list(zip(cells, hints))))
     return out
 
 
-def _prose(body):
-    return "\n".join(l for l in body.split("\n") if l.count("|") < 2)
+def _stated(body, kind, key, notes):
+    want = "money" if kind in ("total", "line_total") else "hours"
+    found, lab = [], _label(key) if key else None
+    for where, text, hint, cells in _sources(body):
+        if where == "prose":
+            n = re.sub(r"\s+", " ", re.sub(r"^[#>*\-\s]+", "", _norm(text)).replace("&", " and "))
+            if lab and not (n.startswith(lab) and not re.match(r"[a-z]|\s*(and|&)\s", n[len(lab):])):
+                continue
+            got = _figures(text.replace(key, " ") if key else text, hint, want)
+        else:
+            if lab and not any(_label(c) == lab for c, h in cells):
+                continue
+            got = [x for c, h in cells if not (lab and _label(c) == lab) for x in _figures(c, h, want)]
+        if got:
+            notes.append("%s %r read as %s: %r" % (where, text[:100], want, got))
+        found += got
+    return found
 
 
-def _num(cell):
-    """A number out of a cell: commas, a currency sign, a unit word or a trailing note tolerated;
-    None where no single number is there."""
-    s = _norm(cell).replace(",", "")
-    s = re.sub(r"\b(hours?|hrs?|usd)\b", " ", s).replace("$", " ").strip()
-    m = re.fullmatch(r"-?\d+(?:\.\d+)?", s)
-    if m:
-        return float(m.group(0))
-    m = re.fullmatch(r"(-?\d+(?:\.\d+)?)\s*(?:\(.*\)|per .*)?", s)
-    return float(m.group(1)) if m else None
-
-
-def _is_id(cell):
-    return re.fullmatch(ID_RE, _norm(cell)) is not None
-
-
-def _is_name(cell):
-    """A cell that reads as a person's name: non-empty, no digit, not an ID, not a total word."""
-    n = _norm(cell)
-    return bool(n) and not re.search(r"\d", n) and not _is_id(n) \
-        and not re.search(r"\b(total|totals|subtotal|sum|average|count)\b", n)
-
-
-def _key_of(row):
-    """The whole-cell ID that keys a row, or None. A key is a whole cell, or a whole cell with a
-    note in parentheses beside it."""
-    for c in row:
-        n = _norm(c)
-        if re.fullmatch(ID_RE, n) or re.fullmatch(ID_RE + r" \(.*\)", n):
-            return n.split(" (")[0].upper()
-    return None
-
-
-def _bool(v):
-    return _norm(v) in TRUE_VALUES
-
-
-class _Page(object):
-    def __init__(self, title, body, published, route):
-        self.title, self.body, self.published, self.route = title, body, published, route
-        self.tables = _tables(body)
-        # an employee table is a table carrying at least one keyed row; its unkeyed rows are kept
-        # so a total line, a note or an employee row missing its ID can be told apart
-        self.emp_tables = [(h, rows, first) for h, rows, first in self.tables if any(_key_of(r) for r in rows)]
-
-    def keyed(self):
-        """{ID: (headers, row)} over every employee table; a duplicate key keeps the first."""
-        out = {}
-        for h, rows, first in self.emp_tables:
-            for r in rows:
-                k = _key_of(r)
-                if k:
-                    out.setdefault(k, (h, r))
-        return out
-
-    def col(self, headers, want, notes):
-        """The index of the wanted column on this header, by hint words first, by the request's
-        order when the header carries no usable words and the table has seven columns."""
-        for hint in HINTS[want]:
-            for i, h in enumerate(headers):
-                if hint in h and not (want == "employee id" and hint == "id" and "policy" in h):
-                    return i
-        if len(headers) == len(MEMO_COLS):
-            notes.append("column %r not in the header %r; taking the request's position %d"
-                         % (want, headers, MEMO_COLS.index(want)))
-            return MEMO_COLS.index(want)
-        return None
-
-
-def _pages_table(ctx, notes):
-    """The pages table, by name and then by content word. Only the three primitives the BambooHR
-    side already reads are used - list_tables, table_columns and query_db - so a ctx that carries
-    no has_table cannot take the page rows down with it."""
+def _pages(ctx, notes):
     names = list(ctx.list_tables())
     notes.append("tables in the snapshot: %r" % names)
-    for name in names:
-        if name.lower() == "pages":
-            return name
-    for name in names:
-        low = name.lower()
-        if "page" in low and not any(x in low for x in ("history", "tree", "link", "tag", "meta")):
-            notes.append("no table named pages; using %s" % name)
-            return name
-    return None
-
-
-def _load_pages(ctx, title, notes):
-    """Every row of the pages table whose title matches, with its content and published flag
-    resolved by content, or by the documented Wiki.js layout when the row's shape validates."""
-    name = _pages_table(ctx, notes)
+    name = next((n for n in names if n.lower() == "pages"), None) or next(
+        (n for n in names if "page" in n.lower() and not any(
+            x in n.lower() for x in ("history", "tree", "link", "tag", "meta"))), None)
     if not name:
-        notes.append("no pages table in this snapshot: %r" % ctx.list_tables())
+        notes.append("no pages table in this snapshot")
         return []
-    cols = list(ctx.table_columns(name))
-    rows = [list(r) for r in ctx.query_db("SELECT * FROM %s" % name)]
+    cols, rows = list(ctx.table_columns(name)), [list(r) for r in ctx.query_db("SELECT * FROM %s" % name)]
     real = "title" in cols and "content" in cols
     notes.append("table %s: %d columns %r, %d rows, %s column names"
                  % (name, len(cols), cols, len(rows), "real" if real else "placeholder"))
     found = []
     for n, r in enumerate(rows):
-        hits = [i for i, v in enumerate(r) if _norm(v) == _norm(title)]
+        hits = [i for i, v in enumerate(r) if _norm(v) == _norm(SPEC["page"])]
         if not hits:
             continue
-        if real:
-            if cols.index("title") not in hits:
-                notes.append("page row %d carries %r outside its title column, in %r; not this page"
-                             % (n, title, [cols[i] for i in hits]))
-                continue
-            body = _clean(r[cols.index("content")])
-            pub = _bool(r[cols.index("isPublished")]) if "isPublished" in cols else None
-            route = "real names"
-        elif len(r) == len(PAGES_COLS) and 3 in hits:
-            body = _clean(r[10])
-            pub = _bool(r[6])
-            route = "documented layout, validated on the title at index 3 and %d columns" % len(r)
+        if real and cols.index("title") in hits:
+            body, pub, route = r[cols.index("content")], r[cols.index("isPublished")] if "isPublished" in cols else None, "real names"
+        elif not real and len(r) == len(PAGES_COLS) and 3 in hits:
+            body, pub, route = r[10], r[6], "documented layout, the title at index 3 of %d" % len(r)
+        elif not real:
+            cand = [v for v in r if isinstance(v, str) and ("|" in v or "#" in v) and len(v) > 40]
+            body, pub, route = max(cand, key=len) if cand else "", None, "longest table-bearing cell"
         else:
-            cand = [_clean(v) for v in r if isinstance(v, str)]
-            cand = [c for c in cand if ("|" in c or "#" in c) and len(c) > 40]
-            body = max(cand, key=len) if cand else ""
-            pub = None
-            route = "content resolved as the longest table-bearing cell; published flag unknown"
-        notes.append("page row %d matches the title via %s; %d chars of content, published=%r"
-                     % (n, route, len(body), pub))
-        found.append(_Page(title, body, pub, route))
-    if not found:
-        notes.append("no row of %s carries the title %r" % (name, title))
+            notes.append("page row %d carries the title outside its title column; not this page" % n)
+            continue
+        pub = None if pub is None else _norm(pub) in ("1", "true", "t", "yes", "y")
+        notes.append("page row %d matches via %s, published=%r" % (n, route, pub))
+        found.append((_clean(body), pub))
     return found
-
-
-# v2's request carries no Form section, so a stated total may be written to the cent, to the
-# dollar or anywhere between, and both readers take whatever precision the page prints.
-def _money_figures(text):
-    return [float(m.replace(",", "")) for m in
-            re.findall(r"\$\s?(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)(?!\d)", text)]
-
-
-def _hour_figures(text):
-    return [float(m.replace(",", "")) for m in
-            re.findall(r"(?<![\d.$])(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+(?:\.\d+)?)(?![\d.])", text)]
-
-
-def _cell(page, key, want, notes):
-    """(cell, headers) for the keyed row's wanted column, or (None, reason)."""
-    keyed = page.keyed()
-    if key not in keyed:
-        return None, "no employee row keyed %s on the page" % key
-    h, r = keyed[key]
-    i = page.col(h, want, notes)
-    if i is None or i >= len(r):
-        return None, "no %r column on the table keyed %s, header %r" % (want, key, h)
-    return r[i], h
-
-
-def _line_name(s):
-    """A line label as it is compared: case, markup and an ampersand normalised, a trailing word
-    for a subtotal dropped, so Sales & Marketing subtotal reads as sales and marketing."""
-    n = _norm(s).replace("&", " and ")
-    n = re.sub(r"[:.]+$", "", n).strip()
-    n = re.sub(r"\s+(total|subtotal|line)$", "", n)
-    return re.sub(r"\s+", " ", n).strip()
-
-
-def _line_sources(page, name, notes):
-    """Every place the page states the named line: the cells of a table row, keyed on no employee,
-    one of whose cells IS the line's name, and every prose line that opens on the name followed
-    by something other than a letter. Returned as a list of (where, [texts])."""
-    want = _line_name(name)
-    out = []
-    for h, rows, first in page.tables:
-        for r in rows:
-            if _key_of(r):
-                continue
-            hit = [i for i, c in enumerate(r) if _line_name(c) == want]
-            if hit:
-                out.append(("table row %r" % (r,), [c for i, c in enumerate(r) if i not in hit]))
-    for line in _prose(page.body).split("\n"):
-        n = re.sub(r"^[#>*\-\s]+", "", _norm(line)).replace("&", " and ")
-        n = re.sub(r"\s+", " ", n)
-        if n.startswith(want) and not re.match(r"[a-z]", n[len(want):len(want) + 1] or " ") \
-                and not re.match(r"\s*(and|&)\s", n[len(want):]):
-            out.append(("prose line %r" % line[:120], [line[len(line) - len(line.lstrip()):]]))
-    notes.append("line %r found in %d place(s): %r" % (name, len(out), [w for w, t in out][:4]))
-    return out
-
-
-def _run_page(kind, page, notes, metrics):
-    S = SPEC
-    keyed = page.keyed()
-    metrics["keyed_rows"] = len(keyed)
-    if kind == "exists":
-        if page.published is None:
-            return False, "the published flag could not be read, so publication is not shown"
-        return page.published, "published=%r" % page.published
-    if kind in ("balance", "rate"):
-        cell, h = _cell(page, S["key"], kind, notes)
-        if cell is None:
-            return False, h
-        got = _num(cell)
-        oks = [abs(got - x) <= TOL_CELL for x in S["expected"]] if got is not None else []
-        notes.append("row %s: %s cell %r reads %r, expected one of %r within %s"
-                     % (S["key"], kind, cell, got, S["expected"], TOL_CELL))
-        return any(oks), "%s %r" % (kind, got)
-    if kind in ("total", "hours"):
-        # the figure has to be STATED: the request asks the page to state both totals, and a sum
-        # a reader has to do themselves is not a stated total
-        # a dollar total is read with its sign first and bare second, because the request carries
-        # no Form section and a page that writes 92739.54 has still stated the total
-        read = (lambda t: _money_figures(t) + _hour_figures(t)) if kind == "total" else _hour_figures
-        prose = _prose(page.body)
-        figures = read(prose)
-        for h, rows, first in page.tables:
-            for r in rows:
-                if not _key_of(r):
-                    figures += [x for c in r for x in read(c)]
-        tol = TOL_TOTAL_MONEY if kind == "total" else TOL_TOTAL_HOURS
-        metrics["stated_%s" % kind] = len(figures)
-        hits = [x for x in figures if any(abs(x - t) <= tol for t in S["expected"])]
-        notes.append("%s figures outside the employee rows: %r; expected one of %r within %s"
-                     % (kind, figures[:12], S["expected"], tol))
-        if hits:
-            return True, "stated %s %.2f" % (kind, hits[0])
-        if figures:
-            return False, "the page states %r and none is the %s" % (figures[:6], kind)
-        return False, "the page states no %s figure outside its employee rows" % kind
-    if kind in ("line_hours", "line_total"):
-        # a line is stated where the page names it; a figure inside an employee row, or a line
-        # the reader has to add up from the employees, is not the line
-        srcs = _line_sources(page, S["key"], notes)
-        metrics["line_sources"] = len(srcs)
-        if not srcs:
-            return False, "the page states no %r line" % S["key"]
-        read = (lambda t: _money_figures(t) + _hour_figures(t)) if kind == "line_total" else _hour_figures
-        tol = TOL_LINE_MONEY if kind == "line_total" else TOL_LINE_HOURS
-        figures = []
-        for where, texts in srcs:
-            for t in texts:
-                # a line label may carry its own words, and its name is stripped so a digit in it
-                # is never a figure; the rest of the text is read whole
-                figures += read(t.replace(S["key"], " "))
-        hits = [x for x in figures if any(abs(x - t) <= tol for t in S["expected"])]
-        notes.append("%s figures on the %r line: %r; expected one of %r within %s"
-                     % (kind, S["key"], figures[:12], S["expected"], tol))
-        if hits:
-            return True, "stated %s %.2f for %s" % (kind, hits[0], S["key"])
-        return False, "the %r line states %r and none is the %s" % (S["key"], figures[:6], kind)
-    return False, "unknown check kind %r" % kind
 
 
 def check(ctx):
@@ -360,24 +161,29 @@ def check(ctx):
     def out(passed, line):
         details = "\n".join(notes + ["", ("PASSED - " if passed else "FAILED - ") + line])
         if not QUIET:
-            # the platform prints a verifier's stdout beside its metrics; the notes belong in both,
-            # so a verdict that reads wrong can be read back from the graded run and not guessed at
             print(details)
         return {"passed": passed, "details": details, "metrics": metrics}
 
     try:
-        pages = _load_pages(ctx, SPEC["page"], notes)
+        pages = _pages(ctx, notes)
         metrics["page_rows"] = len(pages)
         if not pages:
             return out(False, "no page titled %r" % SPEC["page"])
-        # the request asks for one page under the title: two rows leave the close's reader to pick,
-        # and a duplicate that is right today is a second page to maintain tomorrow
         if len(pages) > 1:
-            return out(False, "%d page rows carry the title %r; the request asks for one"
-                       % (len(pages), SPEC["page"]))
-        ok, why = _run_page(SPEC["kind"], pages[0], notes, metrics)
-        notes.append("page %r: %s - %s" % (SPEC["page"], "ok" if ok else "NO", why))
-        return out(ok, why)
+            return out(False, "%d page rows carry the title %r; the request asks for one" % (len(pages), SPEC["page"]))
+        body, pub = pages[0]
+        if SPEC["kind"] == "exists":
+            if pub is None:
+                return out(False, "the published flag could not be read, so publication is not shown")
+            return out(pub, "published=%r" % pub)
+        figures = _stated(body, SPEC["kind"], SPEC.get("key"), notes)
+        tol = TOL[SPEC["kind"]]
+        metrics["figures_read"] = len(figures)
+        hits = [x for x in figures if any(abs(x - t) <= tol for t in SPEC["expected"])]
+        notes.append("expected one of %r within %s" % (SPEC["expected"], tol))
+        if hits:
+            return out(True, "stated %s %.2f" % (SPEC.get("key") or SPEC["kind"], hits[0]))
+        return out(False, "the page states %r and none is the %s" % (figures[:8], SPEC.get("key") or SPEC["kind"]))
     except Exception as exc:
         notes.append("unexpected error: %s: %s" % (type(exc).__name__, str(exc)[:300]))
         return out(False, "the check could not complete; see the error above")

@@ -66,26 +66,41 @@ def weights():
 AS_LINES = "--as-lines" in sys.argv
 
 
+def _employee_rows(text):
+    """{ID: (balance, hourly)} off every table whose header names a balance and a rate, keyed by
+    a whole-cell employee ID. The engine reads no employee row, so this reader lives here, with
+    the one reading that needs it."""
+    out, header = {}, None
+    for line in text.split("\n"):
+        if line.count("|") < 2:
+            header = None
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if all(re.fullmatch(r":?-{2,}:?", c or "--") for c in cells):
+            continue
+        if header is None:
+            header = [c.lower() for c in cells]
+            continue
+        bi = next((i for i, h in enumerate(header) if "balance" in h), None)
+        ri = next((i for i, h in enumerate(header) if "rate" in h), None)
+        key = next((c.upper() for c in cells if re.fullmatch(r"trt-\d{4}", c.strip().lower())), None)
+        if key and bi is not None and ri is not None and max(bi, ri) < len(cells):
+            try:
+                out.setdefault(key, (float(re.sub(r"[^\d.]", "", cells[bi])), float(re.sub(r"[^\d.]", "", cells[ri]))))
+            except ValueError:
+                pass
+    return out
+
+
 def with_lines(text):
-    """The page with a line table appended, each line the sum of the run's own keyed rows: its
+    """The page with a line table appended, each line the sum of the run's own employee rows: its
     balance, and its balance times its hourly rate, by the department the roster gives the ID."""
-    eng = importlib.util.spec_from_file_location("eng", os.path.join(HERE, "verifiers", sorted(
-        f for f in os.listdir(os.path.join(HERE, "verifiers")) if f.endswith(".py"))[0]))
-    m = importlib.util.module_from_spec(eng)
-    eng.loader.exec_module(m)
-    page = m._Page(B.PAGE, m._clean(text), True, "archive")
     sums = {name: [0.0, 0.0] for name, ds in B.LINES}
-    for k, (h, r) in page.keyed().items():
-        if k not in B.GOLDEN_BY_ID:
-            continue
-        bi, ri = page.col(h, "balance", []), page.col(h, "rate", [])
-        bal = m._num(r[bi]) if bi is not None and bi < len(r) else None
-        rate = m._num(r[ri]) if ri is not None and ri < len(r) else None
-        if bal is None or rate is None:
-            continue
-        line = B.LINE_OF[B.GOLDEN_BY_ID[k]["dept"]]
-        sums[line][0] += bal
-        sums[line][1] += round(bal * rate, 2)
+    for k, (bal, rate) in _employee_rows(text).items():
+        if k in B.GOLDEN_BY_ID:
+            line = B.LINE_OF[B.GOLDEN_BY_ID[k]["dept"]]
+            sums[line][0] += bal
+            sums[line][1] += round(bal * rate, 2)
     rows = ["", "| Line | PTO hours | PTO liability |", "|---|---|---|"]
     rows += ["| %s | %.2f | $%.2f |" % (n, sums[n][0], sums[n][1]) for n, ds in B.LINES]
     return text.rstrip("\n") + "\n" + "\n".join(rows) + "\n"
