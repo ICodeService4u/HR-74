@@ -1,0 +1,145 @@
+# 09 - the file that registers, and the mappings it carries (T2 v2, 09/22/2026)
+
+`05_rubric_import.xlsx` is the artifact the task interface loads. `build/rubric_plan.csv` is this
+package's own record and carries two columns of its own, Family and Gate, which the interface
+does not read, plus the five paste fields. Both are generated from
+`build/build_package_artifacts.py`'s `_rubric()`, read off the plan's rows, and `check_import()`
+asserts row by row that the criteria, explanations, weights, criterion types, primary flags and
+verifier types in the two are the same strings.
+
+The shape is HR 32 T24's, carried by HR 79 T1 and by T1, T1 v2 and T2 here: thirteen columns in
+HR 79 T1's order, one row per verifier, the sheet named `Rubric`. **27 rows, 143 points, 1 gate,
+26 primary**, md5 `12b9c24b04a769ebbfa56ebfb032692d`, the md5 a property of the content because
+the builder freezes every timestamp in the file. The rows are the plan's of 09/22/2026, written
+in one pass from the rescope and not from T2's file, so no round history sits behind them.
+
+**What the rescope took out of the import.** T2's 55 rows carried 14 points of page and form and
+29 BambooHR rows at 1 each. v2 grades the determination and the page's existence. There is no
+BambooHR row, so no row targets `bamboohr`, and there is no form row, so the `Style / formatting`
+tag goes on nothing. `FORM_ROWS` and `FORM_TAG` stay in the builder as the bar: `check_import()`
+still computes the wanted tag from the criterion text, so a row that came back carrying hours to
+two decimals, rates to four decimals, dollars to the cent, an employee ID on every row, dates
+MM/DD/YYYY or the summary above one table would have to carry the form tag, and
+`build/build_task_input.py` bars each of those lines from the memo with a control each. Nothing
+in the import grades absence: no row reads a record the response left out, which is why a page
+carrying all 52 employees and a page carrying only the 22 the load has wrong both take every
+point.
+
+**The ids, and what the import populates.** The world snapshot id is
+`snap_c6f6a0879f3d47a19048ee80d7529157`, unchanged across the exports of T1, T1 v2 and T2. The
+task data id is `snap_1e12795ed0df4d489a36382afdb63279`, read off T2's 09/21/2026 re-upload and
+carried here; a 1.4 re-upload mints a new task data id, so v2's memo will mint its own and the id
+is re-read off v2's first export. `check_import()` refuses to build the file on a sentinel id.
+What the import does and does not populate is T2's measurement, not a guess: its five loads of
+09/20 and 09/21/2026 each read back criteria, explanations, weights and criterion types, and
+every row came back with `verifier_custom_field_values = {}` and no tag. So Tags, Reference
+Artifacts and Grading Target do not populate through the import, which is what HR 79 T24 measured
+on the tag field on 09/11/2026. Count the rows Studio holds against 27, then set Reference
+Artifacts in the Structured view from `build/rubric_plan.csv`, which carries them per row. Tags
+are `Final Response` on all 27 rows. Grading Target stays empty on an App DB row.
+
+| Column | What this package writes |
+|---|---|
+| Index, Criteria, Numerical Weight | The plan's 27 rows: 143 points, one gate at 10, the only 9 or 10 in the file |
+| Criteria Explanation | The house register, held by `check_register()` on every build: 27 explanations, 108 to 239 characters, 194 average, every figure the build's own |
+| Verifier Type | **`App DB Programatic`** on every row. One "m", the picker's spelling, not the guide's. `check_import()` refuses a type containing "Programmatic" |
+| Tags | `Final Response` on all 27 rows. **`Style / formatting`** is in the allowed set and on no row, because the memo carries no Form section. Set by hand after import, see above |
+| Criterion Type | `Expert Assessment` on the 26 rows that apply a rule against a record carrying a finished number, `Objective Compliance` on row 1, which reads a page's existence. The code-verifier form's own list, `Process` unused |
+| Severity Level | `Critical` on the 26 primary rows, `Major` on row 1 |
+| Is this a primary criterion? | `Yes` on the 26 determination rows, which every registered path short of the heal fails at least one of: the gate, the hours total and the 24 cells where the world's figure at 08/31/2026 is not the load's. `No` on row 1 |
+| Reference Artifacts | The picker's resolved objects, 126 citations over 13 of the 22 selected world files and the one 1.4 upload. Not populated by the import, set by hand, see above |
+| Grading Target | Empty on every row: no row grades a file. HR 79 T1's registered position, and its round 7 passed with it empty on every App DB row |
+| Output Dependencies | Empty on every row: the deliverable is one wiki page and 1.5 carries nothing |
+| Depends on | `None` on every row |
+
+## The weights, and the guide's importance table
+
+The weights were registered 09/22/2026 before any v2 run and do not move after one.
+`check_rubric()` holds them to the guide's table by criterion type: a compliance row at 1 to 5, a
+reasoning row at 1 to 10, and 9 or 10 on the gate alone, which is row 2, the total dollar
+liability, Critical value. Every other weight is priced by materiality, the dollars the cell
+moves: 7 at $2,000.00 or more, 6 at $800.00 or more, 5 at $250.00 or more, 4 at $80.00 or more
+and 3 below that, from `MONEY_BANDS` in the builder.
+
+| Weight | Rows | Points | What carries it |
+|---|---|---|---|
+| 10 | 1 | 10 | The gate, the total dollar liability |
+| 8 | 1 | 8 | The total PTO hours |
+| 7 | 4 | 28 | A cell moving $2,000.00 or more |
+| 6 | 6 | 36 | A cell moving $800.00 or more |
+| 5 | 7 | 35 | A cell moving $250.00 or more |
+| 4 | 4 | 16 | A cell moving $80.00 or more |
+| 3 | 3 | 9 | A cell moving less than that |
+| 1 | 1 | 1 | The page published, the only row that is not a determination |
+
+**No row weighs 2**, which is the point of the rescope: the grader's rule is that a criterion
+whose failure materially changes the output weighs more than 2, and every row here but row 1 does
+change the output. Row 1 is 1 point of 143, 0.7%, and it is the whole of what a response earns
+for publishing a page with the wrong numbers on it. Expert Assessment carries 142 of 143, 99.3%,
+and a row is primary if and only if it is a reasoning row, which `check_rubric()` also holds.
+
+## Reference Artifacts
+
+Each citation ships as the picker's own object, `{"name": "filesystem/<path>", "index": null,
+"source": "world", "snapshotId": "<id>", "transformations": []}`, and the task upload as
+`filesystem/pto_liability_request.pdf` with `"source": "task"`. A bare string has no `source` for
+the judge to dereference, which HR 32 measured at every trajectory 0%. Every world citation is
+held to the selection block in `02_task_metadata.md`, so a row cannot cite a file the run is not
+given, and `check_import()` refuses an app seed table cited as a world file. Row 1 cites the
+request alone; the gate cites nine, the most in the file; a cell row cites four to six.
+
+The nine selected files no row cites are the traps: the 2025 policy, the load file, the field
+mapping workbook, the closeout memo, the payroll history, the July close package, the Paid Time
+Off wiki page, the Compensation Authority page and the Onboarding Data Standards page. Each
+carries a number a failing path prints, and the selection keeps them in the run's reach. The nine
+app tables sit in the plan's references for the record and not in the picker, whose browser does
+not list them.
+
+## The explanation column
+
+This column is what the interface publishes beside each row, so every explanation states the
+governing fact and names its source, in the house register: ASCII, no colon, semicolon or
+bracket, no spaced dash, no spelled month, no ISO date, no grading word, no reference to the
+rubric's own rows, at most three sentences and 240 characters, no two rows opening alike or
+carrying one text, and the set averaging at most 200. The rules are HR 79 T1's, carried from T2
+unchanged. Every number in an explanation is formatted from the schedule the builder recomputes,
+so a world byte that moved would move the explanation with it.
+
+## The verifier record
+
+Built 09/22/2026. Every row's code is generated into `qc/verifiers/` from the same rows that wrote
+this file: the row's spec stamped onto `build/verifier_engine.py`, so a row file is never edited
+by hand and `check_rubric()` holds each spec to its criterion, the key it names and the value it
+states. The engine is 318 lines against T2's 770, because v2 reads one app and five check kinds:
+`exists`, `total`, `hours`, `balance` and `rate`.
+
+Tolerances, from the engine's own constants: a cell to half a hundredth, `TOL_CELL` 0.005 on a
+balance in hours and on an hourly rate, a stated dollar total to half a dollar and a stated hours
+figure to a twentieth of an hour, `TOL_TOTAL_MONEY` 0.5 and `TOL_TOTAL_HOURS` 0.05. The bands are
+wide because v2's memo carries no Form section and nothing tells a response how many decimals to
+print. No registered path comes within either band, which `06_failure_analysis.md` states path by
+path.
+
+`qc/verifier_harness.py` proves the set on 31 snapshots with the answer known, **837 of 837
+verdicts correct**, 27 rows against every snapshot: the golden page, real and placeholder column
+names, the page as HTML, the title with an em dash, a 20-column pages table, a second page under
+the same title, a note page carrying the title in its description, the paths P0 to P5 as pages,
+the load copied whole, and one planted defect per way a row can be wrong, a cell a hundredth
+under, a cell a thousandth under, a row dropped, a total a dollar out, an hours total a tenth
+out. Two scenarios carry the over-delivery constraint in both directions and fail no row: every
+employee at seven columns with a summary block, and only the rows the load has wrong. No
+Additional Notes are written: the route is T1 v2's and T2's, generated code pasted per row,
+because HR 79 measured Studio's own generation from notes grading wrongly on three rows of three.
+
+**The form fields at paste time**, per row in `build/rubric_plan.csv`: Target App `wiki_js_mcp` on
+every row, Check Type `Existence Check` on row 1 and `Content Match` on rows 2 to 27, Target
+Record ID the page title on rows 1 to 3 and the employee number on rows 4 to 27, Fallback
+Strategy **DB only** on every row, and the Verifier File to paste. Grading Target stays empty.
+
+**What the fixture rests on, and what it does not know.** The pages table follows the documented
+Wiki.js layout, 21 columns with the title at index 3, the published flag at 6 and the content at
+10, which T1 v2 built to and thirteen `get_page` reads agreed with. The live app's table names
+and column order are unmeasured, which is why the engine finds the pages table by those columns
+and not by a name, and why the first grading run's `details` strings are owed to the open items
+in `02_task_metadata.md`. The BambooHR and Greenhouse seed tables stay in the fixture as other
+apps' tables that no row reads, so the discovery has to pass over them.

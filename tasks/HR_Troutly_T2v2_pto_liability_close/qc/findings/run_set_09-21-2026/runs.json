@@ -1,0 +1,441 @@
+[
+ {
+  "run": "G1",
+  "trajectory_id": "traj_264c2ae440ad483195e7a208839ab59d",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 287,
+  "assistant_messages": 287,
+  "elapsed_seconds": 3026,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_1e12795ed0df4d489a36382afdb63279",
+  "task_version": 29,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 111,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 55,
+   "target_record_labels": [
+    "33 loaded records the schedule leaves as loaded",
+    "44 loaded records the schedule leaves as loaded",
+    "Beatriz Quintanilla, TRT-0141",
+    "Belaviv Luk, TRT-0117",
+    "Callum Oyelaran, TRT-0058",
+    "Delphine Marchetti, TRT-0096",
+    "Desmond Achterberg, TRT-0083",
+    "Edith Bustamante, TRT-0021",
+    "Emeka Thorsen, TRT-0029",
+    "Ilse Van der Kolk, TRT-0040",
+    "Jessica Ko, TRT-0012",
+    "Krystale Jumawan, TRT-0009",
+    "Maeve Oyinlola, TRT-0023",
+    "Marisela Thornbury, TRT-0018",
+    "Michael Labeson, TRT-0001",
+    "Mikelle Hosana, TRT-0005",
+    "Oren Kastellanos, TRT-0043",
+    "PTO Liability - 08/31/2026",
+    "Priyamvada Raghunath, TRT-0051",
+    "Rafael Ibarra, TRT-0155",
+    "Rohan Iyer, TRT-0014",
+    "Samuel Burkenham, TRT-0071",
+    "Simone Okonkwo, TRT-0153",
+    "Sora Jackson, TRT-0002",
+    "Wren Takahashi-Bell, TRT-0079",
+    "Yolanda Featherstone, TRT-0088",
+    "Zephyr Adebayo, TRT-0031"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 5996,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_create_page",
+   "observed_at_call": 169,
+   "observations": [
+    {
+     "seq": 169,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 5996
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 31,
+   "by_tool": {
+    "bamboo_employees_create": 2,
+    "bamboo_employees_update": 13,
+    "bamboo_time_off_assign_policy": 11,
+    "bamboo_time_off_update_balance": 5
+   },
+   "by_route": {
+    "toolbelt": 31
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G2",
+  "trajectory_id": "traj_dbeed0214258459382b4f69f7a554f2e",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 146,
+  "assistant_messages": 146,
+  "elapsed_seconds": 1917,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_1e12795ed0df4d489a36382afdb63279",
+  "task_version": 29,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 92,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 55,
+   "target_record_labels": [
+    "33 loaded records the schedule leaves as loaded",
+    "44 loaded records the schedule leaves as loaded",
+    "Beatriz Quintanilla, TRT-0141",
+    "Belaviv Luk, TRT-0117",
+    "Callum Oyelaran, TRT-0058",
+    "Delphine Marchetti, TRT-0096",
+    "Desmond Achterberg, TRT-0083",
+    "Edith Bustamante, TRT-0021",
+    "Emeka Thorsen, TRT-0029",
+    "Ilse Van der Kolk, TRT-0040",
+    "Jessica Ko, TRT-0012",
+    "Krystale Jumawan, TRT-0009",
+    "Maeve Oyinlola, TRT-0023",
+    "Marisela Thornbury, TRT-0018",
+    "Michael Labeson, TRT-0001",
+    "Mikelle Hosana, TRT-0005",
+    "Oren Kastellanos, TRT-0043",
+    "PTO Liability - 08/31/2026",
+    "Priyamvada Raghunath, TRT-0051",
+    "Rafael Ibarra, TRT-0155",
+    "Rohan Iyer, TRT-0014",
+    "Samuel Burkenham, TRT-0071",
+    "Simone Okonkwo, TRT-0153",
+    "Sora Jackson, TRT-0002",
+    "Wren Takahashi-Bell, TRT-0079",
+    "Yolanda Featherstone, TRT-0088",
+    "Zephyr Adebayo, TRT-0031"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 5033,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 133,
+   "observations": [
+    {
+     "seq": 132,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 5033
+    },
+    {
+     "seq": 133,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5033
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 6,
+   "by_tool": {
+    "bamboo_employees_create": 2,
+    "bamboo_time_off_assign_policy": 2,
+    "bamboo_time_off_update_balance": 2
+   },
+   "by_route": {
+    "toolbelt": 6
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G3",
+  "trajectory_id": "traj_97096955538a4efabd9de75cac6f1f80",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 235,
+  "assistant_messages": 190,
+  "elapsed_seconds": 2735,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_1e12795ed0df4d489a36382afdb63279",
+  "task_version": 30,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 121,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 55,
+   "target_record_labels": [
+    "33 loaded records the schedule leaves as loaded",
+    "44 loaded records the schedule leaves as loaded",
+    "Beatriz Quintanilla, TRT-0141",
+    "Belaviv Luk, TRT-0117",
+    "Callum Oyelaran, TRT-0058",
+    "Delphine Marchetti, TRT-0096",
+    "Desmond Achterberg, TRT-0083",
+    "Edith Bustamante, TRT-0021",
+    "Emeka Thorsen, TRT-0029",
+    "Ilse Van der Kolk, TRT-0040",
+    "Jessica Ko, TRT-0012",
+    "Krystale Jumawan, TRT-0009",
+    "Maeve Oyinlola, TRT-0023",
+    "Marisela Thornbury, TRT-0018",
+    "Michael Labeson, TRT-0001",
+    "Mikelle Hosana, TRT-0005",
+    "Oren Kastellanos, TRT-0043",
+    "PTO Liability - 08/31/2026",
+    "Priyamvada Raghunath, TRT-0051",
+    "Rafael Ibarra, TRT-0155",
+    "Rohan Iyer, TRT-0014",
+    "Samuel Burkenham, TRT-0071",
+    "Simone Okonkwo, TRT-0153",
+    "Sora Jackson, TRT-0002",
+    "Wren Takahashi-Bell, TRT-0079",
+    "Yolanda Featherstone, TRT-0088",
+    "Zephyr Adebayo, TRT-0031"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 5314,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 232,
+   "observations": [
+    {
+     "seq": 221,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 5314
+    },
+    {
+     "seq": 232,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5314
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 24,
+   "by_tool": {
+    "bamboo_employees_create": 3,
+    "bamboo_time_off_assign_policy": 11,
+    "bamboo_time_off_update_balance": 10
+   },
+   "by_route": {
+    "toolbelt": 24
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G4",
+  "trajectory_id": "traj_5de80d17765f4a2db1cdaf08bdebdc7b",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 296,
+  "assistant_messages": 296,
+  "elapsed_seconds": 3699,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_1e12795ed0df4d489a36382afdb63279",
+  "task_version": 30,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 158,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 55,
+   "target_record_labels": [
+    "33 loaded records the schedule leaves as loaded",
+    "44 loaded records the schedule leaves as loaded",
+    "Beatriz Quintanilla, TRT-0141",
+    "Belaviv Luk, TRT-0117",
+    "Callum Oyelaran, TRT-0058",
+    "Delphine Marchetti, TRT-0096",
+    "Desmond Achterberg, TRT-0083",
+    "Edith Bustamante, TRT-0021",
+    "Emeka Thorsen, TRT-0029",
+    "Ilse Van der Kolk, TRT-0040",
+    "Jessica Ko, TRT-0012",
+    "Krystale Jumawan, TRT-0009",
+    "Maeve Oyinlola, TRT-0023",
+    "Marisela Thornbury, TRT-0018",
+    "Michael Labeson, TRT-0001",
+    "Mikelle Hosana, TRT-0005",
+    "Oren Kastellanos, TRT-0043",
+    "PTO Liability - 08/31/2026",
+    "Priyamvada Raghunath, TRT-0051",
+    "Rafael Ibarra, TRT-0155",
+    "Rohan Iyer, TRT-0014",
+    "Samuel Burkenham, TRT-0071",
+    "Simone Okonkwo, TRT-0153",
+    "Sora Jackson, TRT-0002",
+    "Wren Takahashi-Bell, TRT-0079",
+    "Yolanda Featherstone, TRT-0088",
+    "Zephyr Adebayo, TRT-0031"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 5714,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 293,
+   "observations": [
+    {
+     "seq": 151,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 5714
+    },
+    {
+     "seq": 152,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5714
+    },
+    {
+     "seq": 206,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5714
+    },
+    {
+     "seq": 293,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5714
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 22,
+   "by_tool": {
+    "bamboo_employees_create": 2,
+    "bamboo_time_off_assign_policy": 13,
+    "bamboo_time_off_update_balance": 7
+   },
+   "by_route": {
+    "toolbelt": 22
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ },
+ {
+  "run": "G5",
+  "trajectory_id": "traj_62a99dd9658f4064a5d29bbaa1ae7e12",
+  "model": "gemini-3.8-flash",
+  "provider": "vertex_ai",
+  "tool_calls": 220,
+  "assistant_messages": 220,
+  "elapsed_seconds": 2492,
+  "world_snapshot_id": "snap_c6f6a0879f3d47a19048ee80d7529157",
+  "task_data_id": "snap_1e12795ed0df4d489a36382afdb63279",
+  "task_version": 30,
+  "task_name_on_platform": "PTO Liability Request",
+  "agent": "React Toolbelt Agent (500 steps)",
+  "platform": "Ergon \u2014 bamboohr + greenhouse + wiki_js (MCP, auto)",
+  "shell_calls": 132,
+  "status": "completed",
+  "verifiers_on_export": {
+   "count": 55,
+   "target_record_labels": [
+    "33 loaded records the schedule leaves as loaded",
+    "44 loaded records the schedule leaves as loaded",
+    "Beatriz Quintanilla, TRT-0141",
+    "Belaviv Luk, TRT-0117",
+    "Callum Oyelaran, TRT-0058",
+    "Delphine Marchetti, TRT-0096",
+    "Desmond Achterberg, TRT-0083",
+    "Edith Bustamante, TRT-0021",
+    "Emeka Thorsen, TRT-0029",
+    "Ilse Van der Kolk, TRT-0040",
+    "Jessica Ko, TRT-0012",
+    "Krystale Jumawan, TRT-0009",
+    "Maeve Oyinlola, TRT-0023",
+    "Marisela Thornbury, TRT-0018",
+    "Michael Labeson, TRT-0001",
+    "Mikelle Hosana, TRT-0005",
+    "Oren Kastellanos, TRT-0043",
+    "PTO Liability - 08/31/2026",
+    "Priyamvada Raghunath, TRT-0051",
+    "Rafael Ibarra, TRT-0155",
+    "Rohan Iyer, TRT-0014",
+    "Samuel Burkenham, TRT-0071",
+    "Simone Okonkwo, TRT-0153",
+    "Sora Jackson, TRT-0002",
+    "Wren Takahashi-Bell, TRT-0079",
+    "Yolanda Featherstone, TRT-0088",
+    "Zephyr Adebayo, TRT-0031"
+   ]
+  },
+  "page": {
+   "title": "PTO Liability - 08/31/2026",
+   "chars": 5057,
+   "published": true,
+   "observed_by": "toolbelt wikijs_mcp_get_page",
+   "observed_at_call": 202,
+   "observations": [
+    {
+     "seq": 201,
+     "route": "toolbelt wikijs_mcp_create_page",
+     "chars": 5057
+    },
+    {
+     "seq": 202,
+     "route": "toolbelt wikijs_mcp_get_page",
+     "chars": 5057
+    }
+   ],
+   "unobserved_later_writes": []
+  },
+  "page_writes_without_content": [],
+  "bamboohr_writes": {
+   "count": 4,
+   "by_tool": {
+    "bamboo_time_off_update_balance": 4
+   },
+   "by_route": {
+    "toolbelt": 4
+   },
+   "unparsed": [],
+   "resets": []
+  },
+  "end_state_observable": {
+   "page": true,
+   "bamboohr": true
+  }
+ }
+]
