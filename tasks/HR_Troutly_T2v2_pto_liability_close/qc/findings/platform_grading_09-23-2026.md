@@ -58,4 +58,11 @@ Row 1 with the trajectory route, pasted alone, rows 2 to 13 empty, graded on a G
   The label is the tool name's last eleven characters, so `get_page` prints as `cp_get_page`.
 - `PASSED - published=True`, `page_rows` 1.
 
-Still open: a figure row on the platform. Row 2 is next.
+## The third grading, the same day: a figure row
+
+Rows 1 and 2 on the same run. Row 1 passed again. Row 2 read the run's page off the same create and
+get_page of page 11 and failed, correctly: the page states a total of $111,320.02 against
+$92,739.54, and lines of $14,159.95, $52,936.57, $11,121.71, $10,957.01 and $22,144.78, with
+1,757.87 hours. `figures_read` 16, `page_rows` 1. The figure reader works on the platform as it does
+in the battery: the stated total is read, and the bare numbers in the title and purpose lines are
+read too and match nothing. Rows 3 to 13 run the same code.
