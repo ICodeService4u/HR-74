@@ -138,7 +138,7 @@ w("|---|---|")
 for _label, _verdict in _rows:
     w("| %s | %s |" % (_label, _verdict))
 w("")
-w("**%d of %d controls went red**, 09/22/2026. A defect planted in the memo, the world constants," % (
+w("**%d of %d controls went red**, 09/23/2026. A defect planted in the memo, the world constants," % (
     sum(1 for _l, _v in _rows if _v == "RED"), len(_rows)))
 w("the plan, the rubric, the register, the import, the engine, the battery or a document fails the")
 w("build or the harness, and the closing rebuild left the tree clean at the published md5s and the")

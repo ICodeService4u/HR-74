@@ -123,6 +123,7 @@ def seed_verdicts():
             spec = importlib.util.spec_from_file_location(f[:-3], os.path.join(vdir, f))
             m = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(m)
+            m.QUIET = True
             r = m.check(ctx)
             out[int(f[3:5])] = (bool(r["passed"]), r["details"].strip().splitlines()[-1], f)
     return out

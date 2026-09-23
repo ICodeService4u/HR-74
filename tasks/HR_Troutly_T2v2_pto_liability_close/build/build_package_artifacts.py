@@ -21,6 +21,7 @@ mirrored rules had left: 55 rows, 105 points.
 
 Run from anywhere: python3 build/build_package_artifacts.py [--docs] [--table]
 """
+import ast
 import csv
 import datetime as dt
 import hashlib
@@ -1191,6 +1192,12 @@ def verifiers():
         # has drifted from the database's state to something a judge should answer
         assert (head + engine).count("\n") < 200, "row file %s runs to %d lines, over the skill's 200" % (name, (head + engine).count("\n"))
         assert (head + engine).isascii(), "row file %s is not ASCII" % name
+        # the platform's AST gate rejected `import os` on 09/23/2026 as a permanently banned import,
+        # so the row files import re and nothing else
+        tree = ast.walk(ast.parse(head + engine))
+        imports = {a.name for n in tree if isinstance(n, ast.Import) for a in n.names}
+        imports |= {n.module or "" for n in ast.walk(ast.parse(head + engine)) if isinstance(n, ast.ImportFrom)}
+        assert imports == {"re"}, "row file %s imports %r; the AST gate allows re alone" % (name, sorted(imports))
         files.append((name, head + engine))
     os.makedirs(vdir, exist_ok=True)
     for old in os.listdir(vdir):

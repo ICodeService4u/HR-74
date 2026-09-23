@@ -179,7 +179,9 @@ ok.append(control("verifier: a page row reading a ctx primitive the measured sur
 ok.append(control("verifier: a run's narration read instead of the database", ENG,
     "        pages = _pages(ctx, notes)\n", "        pages = _pages(ctx, notes) or [(_clean(ctx.final_answer), True)]\n", VH, pre=BLD))
 ok.append(control("verifier: a row file over the skill's 200 lines", ENG,
-    "import os\n", "import os\n" + "# padding\n" * 40, BLD))
+    "import re\n", "import re\n" + "# padding\n" * 40, BLD))
+ok.append(control("verifier: an import the platform's AST gate bans", ENG,
+    "import re\n", "import os\nimport re\n", BLD, expect="the AST gate allows re alone"))
 ok.append(control("battery: an expectation planted wrong", SCN,
     '("the golden page", lambda: snap([(PAGE, GOLD)]), set(),', '("the golden page", lambda: snap([(PAGE, GOLD)]), {1},', VH, expect="FALSE PASS"))
 ok.append(control("battery: a page that over-delivers expected to fail", SCN,
