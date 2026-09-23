@@ -51,7 +51,8 @@ three database primitives a graded run has been measured to serve, `list_tables`
 - A graded run serves those three primitives. `has_table` is measured by nothing and no row reads it.
 - The import populates criteria, explanations, weights and criterion types, and not Tags,
   Reference Artifacts or Grading Target, which are entered by hand from `build/rubric_plan.csv`.
-- A 1.4 re-upload mints a new task data id.
+- A 1.4 re-upload mints a new task data id. Measured again on v2's own upload: its first export,
+  09/23/2026, carries `snap_31202a8918284a76a7c53582bfc550ec`.
 - T2's first platform grading, 09/21/2026, failed every wiki row on a page the app had returned
   under the exact title, and two causes fit: the target app the rows are grounded on, or a ctx
   without `has_table`. The record and the one test run that separates them are in

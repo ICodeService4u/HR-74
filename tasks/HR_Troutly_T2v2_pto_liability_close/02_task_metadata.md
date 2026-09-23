@@ -18,8 +18,8 @@ again, from a row per current employee to five department lines, and is recorded
 | **Apps** | Wiki.js (written), BambooHR (read), Greenhouse (untouched and ungraded) |
 | **Deliverable** | one page, `PTO Liability - 08/31/2026` |
 | **World snapshot** | `snap_c6f6a0879f3d47a19048ee80d7529157` |
-| **Task data id** | `snap_1e12795ed0df4d489a36382afdb63279`, the id measured on 09/21/2026. v2's own is read off its first export |
-| **Rubric import** | `05_rubric_import.xlsx`, md5 `923fcbdd7bdf474a702e26c5e6142039`, **13 rows and 79 points**, 12 primary, one sheet named Rubric in the HR 79 T1 column order |
+| **Task data id** | `snap_31202a8918284a76a7c53582bfc550ec`, v2's own, read off its first export on 09/23/2026 |
+| **Rubric import** | `05_rubric_import.xlsx`, md5 `9521e24e215ffd0a071bb0d1c7d7418b`, **13 rows and 79 points**, 12 primary, one sheet named Rubric in the HR 79 T1 column order |
 | **Golden output** | `04_golden_output_PTO_Liability.md`, md5 `4568b979097e4411479f9960b0e10fae` |
 | **Verifier code** | 13 row files under `qc/verifiers/`, each the row's spec stamped onto `build/verifier_engine.py`. `qc/verifier_harness.py` reads every row against every snapshot with the answer known |
 
@@ -232,10 +232,14 @@ nothing, so a row on it is a point every response earns.
 
 ## Open items
 
-1. **A v2 run set.** Five Gemini 3.8 Flash trajectories against this memo, and three GPT Sol
-   5.6 for the record. Nothing here has been run against v2's own ask yet.
-2. **v2's task data id.** The memo is a new 1.4 upload, so it mints one. `TASK_SNAP` carries
-   the id measured on 09/21/2026 until the first v2 export is read.
+1. **A v2 run set.** One of the five Gemini 3.8 Flash trajectories the decision rule reads has
+   run: G1 of 09/23/2026, archived under `qc/findings/run_set_09-23-2026/` and scored from its
+   bytes at 1.3%, the load's own figures line for line, $111,100.39, the page row and nothing else,
+   106 steps on the platform's count. The record is in `06_failure_analysis.md`. Four Gemini
+   runs and three GPT Sol 5.6 are owed, and the rule fires on five.
+2. **v2's task data id.** Measured 09/23/2026 off G1's export:
+   `snap_31202a8918284a76a7c53582bfc550ec`, minted by the memo's 1.4 upload. `TASK_SNAP` carries it and the
+   import's task-source reference points at it.
 3. **The wiki in the graded dump.** Measured 09/23/2026: row 1 with both wiki services ticked
    was handed 57 BambooHR and Greenhouse tables and no Wiki.js table, which is why every wiki
    row failed on 09/21/2026. The rows now read the page off the run's own Wiki.js calls when the

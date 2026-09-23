@@ -11,7 +11,9 @@ carried it, loaded into the battery's fixture and read by every row file under q
 the record's scores are the verifiers' own verdicts on the archived bytes, never a second reading
 of the plan. v2 grades one page, so nothing here rebuilds an app's write state.
 
-The two sets archived here are T2's, scored under T2's own rubric on 09/20/2026 and 09/21/2026.
+`run_set_09-23-2026` is v2's own, the first trajectory against this memo, archived 09/23/2026; its
+page states the five lines, so it is read as printed and `--as-lines` adds nothing to it.
+The two earlier sets are T2's, scored under T2's own rubric on 09/20/2026 and 09/21/2026.
 They are carried into v2 because the pages they hold are the same deliverable in kind, a row per
 employee with a balance and an hourly rate beside it, so they measure what v2's rubric does to a
 response that copies the load. Their own record stays in the T2 package.
