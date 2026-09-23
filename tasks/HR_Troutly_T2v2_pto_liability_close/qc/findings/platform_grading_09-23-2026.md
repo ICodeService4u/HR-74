@@ -45,9 +45,17 @@ controls hold that route: 793 of 793 verdicts on 61 snapshots, 79 of 79 controls
 files run to 231 to 234 lines, over the skill's 200; the builder's cap is 240, with the reason in
 the builder.
 
-## Still open
+## The second grading, the same day: the route measured
 
-Whether a graded ctx carries `trajectory`, and in what shape. Row 1's details print
-`trajectory: N messages, keys [...]` and `Wiki.js calls on the page: [...]`, so the next grading
-says both. If it reads 0 messages, a code verifier cannot see the page, and the wiki rows belong
-on the platform's Trajectory verifier, an LLM judge over the run's tool calls and outputs.
+Row 1 with the trajectory route, pasted alone, rows 2 to 13 empty, graded on a Gemini run:
+
+- The AST gate passed `import json`.
+- A graded ctx carries `trajectory`: 96 messages, keys `content`, `function_call`,
+  `reasoning_content`, `role`, `thinking_blocks`, `tool_call_id`, `tool_calls`. That is the
+  export's message shape, which the scenarios use.
+- `Wiki.js calls on the page: [('create_page', '11'), ('cp_get_page', 11)]`: a create under the
+  title the app answered with success and page id 11, then the app's get_page reply for page 11.
+  The label is the tool name's last eleven characters, so `get_page` prints as `cp_get_page`.
+- `PASSED - published=True`, `page_rows` 1.
+
+Still open: a figure row on the platform. Row 2 is next.

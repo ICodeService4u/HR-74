@@ -239,8 +239,9 @@ nothing, so a row on it is a point every response earns.
 3. **The wiki in the graded dump.** Measured 09/23/2026: row 1 with both wiki services ticked
    was handed 57 BambooHR and Greenhouse tables and no Wiki.js table, which is why every wiki
    row failed on 09/21/2026. The rows now read the page off the run's own Wiki.js calls when the
-   dump has no pages table. Unmeasured: whether a graded ctx carries `trajectory`, and in what
-   shape. Row 1's `trajectory:` details line says both on the next grading. The record is
+   dump has no pages table. Measured the same day: a graded ctx carries `trajectory`, 96
+   messages in the export's shape, and row 1 passed on a create and a get_page of page 11.
+   Unmeasured: a figure row on the platform. The record is
    `qc/findings/platform_grading_09-23-2026.md`.
 4. **The import does not populate Tags, Reference Artifacts or Grading Target.** Measured on T2
    and unchanged. They are entered by hand from `build/rubric_plan.csv`.
