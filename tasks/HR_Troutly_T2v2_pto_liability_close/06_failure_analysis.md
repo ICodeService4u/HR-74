@@ -234,7 +234,7 @@ else, which is what prediction 1 registered for a response that copies the repor
 six questions above:
 
 1. It opened the request at call 12, the wiki PTO page at call 18 and the cutover memo at call
-   19, where its own trace prints the cap sentence; the migration closeout memo and the payroll
+   19, and its own reasoning quotes the cap sentence at call 22; the migration closeout memo and the payroll
    procedures memo at call 23; the promotion approval, the comp amendment, the signed TRT-0153
    offer and the TRT-0141 schedule change at call 27; the handbook at call 59; the board minutes
    at calls 60 to 62; and the field mapping workbook at call 71, whose `numeric; no cap` line it
@@ -277,7 +277,7 @@ result.
 
 **What the run adds to the prediction.** The prediction said the budget would go to the
 arithmetic rather than to the memo. It went to both. The run spent 84 shell calls, printed the
-cap sentence at call 19 and returned to it in its reasoning at calls 22, 60, 62, 74 and 89, found
+memo at call 19, quoted the cap sentence in its own reasoning at call 22 and returned to it at calls 60, 62, 74 and 89, found
 both signed rates, derived the two hires' accruals to the cent at call 90, computed the capped
 total at call 89, and so held every rule it needed before it wrote a line of the page. It then
 chose the record over the rule each time and said why: the report "itself" carries the uncapped
@@ -303,11 +303,11 @@ total off the trajectory route and failing it.
 For the Gemini Failure Analysis box on the task, in the shape T2's record used: what the run did
 and the figure it reported, its own evidence and where it set the rule aside, what it should have
 done, and why the output is unacceptable with the numbers. Steps here are the platform's own
-numbering, which on this export runs even with the tool-call count: the platform's step 19 is
-the export's call 19.
+numbering, which on this export runs even with the tool-call count: the platform's step 22 is
+the export's call 22.
 
 **G1, traj_34e36e18129e4b169e3ddf956e3970c8.** Gemini copies the HRIS time off report onto PTO
-Liability - 08/31/2026 and reports $111,100.39 of liability on 1,751.71 hours. At step 19, it
+Liability - 08/31/2026 and reports $111,100.39 of liability on 1,751.71 hours. At step 22, it
 prints the cutover memo's "Carryover into the new system is capped at 40.0 hours as of
 06/30/2026; the excess is forfeited", and at step 89 it computes the capped total, $90,628.55,
 but it sets it aside because the input file carries the uncapped balances. It should have capped

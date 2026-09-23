@@ -23,7 +23,7 @@ platform's count. Four Gemini runs and three GPT Sol 5.6 are owed.
 | Verifier code and battery | 09/22/2026 | 13 row files generated from the rows onto `build/verifier_engine.py`, 231 to 234 lines each; **793 of 793 verdicts correct** across 61 snapshots |
 | Re-scored, T2's run sets | 09/22/2026 | the ten archived trajectories read under this rubric: the 09/20/2026 five at a mean of 1.3%, the 09/21/2026 five at 1.3%, none over 1.3%. Their pages carry no line, so `--as-lines` sums each run's own rows onto the five lines: 1.3% and 1.3%, none having applied the cap |
 | Negative controls | 09/22/2026 | see the table below, from `build/negative_controls.py` |
-| First v2 trajectory | 09/23/2026 | G1, gemini-3.8-flash, task version 34, task data id `snap_31202a8918284a76a7c53582bfc550ec`, all 13 verifiers on the export; $111,100.39 on 1,751.71 hours, the page row alone, 1.3%, 106 steps; the cap printed at step 19, computed at step 89 and set aside for the report. Archived under `qc/findings/run_set_09-23-2026/`, recorded in `06_failure_analysis.md` |
+| First v2 trajectory | 09/23/2026 | G1, gemini-3.8-flash, task version 34, task data id `snap_31202a8918284a76a7c53582bfc550ec`, all 13 verifiers on the export; $111,100.39 on 1,751.71 hours, the page row alone, 1.3%, 106 steps; the memo opened at step 19, its cap quoted at step 22, the capped total computed at step 89 and set aside for the report. Archived under `qc/findings/run_set_09-23-2026/`, recorded in `06_failure_analysis.md` |
 
 ## The ask, in one paragraph
 
