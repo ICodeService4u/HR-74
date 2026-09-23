@@ -178,10 +178,26 @@ ok.append(control("verifier: a page row reading a ctx primitive the measured sur
     "    names = list(ctx.list_tables())", '    names = ["pages"] if ctx.has_table("pages") else list(ctx.list_tables())', VH, expect="WRONG", pre=BLD))
 ok.append(control("verifier: a run's narration read instead of the database", ENG,
     "        pages = _pages(ctx, notes)\n", "        pages = _pages(ctx, notes) or [(_clean(ctx.final_answer), True)]\n", VH, pre=BLD))
-ok.append(control("verifier: a row file over the skill's 200 lines", ENG,
+ok.append(control("verifier: a write the app refused read as written", ENG,
+    'name.endswith(("create_page", "update_page")) and r.get("success") is True:',
+    'name.endswith(("create_page", "update_page")):', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the page's first state read instead of its last", ENG,
+    "    body = next((o for o in reversed(obs) if o[2] is not None), None)",
+    "    body = next((o for o in obs if o[2] is not None), None)", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a page under any title read as this one", ENG,
+    '            if _norm(a.get("title")) == _norm(SPEC["page"]) or', "            if True or", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: an update to any page read as this one", ENG,
+    'name.endswith("update_page") and pid in ids)', 'name.endswith("update_page"))', VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: the run's record read where the dump holds the wiki", ENG,
+    "        found.append((_clean(body), pub))\n    return found\n",
+    "        found.append((_clean(body), pub))\n    return found or _traj(ctx, notes)\n", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: two pages created under the title graded as one", ENG,
+    "    return [(_clean(body[2]), pub)] * max(1, sum(1 for v in pages.values() if v))",
+    "    return [(_clean(body[2]), pub)]", VH, expect="FALSE PASS", pre=BLD))
+ok.append(control("verifier: a row file over the 240-line cap", ENG,
     "import re\n", "import re\n" + "# padding\n" * 40, BLD))
 ok.append(control("verifier: an import the platform's AST gate bans", ENG,
-    "import re\n", "import os\nimport re\n", BLD, expect="the AST gate allows re alone"))
+    "import re\n", "import os\nimport re\n", BLD, expect="the allow-list is json and re"))
 ok.append(control("battery: an expectation planted wrong", SCN,
     '("the golden page", lambda: snap([(PAGE, GOLD)]), set(),', '("the golden page", lambda: snap([(PAGE, GOLD)]), {1},', VH, expect="FALSE PASS"))
 ok.append(control("battery: a page that over-delivers expected to fail", SCN,

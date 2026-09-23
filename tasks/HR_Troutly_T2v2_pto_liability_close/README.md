@@ -10,7 +10,7 @@ per-employee table itself over the platform's 25-criterion limit, 52 rows of thr
 the measurement-date sentence an ask no row read. Both are out, and the request asks for five
 department lines in the table's place, Sales and Marketing joined because Marketing alone is a
 figure the load already carries right. 13 rows and 79 points, of which 1 point is not a
-determination. The battery reads **598 of 598 verdicts correct across 46 snapshots**, and the ten
+determination. The battery reads **793 of 793 verdicts correct across 61 snapshots**, and the ten
 Gemini trajectories already measured in this world score 1.3% and 1.3% against this rubric,
 where T2's own read 23.9% and 38.1%. A v2 run set is owed.
 
@@ -18,7 +18,7 @@ where T2's own read 23.9% and 38.1%. A v2 run set is owed.
 |---|---|---|
 | Built | 09/22/2026 | the memo narrowed to three asks, the golden recomputed from the world, 27 rows at 143 points, seven registered paths, predictions dated |
 | Review round 1 | 09/22/2026 | two findings, both accepted: the per-employee table and the measurement-date sentence out of the memo, five department lines in, 13 rows at 79 points, every figure recomputed from the world |
-| Verifier code and battery | 09/22/2026 | 13 row files generated from the rows onto `build/verifier_engine.py`, 187 to 190 lines each; **598 of 598 verdicts correct** across 46 snapshots |
+| Verifier code and battery | 09/22/2026 | 13 row files generated from the rows onto `build/verifier_engine.py`, 231 to 234 lines each; **793 of 793 verdicts correct** across 61 snapshots |
 | Re-scored, T2's run sets | 09/22/2026 | the ten archived trajectories read under this rubric: the 09/20/2026 five at a mean of 1.3%, the 09/21/2026 five at 1.3%, none over 1.3%. Their pages carry no line, so `--as-lines` sums each run's own rows onto the five lines: 1.3% and 1.3%, none having applied the cap |
 | Negative controls | 09/22/2026 | see the table below, from `build/negative_controls.py` |
 
@@ -85,7 +85,7 @@ what the golden scores.
 | `build/write_metadata.py`, `build/write_readme.py`, `build/measured.py` | `02_task_metadata.md` and this file, written from the build, the battery and the re-scoring so every figure in them is measured on the write |
 | `qc/README.md`, `qc/findings/` | The AutoQC register and the verbatim archive, including T2's two run sets, carried here to be re-scored |
 | `qc/ctx.py`, `qc/run_battery.py` | The verifier skill's stand-in `ctx` and battery runner |
-| `qc/scenarios.py`, `qc/verifier_harness.py` | The 46-snapshot battery and the runner over all rows |
+| `qc/scenarios.py`, `qc/verifier_harness.py` | The 61-snapshot battery and the runner over all rows |
 | `qc/verifiers/` | The 13 generated row files |
 | `qc/write_paste_guide.py` | Writes `07_paste_guide.md` from the rows |
 | `qc/archive_run_set.py`, `qc/score_run_set.py` | The archiver and the scorer, each with a `--self-check` |
@@ -175,7 +175,13 @@ python3 qc/score_run_set.py --set run_set_09-21-2026 --details
 | verifier: the title read off any cell of a page row | RED |
 | verifier: a page row reading a ctx primitive the measured surface does not carry | RED |
 | verifier: a run's narration read instead of the database | RED |
-| verifier: a row file over the skill's 200 lines | RED |
+| verifier: a write the app refused read as written | RED |
+| verifier: the page's first state read instead of its last | RED |
+| verifier: a page under any title read as this one | RED |
+| verifier: an update to any page read as this one | RED |
+| verifier: the run's record read where the dump holds the wiki | RED |
+| verifier: two pages created under the title graded as one | RED |
+| verifier: a row file over the 240-line cap | RED |
 | verifier: an import the platform's AST gate bans | RED |
 | battery: an expectation planted wrong | RED |
 | battery: a page that over-delivers expected to fail | RED |
@@ -186,10 +192,10 @@ python3 qc/score_run_set.py --set run_set_09-21-2026 --details
 | docs: a non-ASCII character in a package document | RED |
 | selection: a wildcard in the block | RED |
 
-**73 of 73 controls went red**, 09/23/2026. A defect planted in the memo, the world constants,
+**79 of 79 controls went red**, 09/23/2026. A defect planted in the memo, the world constants,
 the plan, the rubric, the register, the import, the engine, the battery or a document fails the
 build or the harness, and the closing rebuild left the tree clean at the published md5s and the
-battery at 598 of 598. The memo controls include each line the rescope and review round 1 took
+battery at 793 of 793. The memo controls include each line the rescope and review round 1 took
 out, planted back, and each one fails the memo build. The plan controls hold the rescope's own
 rule: a Marketing line on its own is a figure the load already carries right and fails the build,
 and a page that over-delivers expected to fail fails the battery. The verifier controls hold the

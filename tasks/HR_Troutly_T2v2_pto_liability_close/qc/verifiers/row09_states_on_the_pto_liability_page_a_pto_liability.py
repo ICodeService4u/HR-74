@@ -14,8 +14,11 @@ SPEC = {'criterion': 'States, on the PTO liability page, a PTO liability of $8,1
 # R1 SELECT * only, columns by content or by the validated Wiki.js layout. R3 a figure counts only
 # in the asked unit, by its own $ or hours, else its column header, else its prose line. R5 the
 # title, an employee key and a line label match whole-field. R12 details say what was read.
-# R13 the database only. R15 never raises. Strikethrough is dropped. Two pages under the title fail.
-# re is the only import: the platform's AST gate rejects os, measured 09/23/2026. The harness sets QUIET.
+# R15 never raises. Strikethrough is dropped. Two pages under the title fail. The platform's AST
+# gate rejects os (09/23/2026); the harness sets QUIET. The graded dump carries no Wiki.js table
+# (09/23/2026), so with no pages table the page is the run's own record of what the app accepted:
+# the last successful create or update under the title, or the app's get_page reply. Never prose.
+import json
 import re
 
 QUIET = False
@@ -129,8 +132,8 @@ def _pages(ctx, notes):
         (n for n in names if "page" in n.lower() and not any(
             x in n.lower() for x in ("history", "tree", "link", "tag", "meta"))), None)
     if not name:
-        notes.append("no pages table in this snapshot")
-        return []
+        notes.append("no pages table in this snapshot; reading the run's Wiki.js calls")
+        return _traj(ctx, notes)
     cols, rows = list(ctx.table_columns(name)), [list(r) for r in ctx.query_db("SELECT * FROM %s" % name)]
     real = "title" in cols and "content" in cols
     notes.append("table %s: %d columns %r, %d rows, %s column names"
@@ -154,6 +157,47 @@ def _pages(ctx, notes):
         notes.append("page row %d matches via %s, published=%r" % (n, route, pub))
         found.append((_clean(body), pub))
     return found
+
+
+def _load(v):
+    if isinstance(v, list) and all(isinstance(x, dict) and "text" in x for x in v):
+        v = "".join(_text(x["text"]) for x in v)
+    try:
+        return json.loads(v) if isinstance(v, str) and v.strip()[:1] in "{[" else v
+    except ValueError:
+        return v
+
+
+def _traj(ctx, notes):
+    t = _load(getattr(ctx, "trajectory", None))
+    t = next((_load(t[k]) for k in ("trajectory_messages", "messages") if k in t), []) if isinstance(t, dict) else t
+    t = [m for m in (t if isinstance(t, list) else []) if isinstance(m, dict)]
+    notes.append("trajectory: %d messages, keys %r" % (len(t), sorted({k for m in t for k in m})[:12]))
+    res = {m.get("tool_call_id"): _load(m.get("content")) for m in t if m.get("role") == "tool"}
+    ids, pages, obs = set(), {}, []
+    for tc in [c for m in t for c in (m.get("tool_calls") or []) if isinstance(c, dict)]:
+        fn = tc.get("function") or tc
+        name, a, r = _text(fn.get("name")), _load(fn.get("arguments") or {}), res.get(tc.get("id"))
+        a = a.get("request") if isinstance(a, dict) and isinstance(a.get("request"), dict) else a
+        if "wiki" not in name or not isinstance(a, dict) or not isinstance(r, dict):
+            continue
+        p = r.get("page") if name.endswith("get_page") and isinstance(r.get("page"), dict) else None
+        if p and _norm(p.get("title")) == _norm(SPEC["page"]):
+            ids.add(_text(p.get("id")))
+            obs.append((name, p.get("id"), p.get("content"), p.get("is_published", p.get("isPublished"))))
+        elif name.endswith(("create_page", "update_page")) and r.get("success") is True:
+            pid = _text(r.get("page_id", a.get("id", a.get("page_id"))))
+            if _norm(a.get("title")) == _norm(SPEC["page"]) or (name.endswith("update_page") and pid in ids):
+                ids.add(pid)
+                pages[pid] = pages.get(pid, 0) + name.endswith("create_page")
+                obs.append((name, pid, a.get("content"), a.get("is_published")))
+    body = next((o for o in reversed(obs) if o[2] is not None), None)
+    pub = next((o[3] for o in reversed(obs) if o[3] is not None), None)
+    notes.append("Wiki.js calls on the page: %r" % [(o[0][-11:], o[1]) for o in obs][:12])
+    if body is None:
+        return []
+    pub = None if pub is None else _norm(pub) in ("1", "true", "t", "yes", "y")
+    return [(_clean(body[2]), pub)] * max(1, sum(1 for v in pages.values() if v))
 
 
 def check(ctx):

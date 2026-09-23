@@ -33,8 +33,10 @@ final answer, not the narration, not which tool was used, not the step count. Bo
 ## The verifier harness
 
 Built 09/22/2026 and rebuilt the same day to the app-db-verifier skill. `verifier_harness.py` runs every
-row file under `verifiers/` against the 46 snapshots in `scenarios.py`, each with the rows it must
-fail named in advance: **598 of 598 verdicts correct**. Twelve of the snapshots are correct answers
+row file under `verifiers/` against the 61 snapshots in `scenarios.py`, each with the rows it must
+fail named in advance: **793 of 793 verdicts correct**. Fifteen of them, added 09/23/2026, hand the
+rows a dump with no Wiki.js table and the page only in the run's Wiki.js calls, which is the dump
+that grading measured. Twelve of the snapshots are correct answers
 in different shapes, three of them pages that carry more than the request asks for, because the
 one thing this battery exists to prove beyond the verdicts is that no row grades the absence of
 content. Seven more hold the line reader to where a line is stated: not Sales alone, in a table or in prose, not a sum left

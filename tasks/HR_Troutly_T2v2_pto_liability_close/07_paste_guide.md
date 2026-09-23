@@ -15,17 +15,19 @@ from the same rows that wrote `05_rubric_import.xlsx` (md5 `923fcbdd7bdf474a702e
 3. **Code verifier form, per row**: set Target app, Check type, Expected Content, Target Table,
    Target Record ID, Target Record Label and Fallback Strategy **DB only** from the block, leave
    Additional Notes empty, and paste the row file whole into the code box. Every row file is the
-   engine with the row's SPEC on top, 187 to 190 lines; if the box balks at the size, say so and the
+   engine with the row's SPEC on top, 231 to 234 lines; if the box balks at the size, say so and the
    builder stamps only the half a row uses. **Target database apps on a wiki row is `wiki_js_mcp`**,
    the service whose tools every archived run called, `wiki_js_mcp_wikijs_mcp_create_page` among
    them, and the picker offers Wiki.js and Wiki.js MCP as two entries. The 09/21/2026 paste took
    Wiki.js and every wiki row read fail on a page the app had returned under the exact title.
-   Two causes fit that equally, the service and a ctx without `has_table`, and the row's own
-   details line separates them: `no pages table in this snapshot` is the service, an
-   `AttributeError` on `has_table` is a row file older than round 6. Select both services until
-   a grading names the one that holds the pages table.
-4. **Run the per-verifier test-run on the untouched task** and compare with the block's expected
-   verdict and last `details` line. 13 of 13 rows fail on the untouched task by design, every one
+   The 09/23/2026 grading settled it: with both services ticked the dump held 57 BambooHR and
+   Greenhouse tables and no Wiki.js table, so the rows read the page off the run's own Wiki.js
+   calls. Keep both services ticked; the details line `trajectory: N messages` on the next
+   grading says whether the graded ctx carries the run's record. Every row box must hold its
+   code: one empty box stops the whole grading with `missing check fn`.
+4. **Run the per-verifier test-run on the untouched task.** It reports whether the code ran and
+   what the AST gate refused, which is how `import os` was caught on 09/23/2026; the verdict is read
+   on a grading. Compare with the block's expected verdict and last `details` line. 13 of 13 rows fail on the untouched task by design, every one
    on no page under the title. A row that passes there, or fails on anything else, is a defect to
    read before the next row is pasted.
 5. **Paste rows 1 and 2 first.** Row 1 proves the route to the pages table and the gate proves the
