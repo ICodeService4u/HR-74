@@ -15,16 +15,20 @@ Two deliberate differences from a permissive stub, both of which make a bad chec
     `table_columns` and `query_db`. The 09/21/2026 run set measured them on the platform, on the
     BambooHR rows that returned their metrics. Nothing measured `has_table`, so the stand-in does
     not carry it and a check that reads it raises here rather than on the graded run.
-  * `list_files`, `read_text`, `exists` and `trajectory` are present but EMPTY. They exist on the
-    real ctx, but a verifier that leans on them is grading the run's narration rather than the
-    end state. Here that dependency fails loudly instead of passing by luck.
+  * `list_files`, `read_text` and `exists` are present but EMPTY. They exist on the real ctx, but
+    a verifier that leans on them is grading the run's narration rather than the end state.
+  * `trajectory` is empty unless a scenario passes one. The 09/23/2026 grading measured a dump
+    with no Wiki.js table, so the page rows read the run's own Wiki.js calls when the dump has no
+    pages table. A scenario passes the calls in the export's message shape: assistant messages
+    with `tool_calls` and tool messages keyed by `tool_call_id`.
 """
 import sqlite3
 
 
 class Ctx(object):
-    def __init__(self, tables, real_names=False):
+    def __init__(self, tables, real_names=False, trajectory=None):
         """tables: {"table_name": (column_names, rows)} - rows are lists of values."""
+        self._trajectory = trajectory if trajectory is not None else []
         self.db = sqlite3.connect(":memory:")
         self._names = {}
         for name, (cols, rows) in tables.items():
@@ -74,7 +78,7 @@ class Ctx(object):
 
     @property
     def trajectory(self):
-        return []
+        return self._trajectory
 
     @property
     def final_answer(self):

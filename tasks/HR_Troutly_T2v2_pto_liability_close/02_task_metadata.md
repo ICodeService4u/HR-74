@@ -236,9 +236,11 @@ nothing, so a row on it is a point every response earns.
    5.6 for the record. Nothing here has been run against v2's own ask yet.
 2. **v2's task data id.** The memo is a new 1.4 upload, so it mints one. `TASK_SNAP` carries
    the id measured on 09/21/2026 until the first v2 export is read.
-3. **The wiki target app.** T2's first platform grading, 09/21/2026, failed every wiki row on a
-   page the app had returned. Two causes fit and one test run separates them; the record is in
-   `../HR_Troutly_T2_pto_liability_close/qc/findings/platform_grading_09-21-2026.md`. v2's rows
-   are grounded on the same service, so the answer carries straight over.
+3. **The wiki in the graded dump.** Measured 09/23/2026: row 1 with both wiki services ticked
+   was handed 57 BambooHR and Greenhouse tables and no Wiki.js table, which is why every wiki
+   row failed on 09/21/2026. The rows now read the page off the run's own Wiki.js calls when the
+   dump has no pages table. Unmeasured: whether a graded ctx carries `trajectory`, and in what
+   shape. Row 1's `trajectory:` details line says both on the next grading. The record is
+   `qc/findings/platform_grading_09-23-2026.md`.
 4. **The import does not populate Tags, Reference Artifacts or Grading Target.** Measured on T2
    and unchanged. They are entered by hand from `build/rubric_plan.csv`.

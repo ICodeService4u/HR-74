@@ -16,8 +16,13 @@ asks for - every employee beside the five lines, the seven columns T2 asked for,
 department beside the joined one, a second table - and each must score every point. Since review
 round 1 of 09/22/2026 the lines are what the rows read, so the battery also proves that a line is
 read where the page names it and nowhere else: not off an employee row, not off Sales alone.
+
+The 09/23/2026 grading handed row 1 a dump of BambooHR and Greenhouse tables and no Wiki.js table,
+so the trajectory scenarios put the page where a graded run has it: nowhere in the tables, and in
+the run's own Wiki.js calls, in the export's message shape, with the app's replies.
 """
 import csv
+import json
 import os
 import re
 import sys
@@ -101,6 +106,43 @@ def snap(pages=(), real_names=False, cols=PAGES_COLS, history=()):
     tables = dict(wiki_tables(pages, cols, history))
     tables.update(other_tables())
     return Ctx(tables, real_names=real_names)
+
+
+# ---------------------------------------------------------------- the dump without Wiki.js
+WIKI = "wiki_js_mcp_wikijs_mcp_"
+
+
+def _call(n, name, args, result, parts=False):
+    reply = json.dumps(result)
+    return [{"role": "assistant", "content": "", "tool_calls": [
+                {"id": "c%d" % n, "type": "function", "function": {"name": WIKI + name, "arguments": json.dumps(args)}}]},
+            {"role": "tool", "tool_call_id": "c%d" % n, "content": [{"type": "text", "text": reply}] if parts else reply}]
+
+
+def create(n, content, title=PAGE, pub=True, ok=True, pid=11, parts=False):
+    args = {"title": title, "path": _slug(title), "content": content, "is_published": pub}
+    return _call(n, "create_page", args, {"success": True, "page_id": pid} if ok else
+                 {"success": False, "error": "a page already exists at this path"}, parts)
+
+
+def update(n, pid, content):
+    return _call(n, "update_page", {"id": pid, "content": content}, {"success": True})
+
+
+def get(n, content, pid=11, title=PAGE, pub=True):
+    return _call(n, "get_page", {"id": pid}, {"success": True, "page": {
+        "id": pid, "title": title, "content": content, "is_published": pub}})
+
+
+def tsnap(*steps, wrap=None, wiki=False):
+    msgs = [{"role": "user", "content": B.PROMPT}] + [m for st in steps for m in st]
+    traj = {"trajectory_messages": msgs} if wrap == "dict" else json.dumps(msgs) if wrap == "str" else msgs
+    tables = dict(wiki_tables()) if wiki else {}
+    tables.update(other_tables())
+    return Ctx(tables, trajectory=traj)
+
+
+WRONG_TOTAL = lambda: set_total(GOLD, money="$93,000.00")
 
 
 # ---------------------------------------------------------------- pages a correct run might write
@@ -368,4 +410,39 @@ BATTERY = [
     ("the load copied whole: the report's balances and the loaded rates",
      lambda: snap([(PAGE, B.render_page(LOADED_SCHED))]), ALL_ROWS - {PAGE_ROW},
      "the failure this ask measures: every graded figure is one the load carries wrong, so copying it earns the page and nothing else"),
+    # ---- the dump the 09/23/2026 grading measured: no Wiki.js table, the page in the run's calls
+    ("no Wiki.js table: the page created and read back", lambda: tsnap(create(1, GOLD), get(2, GOLD)), set(),
+     "the graded shape: the page reaches the verifier only through the run's calls and the app's replies"),
+    ("no Wiki.js table: created, the reply as text parts", lambda: tsnap(create(1, GOLD, parts=True)), set(),
+     "a tool reply carried as a list of text parts is the same reply"),
+    ("no Wiki.js table: the record wrapped as an export", lambda: tsnap(create(1, GOLD), wrap="dict"), set(),
+     "the trajectory may arrive as the export's dict with trajectory_messages"),
+    ("no Wiki.js table: the record as a JSON string", lambda: tsnap(create(1, GOLD), wrap="str"), set(),
+     "the trajectory may arrive serialized"),
+    ("no Wiki.js table: the create refused by the app", lambda: tsnap(create(1, GOLD, ok=False)), "all",
+     "a call the app refused wrote nothing; reading its arguments pays for an attempt"),
+    ("no Wiki.js table: created under a different title", lambda: tsnap(create(1, GOLD, title="PTO Liability August 2026")), "all",
+     "the request names the title; another page is not this one"),
+    ("no Wiki.js table: created, then updated by id to a wrong total",
+     lambda: tsnap(create(1, GOLD), update(2, 11, WRONG_TOTAL())), {TOTAL_ROW},
+     "the page is its last accepted state, not its first"),
+    ("no Wiki.js table: created wrong, then updated by id to the golden",
+     lambda: tsnap(create(1, WRONG_TOTAL()), update(2, 11, GOLD)), set(),
+     "a run that corrects its page is graded on the correction"),
+    ("no Wiki.js table: an update to another page's id", lambda: tsnap(create(1, WRONG_TOTAL()), update(2, 99, GOLD)), {TOTAL_ROW},
+     "an update to a page that is not this one does not change this one"),
+    ("no Wiki.js table: created unpublished", lambda: tsnap(create(1, GOLD, pub=False)), {PAGE_ROW},
+     "the page row reads the published flag the run sent"),
+    ("no Wiki.js table: read back unpublished after a published create",
+     lambda: tsnap(create(1, GOLD), get(2, GOLD, pub=False)), {PAGE_ROW},
+     "the app's own reply is the later word on the flag"),
+    ("no Wiki.js table: two pages created under the title", lambda: tsnap(create(1, GOLD), create(2, GOLD, pid=12)), "all",
+     "the request asks for one page, as on the table route"),
+    ("no Wiki.js table: the page only in the run's narration",
+     lambda: tsnap([{"role": "assistant", "content": "Published the page:\n\n" + GOLD}]), "all",
+     "R13: what the run said is not what the app holds"),
+    ("no Wiki.js table and no record", lambda: tsnap(), "all",
+     "nothing written, nothing read"),
+    ("a pages table without the page, the run's calls carrying it", lambda: tsnap(create(1, GOLD), wiki=True), "all",
+     "where the dump holds the wiki, the dump decides and the record is not read"),
 ]

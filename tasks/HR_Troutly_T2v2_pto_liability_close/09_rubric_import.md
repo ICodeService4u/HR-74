@@ -132,7 +132,7 @@ stated hours figure to a twentieth of an hour, `TOL_TOTAL_MONEY` and `TOL_LINE_M
 section and nothing tells a response how many decimals to print. No registered path comes within
 either band, which `06_failure_analysis.md` states path by path.
 
-`qc/verifier_harness.py` proves the set on 46 snapshots with the answer known, **598 of 598
+`qc/verifier_harness.py` proves the set on 61 snapshots with the answer known, **793 of 793
 verdicts correct**, 13 rows against every snapshot: the golden page, real and placeholder column
 names, the page as HTML, the title with an em dash, a 20-column pages table, a second page under
 the same title, a note page carrying the title in its description, the paths P0 to P5 as pages,
