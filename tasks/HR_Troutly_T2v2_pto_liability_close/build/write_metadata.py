@@ -10,6 +10,8 @@ g = B.GOLDEN_BY_ID
 # the archived run sets re-scored under this rubric by qc/score_run_set.py, 09/22/2026
 RESCORED = tuple("%.1f%%" % measured.rescored(rs)[0] for rs in ("run_set_09-20-2026", "run_set_09-21-2026"))
 RESCORED_LINES = tuple("%.1f%%" % measured.rescored(rs, True)[0] for rs in ("run_set_09-20-2026", "run_set_09-21-2026"))
+# v2's own first run set, scored by qc/score_run_set.py from the archived page, 09/23/2026
+V2_G1 = "%.1f%%" % measured.rescored("run_set_09-23-2026")[0]
 paths = B.score_paths()
 cells = B.CELLS
 bands = {}
@@ -40,7 +42,7 @@ w("| **Grading target** | None. Every row is App DB Programatic on the Wiki.js `
 w("| **Apps** | Wiki.js (written), BambooHR (read), Greenhouse (untouched and ungraded) |")
 w("| **Deliverable** | one page, `%s` |" % B.PAGE)
 w("| **World snapshot** | `%s` |" % B.SNAP)
-w("| **Task data id** | `%s`, the id measured on 09/21/2026. v2's own is read off its first export |" % B.TASK_SNAP)
+w("| **Task data id** | `%s`, v2's own, read off its first export on 09/23/2026 |" % B.TASK_SNAP)
 w("| **Rubric import** | `05_rubric_import.xlsx`, md5 `%s`, **%d rows and %d points**, %d primary, one sheet named Rubric in the HR 79 T1 column order |" % (
     B.md5(B.IMPORT), len(B.RUBRIC), B.PLAN_TOTAL, sum(1 for c in B.RUBRIC if c[4] == "Yes")))
 w("| **Golden output** | `04_golden_output_PTO_Liability.md`, md5 `%s` |" % B.md5(os.path.join(PKG, B.GOLDEN_FILE)))
@@ -211,10 +213,14 @@ w("   the package retires. The rubric is not rescoped around whatever failed.")
 w("")
 w("## Open items")
 w("")
-w("1. **A v2 run set.** Five Gemini 3.8 Flash trajectories against this memo, and three GPT Sol")
-w("   5.6 for the record. Nothing here has been run against v2's own ask yet.")
-w("2. **v2's task data id.** The memo is a new 1.4 upload, so it mints one. `TASK_SNAP` carries")
-w("   the id measured on 09/21/2026 until the first v2 export is read.")
+w("1. **A v2 run set.** One of the five Gemini 3.8 Flash trajectories the decision rule reads has")
+w("   run: G1 of 09/23/2026, archived under `qc/findings/run_set_09-23-2026/` and scored from its")
+w("   bytes at %s, the load's own figures line for line, %s, the page row and nothing else," % (V2_G1, B._money(B.LOADED_TOTAL)))
+w("   106 steps on the platform's count. The record is in `06_failure_analysis.md`. Four Gemini")
+w("   runs and three GPT Sol 5.6 are owed, and the rule fires on five.")
+w("2. **v2's task data id.** Measured 09/23/2026 off G1's export:")
+w("   `%s`, minted by the memo's 1.4 upload. `TASK_SNAP` carries it and the" % B.TASK_SNAP)
+w("   import's task-source reference points at it.")
 w("3. **The wiki in the graded dump.** Measured 09/23/2026: row 1 with both wiki services ticked")
 w("   was handed 57 BambooHR and Greenhouse tables and no Wiki.js table, which is why every wiki")
 w("   row failed on 09/21/2026. The rows now read the page off the run's own Wiki.js calls when the")

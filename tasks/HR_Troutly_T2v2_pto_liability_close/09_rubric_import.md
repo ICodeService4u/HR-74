@@ -9,7 +9,7 @@ verifier types in the two are the same strings.
 
 The shape is HR 32 T24's, carried by HR 79 T1 and by T1, T1 v2 and T2 here: thirteen columns in
 HR 79 T1's order, one row per verifier, the sheet named `Rubric`. **13 rows, 79 points, 1 gate,
-12 primary**, md5 `923fcbdd7bdf474a702e26c5e6142039`, the md5 a property of the content because
+12 primary**, md5 `9521e24e215ffd0a071bb0d1c7d7418b`, the md5 a property of the content because
 the builder freezes every timestamp in the file. The rows are the plan's after review round 1 of
 09/22/2026, which took the per-employee table and the measurement-date sentence out of the memo
 and put five department lines in, so the 27-row file of the same morning is superseded whole.
@@ -25,9 +25,10 @@ Marketing apart beside the joined line, takes every point.
 
 **The ids, and what the import populates.** The world snapshot id is
 `snap_c6f6a0879f3d47a19048ee80d7529157`, unchanged across the exports of T1, T1 v2 and T2. The
-task data id is `snap_1e12795ed0df4d489a36382afdb63279`, read off T2's 09/21/2026 re-upload and
-carried here; a 1.4 re-upload mints a new task data id, so v2's memo will mint its own and the id
-is re-read off v2's first export. `check_import()` refuses to build the file on a sentinel id.
+task data id is `snap_31202a8918284a76a7c53582bfc550ec`, v2's own, read off its first export on
+09/23/2026: a 1.4 re-upload mints a new task data id, and v2's memo minted this one in place of
+the 09/21/2026 id T2's re-upload had minted, which the file carried until the export was read.
+`check_import()` refuses to build the file on a sentinel id.
 What the import does and does not populate is T2's measurement, not a guess: its five loads of
 09/20 and 09/21/2026 each read back criteria, explanations, weights and criterion types, and
 every row came back with `verifier_custom_field_values = {}` and no tag. So Tags, Reference

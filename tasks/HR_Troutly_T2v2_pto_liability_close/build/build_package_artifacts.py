@@ -57,8 +57,8 @@ PROMPT = ("Complete the request (using the HRIS time off report and the rest of 
 TASK_INPUTS = ["00_task_input_pto_liability_request.pdf"]
 TASK_UPLOADS = ["pto_liability_request.pdf"]
 ASOF = "08/31/2026"
-SNAP = "snap_c6f6a0879f3d47a19048ee80d7529157"  # world_snapshot_id, unchanged across 13 exports
-TASK_SNAP = "snap_1e12795ed0df4d489a36382afdb63279"  # the task data id measured on 09/21/2026; v2's own is owed on its first export
+SNAP = "snap_c6f6a0879f3d47a19048ee80d7529157"  # world_snapshot_id, unchanged across 14 exports
+TASK_SNAP = "snap_31202a8918284a76a7c53582bfc550ec"  # v2's own task data id, read off its first export on 09/23/2026; T2's 09/21/2026 id was snap_1e12795ed0df4d489a36382afdb63279
 
 # ---------------------------------------------------------------- world readers
 def _csv(app, table):

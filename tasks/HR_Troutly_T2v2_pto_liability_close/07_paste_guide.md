@@ -2,7 +2,7 @@
 
 The rubric import registers criteria, explanations, weights and criterion types and nothing else,
 measured by task round 1. Everything below is what the interface still needs per row, generated
-from the same rows that wrote `05_rubric_import.xlsx` (md5 `923fcbdd7bdf474a702e26c5e6142039`, 13 rows, 79 points) by
+from the same rows that wrote `05_rubric_import.xlsx` (md5 `9521e24e215ffd0a071bb0d1c7d7418b`, 13 rows, 79 points) by
 `qc/write_paste_guide.py`, so a rebuild rewrites it and `check_docs()` holds it to the plan.
 
 ## The procedure
