@@ -241,7 +241,7 @@ nothing, so a row on it is a point every response earns.
    row failed on 09/21/2026. The rows now read the page off the run's own Wiki.js calls when the
    dump has no pages table. Measured the same day: a graded ctx carries `trajectory`, 96
    messages in the export's shape, and row 1 passed on a create and a get_page of page 11.
-   Row 2 then read the page's $111,320.02 total and failed it, as it should. The record is
+   Row 2 then read the page's total off the same calls and failed it, as it should. The record is
    `qc/findings/platform_grading_09-23-2026.md`.
 4. **The import does not populate Tags, Reference Artifacts or Grading Target.** Measured on T2
    and unchanged. They are entered by hand from `build/rubric_plan.csv`.

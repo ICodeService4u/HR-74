@@ -220,7 +220,7 @@ w("   was handed 57 BambooHR and Greenhouse tables and no Wiki.js table, which i
 w("   row failed on 09/21/2026. The rows now read the page off the run's own Wiki.js calls when the")
 w("   dump has no pages table. Measured the same day: a graded ctx carries `trajectory`, 96")
 w("   messages in the export's shape, and row 1 passed on a create and a get_page of page 11.")
-w("   Row 2 then read the page's $111,320.02 total and failed it, as it should. The record is")
+w("   Row 2 then read the page's total off the same calls and failed it, as it should. The record is")
 w("   `qc/findings/platform_grading_09-23-2026.md`.")
 w("4. **The import does not populate Tags, Reference Artifacts or Grading Target.** Measured on T2")
 w("   and unchanged. They are entered by hand from `build/rubric_plan.csv`.")
