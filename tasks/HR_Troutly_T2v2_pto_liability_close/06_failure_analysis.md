@@ -307,17 +307,13 @@ numbering, which on this export runs even with the tool-call count: the platform
 the export's call 19.
 
 **G1, traj_34e36e18129e4b169e3ddf956e3970c8.** Gemini copies the HRIS time off report onto PTO
-Liability - 08/31/2026 and reports $111,100.39 of liability on 1,751.71 hours for 52 employees,
-the five lines summed from the report's own balances and the two unloaded hires at 0.00. Its own
-step 19 prints the cutover memo's "Carryover into the new system is capped at 40.0 hours as of
-06/30/2026; the excess is forfeited", its step 28 reads the signed $118,000.00 and $148,200.00
-for TRT-0088 and TRT-0117 against the loaded $104,000.00 and $138,000.00 and names the rule that
-the signed document governs, and at step 89 it computes the capped total, $90,628.55, and sets it
-aside because the report "itself shows the balances carrying forward from July without the
-40-hour cap" and Grayson's July detail did the same. It should have capped the eleven openings at
-40.00 hours, tiered the nine migrated records on their archive dates with TRT-0071 bridged, valued
-TRT-0088 and TRT-0117 at their signed rates, accrued the two hires from their start dates, and
-stated $92,739.54 on 1,522.17 hours with the five lines at 297.79, 558.31, 121.53, 170.50 and
-374.04 hours. The output is unacceptable because it overstates the liability by $18,360.85,
-states every one of the five lines wrong, and credits eleven of the 52 employees with hours the
-policy forfeited on 06/30/2026.
+Liability - 08/31/2026 and reports $111,100.39 of liability on 1,751.71 hours, the five lines
+summed from the report's own balances and the two unloaded hires at 0.00. Its own step 19 prints
+the cutover memo's "Carryover into the new system is capped at 40.0 hours as of 06/30/2026; the
+excess is forfeited", and at step 89 it computes the capped total, $90,628.55, and sets it aside
+because the report itself carries the uncapped balances and Grayson's July detail did the same.
+It should have capped the eleven openings at 40.00 hours, tiered the nine migrated records on
+their archive dates, valued TRT-0088 and TRT-0117 at their signed rates, accrued the two hires,
+and stated $92,739.54 on 1,522.17 hours. The output is unacceptable because it overstates the
+liability by $18,360.85, states all five lines wrong, and credits eleven of the 52 employees with
+hours the policy forfeited on 06/30/2026.
