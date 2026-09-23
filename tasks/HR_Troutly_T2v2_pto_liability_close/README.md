@@ -176,6 +176,7 @@ python3 qc/score_run_set.py --set run_set_09-21-2026 --details
 | verifier: a page row reading a ctx primitive the measured surface does not carry | RED |
 | verifier: a run's narration read instead of the database | RED |
 | verifier: a row file over the skill's 200 lines | RED |
+| verifier: an import the platform's AST gate bans | RED |
 | battery: an expectation planted wrong | RED |
 | battery: a page that over-delivers expected to fail | RED |
 | golden: a total the schedule did not give | RED |
@@ -185,7 +186,7 @@ python3 qc/score_run_set.py --set run_set_09-21-2026 --details
 | docs: a non-ASCII character in a package document | RED |
 | selection: a wildcard in the block | RED |
 
-**72 of 72 controls went red**, 09/22/2026. A defect planted in the memo, the world constants,
+**73 of 73 controls went red**, 09/23/2026. A defect planted in the memo, the world constants,
 the plan, the rubric, the register, the import, the engine, the battery or a document fails the
 build or the harness, and the closing rebuild left the tree clean at the published md5s and the
 battery at 598 of 598. The memo controls include each line the rescope and review round 1 took

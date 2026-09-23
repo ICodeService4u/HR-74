@@ -15,10 +15,10 @@ SPEC = {'criterion': 'States, on the PTO liability page, a PTO liability of $8,1
 # in the asked unit, by its own $ or hours, else its column header, else its prose line. R5 the
 # title, an employee key and a line label match whole-field. R12 details say what was read.
 # R13 the database only. R15 never raises. Strikethrough is dropped. Two pages under the title fail.
-import os
+# re is the only import: the platform's AST gate rejects os, measured 09/23/2026. The harness sets QUIET.
 import re
 
-QUIET = os.environ.get("T2_VERIFIER_QUIET") == "1"
+QUIET = False
 PAGES_COLS = ["id", "path", "hash", "title", "description", "isPrivate", "isPublished",
               "privateNS", "publishStartDate", "publishEndDate", "content", "render", "toc",
               "contentType", "createdAt", "updatedAt", "editorKey", "localeCode", "authorId",

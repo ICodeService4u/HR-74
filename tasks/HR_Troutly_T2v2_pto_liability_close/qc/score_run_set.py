@@ -50,6 +50,7 @@ def checks():
         spec = importlib.util.spec_from_file_location(f[:-3], os.path.join(vdir, f))
         m = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(m)
+        m.QUIET = True
         out[n] = m.check
     assert len(out) == len(B.PLAN), "%d row files against %d planned rows" % (len(out), len(B.PLAN))
     return out
